@@ -1,9 +1,11 @@
+"use no memo";
 /**
  * EL MONSTRUO — Tablero de Campaña v2.0 (Forja Industrial Brutalista)
  * Página principal que orquesta:
  * - Canvas 3D isométrico (IsometricBoard)
  * - HUD 2D overlay (LivePulse, ContextCard, Omnibox, TopToolbar)
  * - Tutorial onboarding la primera vez
+ * - Nano Banana Studio (operable, conectado a Gemini real)
  */
 import { useState, useEffect, useMemo } from "react";
 import { AnimatePresence } from "framer-motion";
@@ -13,6 +15,7 @@ import { ContextCard } from "@/components/hud/ContextCard";
 import { Omnibox } from "@/components/hud/Omnibox";
 import { TopToolbar } from "@/components/hud/TopToolbar";
 import { TutorialOverlay } from "@/components/hud/TutorialOverlay";
+import { NanoBananaStudio } from "@/components/studio/NanoBananaStudio";
 import boardDataRaw from "@/data/board_data.json";
 import type { BoardData } from "@/lib/board-types";
 
@@ -24,9 +27,9 @@ export default function Home() {
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const [zoomLevel, setZoomLevel] = useState(28);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [studioOpen, setStudioOpen] = useState(false);
 
   useEffect(() => {
-    // Mostrar tutorial si nunca se ha visto
     const seen = localStorage.getItem(TUTORIAL_KEY);
     if (!seen) {
       const timer = setTimeout(() => setShowTutorial(true), 1200);
@@ -63,7 +66,7 @@ export default function Home() {
         />
       </div>
 
-      {/* Vignette ambient para profundidad (no bloquea clicks) */}
+      {/* Vignette ambient para profundidad */}
       <div
         className="absolute inset-0 pointer-events-none z-10"
         style={{
@@ -80,6 +83,7 @@ export default function Home() {
           data={boardData}
           onClose={() => setSelectedNodeId(null)}
           onSelectNode={setSelectedNodeId}
+          onOpenStudio={() => setStudioOpen(true)}
         />
         <TopToolbar
           zoomLevel={zoomLevel}
@@ -94,6 +98,9 @@ export default function Home() {
       <AnimatePresence>
         {showTutorial && <TutorialOverlay onClose={handleCloseTutorial} />}
       </AnimatePresence>
+
+      {/* Nano Banana Studio (operable) */}
+      <NanoBananaStudio open={studioOpen} onClose={() => setStudioOpen(false)} />
     </div>
   );
 }

@@ -17,6 +17,7 @@ import {
   Clock,
   Code2,
   Calendar,
+  Sparkles,
 } from "lucide-react";
 import type { BoardNode, BoardData } from "@/lib/board-types";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ interface ContextCardProps {
   data: BoardData;
   onClose: () => void;
   onSelectNode: (id: string) => void;
+  onOpenStudio?: () => void;
 }
 
 const STATUS_META = {
@@ -59,7 +61,7 @@ const STATUS_META = {
   },
 } as const;
 
-export function ContextCard({ node, data, onClose, onSelectNode }: ContextCardProps) {
+export function ContextCard({ node, data, onClose, onSelectNode, onOpenStudio }: ContextCardProps) {
   return (
     <AnimatePresence mode="wait">
       {node && (
@@ -76,6 +78,7 @@ export function ContextCard({ node, data, onClose, onSelectNode }: ContextCardPr
             data={data}
             onClose={onClose}
             onSelectNode={onSelectNode}
+            onOpenStudio={onOpenStudio}
           />
         </motion.div>
       )}
@@ -88,12 +91,15 @@ function ContextCardContent({
   data,
   onClose,
   onSelectNode,
+  onOpenStudio,
 }: {
   node: BoardNode;
   data: BoardData;
   onClose: () => void;
   onSelectNode: (id: string) => void;
+  onOpenStudio?: () => void;
 }) {
+  const isNanoBanana = node.id === "nano_banana_pro";
   const district = data.districts.find((d) => d.id === node.district);
   const statusMeta = STATUS_META[node.status];
   const StatusIcon = statusMeta.icon;
@@ -248,27 +254,28 @@ function ContextCardContent({
         )}
       </div>
 
-      {/* Acciones (placeholders Fase 2+) */}
+      {/* Acciones */}
       <div className="px-5 py-4 border-t border-white/5 bg-black/20 space-y-2">
-        <Button
-          variant="default"
-          size="sm"
-          className="w-full bg-orange-600 hover:bg-orange-500 text-white border-0"
-          onClick={() => {
-            // Placeholder
-          }}
-        >
-          Pedir mejora a esta pieza
-        </Button>
+        {isNanoBanana && onOpenStudio && (
+          <Button
+            variant="default"
+            size="sm"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0 font-bold tracking-wide"
+            onClick={onOpenStudio}
+          >
+            <Sparkles className="size-4 mr-2" />
+            Abrir Studio operable
+          </Button>
+        )}
         <Button
           variant="outline"
           size="sm"
           className="w-full border-white/10 hover:bg-white/5"
           onClick={() => {
-            // Placeholder
+            // Placeholder Fase 2: Pedir mejora vía Gemini reasoning
           }}
         >
-          Ver historia
+          {isNanoBanana ? "Pedir mejora a esta pieza" : "Pedir mejora a esta pieza"}
         </Button>
       </div>
     </div>
