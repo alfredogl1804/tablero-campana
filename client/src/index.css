@@ -1,3 +1,11 @@
+/**
+ * EL MONSTRUO — TABLERO DE CAMPAÑA
+ * Diseño: "Forja Industrial Brutalista"
+ * - Fondo grafito profundo, luz forjada naranja emanando del centro
+ * - Tipografía dual: Inter Display (UI) + JetBrains Mono (datos)
+ * - Materialidad táctil: grain, brushed metal, glass
+ */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -40,118 +48,160 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: "Inter", "Inter Display", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Inter Display", "Inter", sans-serif;
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  /* FORJA INDUSTRIAL — Dark mode by default (es siempre noche en el taller) */
+  --radius: 0.5rem;
+
+  /* Grafito profundo */
+  --background: oklch(0.16 0.005 65);
+  --foreground: oklch(0.92 0.005 65);
+
+  /* Acero metálico para cards */
+  --card: oklch(0.21 0.006 65);
+  --card-foreground: oklch(0.92 0.005 65);
+
+  --popover: oklch(0.19 0.006 65);
+  --popover-foreground: oklch(0.92 0.005 65);
+
+  /* Naranja Forja — el color de la marca */
+  --primary: oklch(0.7 0.18 50);
+  --primary-foreground: oklch(0.16 0.005 65);
+
+  --secondary: oklch(0.28 0.008 65);
+  --secondary-foreground: oklch(0.85 0.005 65);
+
+  --muted: oklch(0.24 0.005 65);
+  --muted-foreground: oklch(0.62 0.012 65);
+
+  --accent: oklch(0.7 0.18 50);
+  --accent-foreground: oklch(0.16 0.005 65);
+
+  --destructive: oklch(0.6 0.22 27);
+  --destructive-foreground: oklch(0.98 0 0);
+
+  /* Bordes — acero sutil */
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.7 0.18 50 / 50%);
+
+  /* Charts: gradiente forja */
+  --chart-1: oklch(0.7 0.18 50);
+  --chart-2: oklch(0.75 0.16 60);
+  --chart-3: oklch(0.65 0.15 35);
+  --chart-4: oklch(0.55 0.12 25);
+  --chart-5: oklch(0.45 0.08 15);
+
+  --sidebar: oklch(0.18 0.006 65);
+  --sidebar-foreground: oklch(0.92 0.005 65);
+  --sidebar-primary: oklch(0.7 0.18 50);
+  --sidebar-primary-foreground: oklch(0.16 0.005 65);
+  --sidebar-accent: oklch(0.24 0.005 65);
+  --sidebar-accent-foreground: oklch(0.92 0.005 65);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.7 0.18 50);
+
+  /* Forja-specific tokens */
+  --forja-orange: #F97316;
+  --forja-orange-glow: rgba(249, 115, 22, 0.4);
+  --forja-steel: #A8A29E;
+  --forja-graphite: #1C1917;
+  --forja-plasma-green: oklch(0.72 0.18 145);
+  --forja-alarm-red: oklch(0.62 0.24 25);
 }
 
 .dark {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground:  oklch(0.92 0.005 65);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground:  oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  /* Mismo theme (siempre dark) */
+  --background: oklch(0.16 0.005 65);
+  --foreground: oklch(0.92 0.005 65);
+  --card: oklch(0.21 0.006 65);
+  --card-foreground: oklch(0.92 0.005 65);
+  --popover: oklch(0.19 0.006 65);
+  --popover-foreground: oklch(0.92 0.005 65);
+  --primary: oklch(0.7 0.18 50);
+  --primary-foreground: oklch(0.16 0.005 65);
+  --secondary: oklch(0.28 0.008 65);
+  --secondary-foreground: oklch(0.85 0.005 65);
+  --muted: oklch(0.24 0.005 65);
+  --muted-foreground: oklch(0.62 0.012 65);
+  --accent: oklch(0.7 0.18 50);
+  --accent-foreground: oklch(0.16 0.005 65);
+  --destructive: oklch(0.6 0.22 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.7 0.18 50 / 50%);
+  --sidebar: oklch(0.18 0.006 65);
+  --sidebar-foreground: oklch(0.92 0.005 65);
+  --sidebar-primary: oklch(0.7 0.18 50);
+  --sidebar-primary-foreground: oklch(0.16 0.005 65);
+  --sidebar-accent: oklch(0.24 0.005 65);
+  --sidebar-accent-foreground: oklch(0.92 0.005 65);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.7 0.18 50);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    background: var(--background);
+  }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv01", "cv02";
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   [type="button"]:not(:disabled),
   [type="submit"]:not(:disabled),
-  [type="reset"]:not(:disabled),
   a[href],
-  select:not(:disabled),
-  input[type="checkbox"]:not(:disabled),
-  input[type="radio"]:not(:disabled) {
+  select:not(:disabled) {
     @apply cursor-pointer;
+  }
+
+  /* Tabular numerals para datos */
+  .font-mono,
+  [class*="font-mono"] {
+    font-feature-settings: "tnum", "ss01";
+  }
+
+  ::selection {
+    background: var(--forja-orange-glow);
+    color: var(--foreground);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: oklch(0.18 0.005 65);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.32 0.008 65);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--forja-orange);
   }
 }
 
 @layer components {
-  /**
-   * Custom container utility that centers content and adds responsive padding.
-   *
-   * This overrides Tailwind's default container behavior to:
-   * - Auto-center content (mx-auto)
-   * - Add responsive horizontal padding
-   * - Set max-width for large screens
-   *
-   * Usage: <div className="container">...</div>
-   *
-   * For custom widths, use max-w-* utilities directly:
-   * <div className="max-w-6xl mx-auto px-4">...</div>
-   */
   .container {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding */
+    padding-left: 1rem;
     padding-right: 1rem;
   }
 
@@ -160,18 +210,86 @@
     min-width: 0;
   }
 
-  @media (min-width: 640px) {
-    .container {
-      padding-left: 1.5rem; /* 24px - tablet padding */
-      padding-right: 1.5rem;
-    }
+  /* GLASSMORPHISM FORJA — paneles HUD */
+  .forja-panel {
+    background: linear-gradient(
+      135deg,
+      oklch(0.21 0.006 65 / 0.85),
+      oklch(0.18 0.005 65 / 0.95)
+    );
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    border: 1px solid oklch(1 0 0 / 8%);
+    box-shadow:
+      0 1px 0 0 oklch(1 0 0 / 6%) inset,
+      0 -1px 0 0 oklch(0 0 0 / 30%) inset,
+      0 24px 60px -24px oklch(0 0 0 / 50%);
   }
 
-  @media (min-width: 1024px) {
-    .container {
-      padding-left: 2rem; /* 32px - desktop padding */
-      padding-right: 2rem;
-      max-width: 1280px; /* Standard content width */
+  /* Brushed steel border */
+  .forja-bevel {
+    background: linear-gradient(
+      180deg,
+      oklch(0.32 0.008 65) 0%,
+      oklch(0.22 0.006 65) 50%,
+      oklch(0.16 0.005 65) 100%
+    );
+    border: 1px solid oklch(1 0 0 / 12%);
+    box-shadow:
+      0 1px 0 0 oklch(1 0 0 / 10%) inset,
+      0 -1px 0 0 oklch(0 0 0 / 30%) inset;
+  }
+
+  /* Forja glow — para nodos activos y elementos importantes */
+  .forja-glow {
+    box-shadow:
+      0 0 0 1px var(--forja-orange) inset,
+      0 0 20px -2px var(--forja-orange-glow),
+      0 0 40px -8px var(--forja-orange-glow);
+  }
+
+  /* Grain noise overlay */
+  .forja-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* Elemento "respirando" — para nodos activos sutiles */
+  @keyframes forja-breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.015); }
+  }
+  .forja-breathe {
+    animation: forja-breathe 4s ease-in-out infinite;
+  }
+
+  /* Pulso de luz forjada */
+  @keyframes forja-pulse {
+    0%, 100% {
+      box-shadow:
+        0 0 0 0 var(--forja-orange-glow),
+        0 0 20px -4px var(--forja-orange-glow);
     }
+    50% {
+      box-shadow:
+        0 0 0 8px transparent,
+        0 0 30px 0 var(--forja-orange-glow);
+    }
+  }
+  .forja-pulse {
+    animation: forja-pulse 2.5s ease-in-out infinite;
+  }
+
+  /* Trama industrial sutil para el suelo del HUD */
+  .forja-hatch {
+    background-image:
+      linear-gradient(45deg, oklch(1 0 0 / 2%) 25%, transparent 25%),
+      linear-gradient(-45deg, oklch(1 0 0 / 2%) 25%, transparent 25%);
+    background-size: 8px 8px;
   }
 }
