@@ -6,6 +6,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ArrowRight, Sparkles, Mic } from "lucide-react";
+import Fuse from "fuse.js";
 import type { BoardData, BoardNode } from "@/lib/board-types";
 
 interface OmniboxProps {
@@ -18,15 +19,42 @@ export function Omnibox({ data, onSelectNode }: OmniboxProps) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Índice Fuse.js para búsqueda fuzzy tolerante a errores
+  const fuse = useMemo(
+    () =>
+      new Fuse(data.nodes, {
+        keys: [
+          { name: "label", weight: 2 },
+          { name: "description", weight: 1 },
+          { name: "id", weight: 0.5 },
+        ],
+        threshold: 0.4,
+        ignoreLocation: true,
+        minMatchCharLength: 2,
+      }),
+    [data.nodes]
+  );
+
   // Atajo: tecla "/" abre la omnibox
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "/" && document.activeElement?.tagName !== "INPUT") {
+      const target = e.target as HTMLElement | null;
+      const isTyping =
+        target?.tagName === "INPUT" ||
+        target?.tagName === "TEXTAREA" ||
+        target?.isContentEditable;
+      if (e.key === "/" && !isTyping) {
         e.preventDefault();
         setOpen(true);
       }
       if (e.key === "Escape") {
         setOpen(false);
+        setQuery("");
+      }
+      // Cmd+K / Ctrl+K también abre
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setOpen((v) => !v);
       }
     }
     window.addEventListener("keydown", onKey);
@@ -41,16 +69,11 @@ export function Omnibox({ data, onSelectNode }: OmniboxProps) {
 
   const matches = useMemo<BoardNode[]>(() => {
     if (!query.trim()) return [];
-    const q = query.trim().toLowerCase();
-    return data.nodes
-      .filter(
-        (n) =>
-          n.label.toLowerCase().includes(q) ||
-          n.description.toLowerCase().includes(q) ||
-          n.id.toLowerCase().includes(q)
-      )
-      .slice(0, 6);
-  }, [query, data.nodes]);
+    return fuse
+      .search(query.trim())
+      .slice(0, 8)
+      .map((r) => r.item);
+  }, [query, fuse]);
 
   const isCommandLike = query.trim().length > 12 && matches.length === 0;
 
@@ -72,7 +95,7 @@ export function Omnibox({ data, onSelectNode }: OmniboxProps) {
               Busca o pide algo al Monstruo
             </span>
             <kbd className="ml-2 px-1.5 py-0.5 text-[10px] font-mono rounded bg-black/40 border border-white/10 text-muted-foreground">
-              /
+              /  ·  ⌘K
             </kbd>
           </motion.button>
         ) : (

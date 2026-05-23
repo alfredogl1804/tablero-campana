@@ -1,3 +1,4 @@
+"use no memo";
 /**
  * Building — cada nodo del genoma como un prisma 3D
  * - Altura proporcional a LOC (escala log)

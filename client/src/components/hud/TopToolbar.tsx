@@ -1,16 +1,23 @@
 /**
- * TopToolbar — barra superior con marca, zoom, modo, y filtros
+ * TopToolbar — barra superior con marca, zoom, modo, y ayuda
  */
 import { motion } from "framer-motion";
 import { Plus, Minus, Maximize2, HelpCircle } from "lucide-react";
+import { ModoPapaToggle } from "./ModoPapaToggle";
 
 interface TopToolbarProps {
   zoomLevel: number;
   onZoomChange: (zoom: number) => void;
   onResetView: () => void;
+  onOpenHelp: () => void;
 }
 
-export function TopToolbar({ zoomLevel, onZoomChange, onResetView }: TopToolbarProps) {
+export function TopToolbar({
+  zoomLevel,
+  onZoomChange,
+  onResetView,
+  onOpenHelp,
+}: TopToolbarProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -16 }}
@@ -24,7 +31,8 @@ export function TopToolbar({ zoomLevel, onZoomChange, onResetView }: TopToolbarP
           className="size-6 rounded-sm"
           style={{
             background: "linear-gradient(135deg, #F97316 0%, #EA580C 100%)",
-            boxShadow: "0 0 12px rgba(249,115,22,0.4), 0 0 0 1px rgba(255,255,255,0.1) inset",
+            boxShadow:
+              "0 0 12px rgba(249,115,22,0.4), 0 0 0 1px rgba(255,255,255,0.1) inset",
           }}
         />
         <div className="flex flex-col leading-none">
@@ -68,8 +76,12 @@ export function TopToolbar({ zoomLevel, onZoomChange, onResetView }: TopToolbarP
         </button>
       </div>
 
+      {/* Modo Papá toggle */}
+      <ModoPapaToggle />
+
       {/* Help */}
       <button
+        onClick={onOpenHelp}
         className="forja-panel rounded-md size-9 flex items-center justify-center hover:bg-orange-500/10 hover:text-orange-400 transition text-muted-foreground"
         aria-label="Ayuda"
       >

@@ -35,9 +35,9 @@ export function LivePulse({ data, onSelectDistrict }: LivePulseProps) {
       <div className="forja-panel forja-grain rounded-lg h-full flex flex-col overflow-hidden relative">
         {/* Header */}
         <div className="px-5 pt-5 pb-4 border-b border-white/5">
-          <div className="flex items-center gap-2 text-[10px] font-mono tracking-[0.2em] text-orange-500/70 uppercase mb-1">
-            <span className="size-1.5 rounded-full bg-orange-500 forja-pulse" />
-            En vivo
+          <div className="flex items-center gap-2 text-[10px] font-mono tracking-[0.2em] text-amber-500/70 uppercase mb-1">
+            <span className="size-1.5 rounded-full bg-amber-500" />
+            Snapshot · {new Date(data.meta.timestamp).toLocaleDateString("es-MX", { day: "numeric", month: "short" })}
           </div>
           <h2 className="text-xl font-bold text-foreground tracking-tight">
             El Monstruo
@@ -160,10 +160,10 @@ export function LivePulse({ data, onSelectDistrict }: LivePulseProps) {
         {/* Footer — kernel health */}
         <div className="px-5 py-3 border-t border-white/5 bg-black/30">
           <div className="flex items-center gap-2 text-[10px] font-mono">
-            <Activity className="size-3 text-emerald-400" />
-            <span className="text-emerald-400">kernel</span>
-            <span className="text-muted-foreground">v0.84.8</span>
-            <span className="ml-auto text-muted-foreground">Railway · MX</span>
+            <Activity className="size-3 text-amber-400/60" />
+            <span className="text-muted-foreground">kernel</span>
+            <span className="text-muted-foreground/70">v0.84.8 · sin conexión</span>
+            <span className="ml-auto text-muted-foreground/50">Railway · MX</span>
           </div>
         </div>
       </div>

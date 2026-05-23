@@ -293,3 +293,54 @@
     background-size: 8px 8px;
   }
 }
+
+/* ============================================
+ * MODO PAPÁ — Accesibilidad para usuario 67+
+ * Activado al añadir clase .modo-papa al <html>
+ * ============================================ */
+
+html.modo-papa {
+  font-size: 19px; /* base 16 → 19 (~19% incremento; 30% en escala compuesta) */
+}
+
+html.modo-papa body {
+  letter-spacing: 0.01em;
+}
+
+/* Focus rings reforzados y siempre visibles */
+html.modo-papa :focus-visible,
+html.modo-papa button:focus-visible,
+html.modo-papa input:focus-visible,
+html.modo-papa [role="button"]:focus-visible,
+html.modo-papa a:focus-visible {
+  outline: 3px solid #F97316 !important;
+  outline-offset: 3px !important;
+  border-radius: 6px;
+}
+
+/* Densidad reducida — paneles con más respiro */
+html.modo-papa .forja-panel {
+  padding-block: 0.25rem;
+}
+
+/* Contraste reforzado en muted-foreground */
+html.modo-papa {
+  --muted-foreground: oklch(0.78 0.01 65);
+}
+
+/* Animaciones sutilmente más lentas para procesar mejor */
+html.modo-papa * {
+  transition-duration: 280ms !important;
+}
+
+/* Botones más grandes y áreas táctiles más amplias */
+html.modo-papa button,
+html.modo-papa [role="button"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+html.modo-papa kbd {
+  font-size: 0.85em;
+  padding: 0.25em 0.5em;
+}

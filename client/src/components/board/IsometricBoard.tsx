@@ -1,3 +1,4 @@
+"use no memo";
 /**
  * EL MONSTRUO — Tablero de Campaña isométrico 3D
  * Diseño: "Forja Industrial Brutalista"

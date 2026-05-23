@@ -16,7 +16,7 @@ import { TutorialOverlay } from "@/components/hud/TutorialOverlay";
 import boardDataRaw from "@/data/board_data.json";
 import type { BoardData } from "@/lib/board-types";
 
-const boardData = boardDataRaw as BoardData;
+const boardData = boardDataRaw as unknown as BoardData;
 const TUTORIAL_KEY = "tablero-campana-tutorial-shown-v1";
 
 export default function Home() {
@@ -85,6 +85,7 @@ export default function Home() {
           zoomLevel={zoomLevel}
           onZoomChange={setZoomLevel}
           onResetView={handleResetView}
+          onOpenHelp={() => setShowTutorial(true)}
         />
         <Omnibox data={boardData} onSelectNode={setSelectedNodeId} />
       </div>

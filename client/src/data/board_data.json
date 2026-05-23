@@ -1,10 +1,10 @@
 {
   "meta": {
     "generated_from": "MONSTRUO_GENOME.yaml",
-    "timestamp": "2026-05-23T12:00:00Z",
+    "timestamp": "2026-05-23T18:00:00Z",
     "version": "2.0.0",
-    "total_nodes": 120,
-    "system_health": 0.92
+    "total_nodes": 66,
+    "system_health": 0.862
   },
   "districts": [
     {
@@ -13,9 +13,16 @@
       "description": "El cerebro del Monstruo — donde piensa, aprende y recuerda",
       "color": "#3B82F6",
       "icon": "brain",
-      "health": 0.88,
-      "grid_origin": [0, 0],
-      "grid_size": [5, 6]
+      "health": 0.972,
+      "grid_origin": [
+        0,
+        0
+      ],
+      "grid_size": [
+        5,
+        6
+      ],
+      "node_count": 18
     },
     {
       "id": "interfaces",
@@ -23,9 +30,16 @@
       "description": "Las formas en que el Monstruo se comunica con el mundo",
       "color": "#8B5CF6",
       "icon": "monitor",
-      "health": 0.45,
-      "grid_origin": [6, 0],
-      "grid_size": [4, 5]
+      "health": 0.863,
+      "grid_origin": [
+        6,
+        0
+      ],
+      "grid_size": [
+        4,
+        5
+      ],
+      "node_count": 8
     },
     {
       "id": "infraestructura",
@@ -33,9 +47,16 @@
       "description": "Los cimientos — servidores, bases de datos, seguridad",
       "color": "#10B981",
       "icon": "server",
-      "health": 0.95,
-      "grid_origin": [0, 7],
-      "grid_size": [5, 5]
+      "health": 1.0,
+      "grid_origin": [
+        0,
+        7
+      ],
+      "grid_size": [
+        5,
+        5
+      ],
+      "node_count": 17
     },
     {
       "id": "capacidades",
@@ -43,9 +64,16 @@
       "description": "Lo que el Monstruo sabe hacer — sus habilidades activas",
       "color": "#F97316",
       "icon": "zap",
-      "health": 0.78,
-      "grid_origin": [6, 6],
-      "grid_size": [4, 5]
+      "health": 0.912,
+      "grid_origin": [
+        6,
+        6
+      ],
+      "grid_size": [
+        4,
+        5
+      ],
+      "node_count": 17
     },
     {
       "id": "futuro",
@@ -54,8 +82,15 @@
       "color": "#6B7280",
       "icon": "compass",
       "health": 0.0,
-      "grid_origin": [11, 0],
-      "grid_size": [2, 12]
+      "grid_origin": [
+        11,
+        0
+      ],
+      "grid_size": [
+        2,
+        12
+      ],
+      "node_count": 6
     }
   ],
   "nodes": [
@@ -66,9 +101,26 @@
       "description": "El director de orquesta — decide qué hacer y delega a los especialistas",
       "status": "ACTIVE",
       "loc": 450,
-      "connections_in": ["telegram_bot", "flutter_app", "memory_sovereign"],
-      "connections_out": ["embrion_brand", "embrion_creativo", "embrion_estratega", "embrion_financiero", "embrion_investigador", "embrion_tecnico", "embrion_ventas", "embrion_vigia", "collective"],
-      "grid_position": [2, 2],
+      "connections_in": [
+        "telegram_bot",
+        "flutter_app",
+        "memory_sovereign"
+      ],
+      "connections_out": [
+        "embrion_brand",
+        "embrion_creativo",
+        "embrion_estratega",
+        "embrion_financiero",
+        "embrion_investigador",
+        "embrion_tecnico",
+        "embrion_ventas",
+        "embrion_vigia",
+        "collective"
+      ],
+      "grid_position": [
+        2,
+        2
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -78,9 +130,20 @@
       "description": "La memoria permanente del Monstruo — lo que nunca olvida",
       "status": "ACTIVE",
       "loc": 890,
-      "connections_in": ["embrion_loop", "anti_dory", "memento"],
-      "connections_out": ["embrion_loop", "knowledge_graph", "belief_revision"],
-      "grid_position": [1, 1],
+      "connections_in": [
+        "embrion_loop",
+        "anti_dory",
+        "memento"
+      ],
+      "connections_out": [
+        "embrion_loop",
+        "knowledge_graph",
+        "belief_revision"
+      ],
+      "grid_position": [
+        1,
+        1
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -90,9 +153,17 @@
       "description": "El protector contra el olvido — asegura que nada se pierda entre sesiones",
       "status": "ACTIVE",
       "loc": 1200,
-      "connections_in": ["memory_sovereign"],
-      "connections_out": ["memory_sovereign", "memento"],
-      "grid_position": [0, 1],
+      "connections_in": [
+        "memory_sovereign"
+      ],
+      "connections_out": [
+        "memory_sovereign",
+        "memento"
+      ],
+      "grid_position": [
+        0,
+        1
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -102,9 +173,17 @@
       "description": "El registro de operaciones críticas — la bitácora de vuelo",
       "status": "ACTIVE",
       "loc": 320,
-      "connections_in": ["anti_dory", "embrion_loop"],
-      "connections_out": ["memory_sovereign"],
-      "grid_position": [0, 2],
+      "connections_in": [
+        "anti_dory",
+        "embrion_loop"
+      ],
+      "connections_out": [
+        "memory_sovereign"
+      ],
+      "grid_position": [
+        0,
+        2
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -114,9 +193,17 @@
       "description": "El inventario de todas las IAs del mundo que el Monstruo conoce y evalúa",
       "status": "ACTIVE",
       "loc": 2100,
-      "connections_in": ["vanguard"],
-      "connections_out": ["embrion_loop", "adaptive_model"],
-      "grid_position": [3, 0],
+      "connections_in": [
+        "vanguard"
+      ],
+      "connections_out": [
+        "embrion_loop",
+        "adaptive_model"
+      ],
+      "grid_position": [
+        3,
+        0
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -127,8 +214,13 @@
       "status": "ACTIVE",
       "loc": 1488,
       "connections_in": [],
-      "connections_out": ["catastro"],
-      "grid_position": [4, 0],
+      "connections_out": [
+        "catastro"
+      ],
+      "grid_position": [
+        4,
+        0
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -138,9 +230,14 @@
       "description": "Donde los especialistas comparten lo que aprenden y generan ideas nuevas",
       "status": "DEGRADED",
       "loc": 380,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [2, 3],
+      "grid_position": [
+        2,
+        3
+      ],
       "last_updated": "2026-05-21",
       "gap": "Opera solo en RAM — pierde todo al reiniciar"
     },
@@ -151,9 +248,16 @@
       "description": "El sistema que permite al Monstruo aprender de cada interacción",
       "status": "ACTIVE",
       "loc": 200,
-      "connections_in": ["embrion_loop"],
-      "connections_out": ["memory_sovereign"],
-      "grid_position": [1, 3],
+      "connections_in": [
+        "embrion_loop"
+      ],
+      "connections_out": [
+        "memory_sovereign"
+      ],
+      "grid_position": [
+        1,
+        3
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -163,9 +267,17 @@
       "description": "Elige qué IA usar para cada tarea — siempre la mejor disponible",
       "status": "ACTIVE",
       "loc": 280,
-      "connections_in": ["catastro", "cost_optimizer"],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [3, 1],
+      "connections_in": [
+        "catastro",
+        "cost_optimizer"
+      ],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        3,
+        1
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -175,9 +287,16 @@
       "description": "Controla cuánto gasta el Monstruo — máximo resultado, mínimo costo",
       "status": "ACTIVE",
       "loc": 350,
-      "connections_in": ["finops"],
-      "connections_out": ["adaptive_model"],
-      "grid_position": [4, 1],
+      "connections_in": [
+        "finops"
+      ],
+      "connections_out": [
+        "adaptive_model"
+      ],
+      "grid_position": [
+        4,
+        1
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -187,9 +306,16 @@
       "description": "Divide problemas complejos en pasos lógicos para resolverlos mejor",
       "status": "ACTIVE",
       "loc": 290,
-      "connections_in": ["embrion_loop"],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [1, 4],
+      "connections_in": [
+        "embrion_loop"
+      ],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        1,
+        4
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -199,9 +325,17 @@
       "description": "El mapa de todo lo que el Monstruo sabe — conceptos conectados entre sí",
       "status": "ACTIVE",
       "loc": 600,
-      "connections_in": ["memory_sovereign", "lightrag"],
-      "connections_out": ["memory_sovereign"],
-      "grid_position": [0, 3],
+      "connections_in": [
+        "memory_sovereign",
+        "lightrag"
+      ],
+      "connections_out": [
+        "memory_sovereign"
+      ],
+      "grid_position": [
+        0,
+        3
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -211,9 +345,14 @@
       "description": "Crea identidades de marca premium — logos, colores, personalidad",
       "status": "ACTIVE",
       "loc": 420,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [6, 6],
+      "grid_position": [
+        6,
+        6
+      ],
       "last_updated": "2026-05-21",
       "gap": "Sin memoria propia — no aprende de proyectos anteriores"
     },
@@ -224,9 +363,14 @@
       "description": "Genera contenido visual y creativo — imágenes, videos, diseños",
       "status": "ACTIVE",
       "loc": 380,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [7, 6],
+      "grid_position": [
+        7,
+        6
+      ],
       "last_updated": "2026-05-21",
       "gap": "Sin memoria propia"
     },
@@ -237,9 +381,14 @@
       "description": "Diseña planes de negocio y estrategias de crecimiento",
       "status": "ACTIVE",
       "loc": 350,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [8, 6],
+      "grid_position": [
+        8,
+        6
+      ],
       "last_updated": "2026-05-21",
       "gap": "Sin memoria propia"
     },
@@ -250,9 +399,14 @@
       "description": "Analiza números, proyecciones, costos y rentabilidad",
       "status": "ACTIVE",
       "loc": 310,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [9, 6],
+      "grid_position": [
+        9,
+        6
+      ],
       "last_updated": "2026-05-21",
       "gap": "Sin memoria propia"
     },
@@ -263,9 +417,14 @@
       "description": "Investiga en tiempo real — busca datos, valida información",
       "status": "ACTIVE",
       "loc": 290,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [6, 7],
+      "grid_position": [
+        6,
+        7
+      ],
       "last_updated": "2026-05-21",
       "gap": "Sin memoria propia"
     },
@@ -276,9 +435,14 @@
       "description": "Escribe código, diseña arquitecturas, resuelve bugs",
       "status": "ACTIVE",
       "loc": 520,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [7, 7],
+      "grid_position": [
+        7,
+        7
+      ],
       "last_updated": "2026-05-21",
       "gap": "Sin memoria propia"
     },
@@ -289,9 +453,14 @@
       "description": "Diseña estrategias de venta, funnels, y pricing",
       "status": "ACTIVE",
       "loc": 314,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [8, 7],
+      "grid_position": [
+        8,
+        7
+      ],
       "last_updated": "2026-05-21",
       "gap": "Sin memoria propia"
     },
@@ -302,9 +471,16 @@
       "description": "Supervisa que los especialistas trabajen bien y no se desvíen",
       "status": "ACTIVE",
       "loc": 180,
-      "connections_in": ["embrion_loop"],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [2, 4],
+      "connections_in": [
+        "embrion_loop"
+      ],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        2,
+        4
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -315,21 +491,31 @@
       "status": "DEGRADED",
       "loc": 800,
       "connections_in": [],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [6, 0],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        6,
+        0
+      ],
       "last_updated": "2026-05-21",
       "gap": "Offline — necesita redeploy en Railway"
     },
     {
       "id": "flutter_app",
-      "district": "interfaces",
+      "district": "futuro",
       "label": "App Móvil",
       "description": "La app para iPhone/Android — El Monstruo en tu bolsillo",
       "status": "FUTURE",
-      "loc": 0,
+      "loc": 200,
       "connections_in": [],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [7, 0],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        11,
+        0
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -338,10 +524,15 @@
       "label": "Centro de Comando",
       "description": "El tablero de control — ves todo el Monstruo desde aquí",
       "status": "SPRINT",
-      "loc": 0,
-      "connections_in": ["kernel_health"],
+      "loc": 1500,
+      "connections_in": [
+        "kernel_health"
+      ],
       "connections_out": [],
-      "grid_position": [8, 0],
+      "grid_position": [
+        8,
+        0
+      ],
       "last_updated": "2026-05-23",
       "gap": "Es lo que estamos construyendo ahora"
     },
@@ -353,32 +544,47 @@
       "status": "ACTIVE",
       "loc": 450,
       "connections_in": [],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [9, 0],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        9,
+        0
+      ],
       "last_updated": "2026-05-21"
     },
     {
       "id": "whatsapp",
-      "district": "interfaces",
+      "district": "futuro",
       "label": "WhatsApp",
       "description": "Hablar con el Monstruo por WhatsApp — futuro",
       "status": "FUTURE",
-      "loc": 0,
+      "loc": 100,
       "connections_in": [],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [6, 1],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        11,
+        2
+      ],
       "last_updated": "2026-05-21"
     },
     {
       "id": "apple_watch",
-      "district": "interfaces",
+      "district": "futuro",
       "label": "Apple Watch",
       "description": "Alertas y comandos rápidos desde la muñeca — futuro",
       "status": "FUTURE",
-      "loc": 0,
+      "loc": 80,
       "connections_in": [],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [7, 1],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        12,
+        2
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -388,9 +594,14 @@
       "description": "Se adapta automáticamente al dispositivo y contexto del usuario",
       "status": "ACTIVE",
       "loc": 150,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [8, 1],
+      "grid_position": [
+        8,
+        1
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -399,10 +610,22 @@
       "label": "Base de Datos",
       "description": "Donde vive toda la información — 169 tablas con millones de datos",
       "status": "ACTIVE",
-      "loc": 0,
-      "connections_in": ["memory_sovereign", "anti_dory", "catastro", "embrion_loop", "lightrag"],
-      "connections_out": ["memory_sovereign", "embrion_loop"],
-      "grid_position": [1, 7],
+      "loc": 600,
+      "connections_in": [
+        "memory_sovereign",
+        "anti_dory",
+        "catastro",
+        "embrion_loop",
+        "lightrag"
+      ],
+      "connections_out": [
+        "memory_sovereign",
+        "embrion_loop"
+      ],
+      "grid_position": [
+        1,
+        7
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -411,10 +634,15 @@
       "label": "Servidores",
       "description": "Los servidores donde corre el Monstruo — Railway Cloud",
       "status": "ACTIVE",
-      "loc": 0,
+      "loc": 200,
       "connections_in": [],
-      "connections_out": ["kernel_health"],
-      "grid_position": [2, 7],
+      "connections_out": [
+        "kernel_health"
+      ],
+      "grid_position": [
+        2,
+        7
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -424,9 +652,17 @@
       "description": "Vigila que todo funcione — si algo falla, alerta inmediata",
       "status": "ACTIVE",
       "loc": 200,
-      "connections_in": ["railway"],
-      "connections_out": ["alerts", "command_center"],
-      "grid_position": [3, 7],
+      "connections_in": [
+        "railway"
+      ],
+      "connections_out": [
+        "alerts",
+        "command_center"
+      ],
+      "grid_position": [
+        3,
+        7
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -438,7 +674,10 @@
       "loc": 180,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [0, 7],
+      "grid_position": [
+        0,
+        7
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -450,7 +689,10 @@
       "loc": 150,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [0, 8],
+      "grid_position": [
+        0,
+        8
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -461,8 +703,13 @@
       "status": "ACTIVE",
       "loc": 996,
       "connections_in": [],
-      "connections_out": ["alerts"],
-      "grid_position": [4, 7],
+      "connections_out": [
+        "alerts"
+      ],
+      "grid_position": [
+        4,
+        7
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -472,9 +719,15 @@
       "description": "Sistema de notificaciones — avisa cuando algo necesita atención",
       "status": "ACTIVE",
       "loc": 280,
-      "connections_in": ["kernel_health", "guardian_runner"],
+      "connections_in": [
+        "kernel_health",
+        "guardian_runner"
+      ],
       "connections_out": [],
-      "grid_position": [4, 8],
+      "grid_position": [
+        4,
+        8
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -485,8 +738,14 @@
       "status": "ACTIVE",
       "loc": 400,
       "connections_in": [],
-      "connections_out": ["knowledge_graph", "supabase"],
-      "grid_position": [1, 8],
+      "connections_out": [
+        "knowledge_graph",
+        "supabase"
+      ],
+      "grid_position": [
+        1,
+        8
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -495,10 +754,15 @@
       "label": "Observabilidad",
       "description": "Registra todo lo que hace el Monstruo — para aprender y mejorar",
       "status": "ACTIVE",
-      "loc": 0,
-      "connections_in": ["embrion_loop"],
+      "loc": 250,
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [2, 8],
+      "grid_position": [
+        2,
+        8
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -509,8 +773,13 @@
       "status": "ACTIVE",
       "loc": 350,
       "connections_in": [],
-      "connections_out": ["cost_optimizer"],
-      "grid_position": [3, 8],
+      "connections_out": [
+        "cost_optimizer"
+      ],
+      "grid_position": [
+        3,
+        8
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -520,9 +789,16 @@
       "description": "Guarda el estado de cada conversación — puede retomar donde se quedó",
       "status": "ACTIVE",
       "loc": 150,
-      "connections_in": ["embrion_loop"],
-      "connections_out": ["supabase"],
-      "grid_position": [1, 9],
+      "connections_in": [
+        "embrion_loop"
+      ],
+      "connections_out": [
+        "supabase"
+      ],
+      "grid_position": [
+        1,
+        9
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -532,9 +808,14 @@
       "description": "Generador de imágenes premium — la única IA de imágenes activa",
       "status": "ACTIVE",
       "loc": 600,
-      "connections_in": ["embrion_creativo"],
+      "connections_in": [
+        "embrion_creativo"
+      ],
       "connections_out": [],
-      "grid_position": [6, 8],
+      "grid_position": [
+        6,
+        8
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -546,7 +827,10 @@
       "loc": 408,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [7, 8],
+      "grid_position": [
+        7,
+        8
+      ],
       "last_updated": "2026-05-21",
       "gap": "Diagnóstico funciona, implementación pendiente"
     },
@@ -559,7 +843,10 @@
       "loc": 531,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [8, 8],
+      "grid_position": [
+        8,
+        8
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -571,7 +858,10 @@
       "loc": 380,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [9, 8],
+      "grid_position": [
+        9,
+        8
+      ],
       "last_updated": "2026-05-21",
       "gap": "Solo diagnóstico, sin conexión a Meta/Google Ads"
     },
@@ -584,44 +874,56 @@
       "loc": 241,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [6, 9],
+      "grid_position": [
+        6,
+        9
+      ],
       "last_updated": "2026-05-21",
       "gap": "Solo diagnóstico, sin conexión a Google Trends"
     },
     {
       "id": "transversales_operaciones",
-      "district": "capacidades",
+      "district": "futuro",
       "label": "Motor de Operaciones",
       "description": "Automatiza procesos operativos de cada proyecto",
       "status": "FUTURE",
-      "loc": 0,
+      "loc": 150,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [7, 9],
+      "grid_position": [
+        12,
+        1
+      ],
       "last_updated": "2026-05-21"
     },
     {
       "id": "transversales_finanzas",
-      "district": "capacidades",
+      "district": "futuro",
       "label": "Motor Financiero",
       "description": "Proyecciones y control de dinero para cada proyecto",
       "status": "FUTURE",
-      "loc": 0,
+      "loc": 150,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [8, 9],
+      "grid_position": [
+        11,
+        1
+      ],
       "last_updated": "2026-05-21"
     },
     {
       "id": "transversales_resiliencia",
-      "district": "capacidades",
+      "district": "futuro",
       "label": "Resiliencia",
       "description": "Auto-protección del sistema — que nunca falle",
       "status": "FUTURE",
-      "loc": 0,
+      "loc": 200,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [9, 9],
+      "grid_position": [
+        12,
+        0
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -633,7 +935,10 @@
       "loc": 800,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [6, 10],
+      "grid_position": [
+        6,
+        10
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -643,9 +948,16 @@
       "description": "Recuerda cada error para no repetirlo jamás",
       "status": "ACTIVE",
       "loc": 858,
-      "connections_in": ["embrion_loop"],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [3, 3],
+      "connections_in": [
+        "embrion_loop"
+      ],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        3,
+        3
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -656,8 +968,13 @@
       "status": "ACTIVE",
       "loc": 450,
       "connections_in": [],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [4, 3],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        4,
+        3
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -668,8 +985,13 @@
       "status": "ACTIVE",
       "loc": 380,
       "connections_in": [],
-      "connections_out": ["embrion_brand"],
-      "grid_position": [9, 7],
+      "connections_out": [
+        "embrion_brand"
+      ],
+      "grid_position": [
+        9,
+        7
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -679,9 +1001,14 @@
       "description": "Reglas visuales que todo lo que crea el Monstruo debe seguir",
       "status": "ACTIVE",
       "loc": 250,
-      "connections_in": ["brand_dna"],
+      "connections_in": [
+        "brand_dna"
+      ],
       "connections_out": [],
-      "grid_position": [8, 10],
+      "grid_position": [
+        8,
+        10
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -692,8 +1019,13 @@
       "status": "ACTIVE",
       "loc": 780,
       "connections_in": [],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [2, 9],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        2,
+        9
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -703,9 +1035,16 @@
       "description": "Ejecuta trabajos en segundo plano — sprints, migraciones, auditorías",
       "status": "ACTIVE",
       "loc": 450,
-      "connections_in": ["embrion_loop"],
-      "connections_out": ["supabase"],
-      "grid_position": [3, 9],
+      "connections_in": [
+        "embrion_loop"
+      ],
+      "connections_out": [
+        "supabase"
+      ],
+      "grid_position": [
+        3,
+        9
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -717,7 +1056,10 @@
       "loc": 120,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [4, 9],
+      "grid_position": [
+        4,
+        9
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -729,7 +1071,10 @@
       "loc": 350,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [0, 9],
+      "grid_position": [
+        0,
+        9
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -739,9 +1084,14 @@
       "description": "Diseña la estructura de nuevos productos y plataformas",
       "status": "ACTIVE",
       "loc": 400,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [7, 10],
+      "grid_position": [
+        7,
+        10
+      ],
       "last_updated": "2026-05-21",
       "gap": "Sin memoria propia"
     },
@@ -752,9 +1102,14 @@
       "description": "Evalúa si lo que se crea cumple el estándar Apple/Tesla de calidad",
       "status": "ACTIVE",
       "loc": 350,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [9, 10],
+      "grid_position": [
+        9,
+        10
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -765,8 +1120,13 @@
       "status": "ACTIVE",
       "loc": 300,
       "connections_in": [],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [9, 1],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        9,
+        1
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -776,9 +1136,14 @@
       "description": "Memoria de acceso rápido — recuerdos frecuentes al instante",
       "status": "ACTIVE",
       "loc": 200,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [0, 4],
+      "grid_position": [
+        0,
+        4
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -788,9 +1153,16 @@
       "description": "Actualiza lo que el Monstruo cree cuando hay nueva evidencia",
       "status": "ACTIVE",
       "loc": 300,
-      "connections_in": ["memory_sovereign"],
-      "connections_out": ["memory_sovereign"],
-      "grid_position": [0, 0],
+      "connections_in": [
+        "memory_sovereign"
+      ],
+      "connections_out": [
+        "memory_sovereign"
+      ],
+      "grid_position": [
+        0,
+        0
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -801,8 +1173,13 @@
       "status": "ACTIVE",
       "loc": 180,
       "connections_in": [],
-      "connections_out": ["embrion_loop"],
-      "grid_position": [6, 2],
+      "connections_out": [
+        "embrion_loop"
+      ],
+      "grid_position": [
+        6,
+        2
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -812,9 +1189,14 @@
       "description": "El Monstruo puede navegar internet como un humano",
       "status": "ACTIVE",
       "loc": 150,
-      "connections_in": ["embrion_loop"],
+      "connections_in": [
+        "embrion_loop"
+      ],
       "connections_out": [],
-      "grid_position": [7, 2],
+      "grid_position": [
+        7,
+        2
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -826,7 +1208,10 @@
       "loc": 280,
       "connections_in": [],
       "connections_out": [],
-      "grid_position": [0, 10],
+      "grid_position": [
+        0,
+        10
+      ],
       "last_updated": "2026-05-21"
     },
     {
@@ -835,11 +1220,60 @@
       "label": "Migraciones",
       "description": "53 cambios a la base de datos — cada uno versionado y reversible",
       "status": "ACTIVE",
-      "loc": 0,
+      "loc": 800,
       "connections_in": [],
-      "connections_out": ["supabase"],
-      "grid_position": [1, 10],
+      "connections_out": [
+        "supabase"
+      ],
+      "grid_position": [
+        1,
+        10
+      ],
       "last_updated": "2026-05-21"
+    },
+    {
+      "id": "el_monstruo_bridge",
+      "label": "Bridge Inter-Hilos",
+      "district": "cognicion",
+      "status": "ACTIVE",
+      "loc": 4500,
+      "description": "Puente de comunicación entre hilos Manus de cuentas distintas. Permite orquestación multi-cuenta y memoria compartida.",
+      "connections": [
+        "kernel",
+        "memoria",
+        "auditor"
+      ],
+      "tags": [
+        "bridge",
+        "multi-cuenta",
+        "orquestación"
+      ],
+      "grid_position": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "monstruo_quantum_realm",
+      "label": "Quantum Realm v2.0",
+      "district": "interfaces",
+      "status": "SPRINT",
+      "loc": 1800,
+      "description": "Tablero de Campaña — esta misma interfaz. El Monstruo viéndose a sí mismo y permitiendo a su creador construirlo.",
+      "connections": [
+        "kernel",
+        "la_forja",
+        "memoria"
+      ],
+      "tags": [
+        "interface",
+        "meta",
+        "forja"
+      ],
+      "grid_position": [
+        7,
+        0
+      ]
     }
   ]
 }
