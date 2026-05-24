@@ -1,0 +1,2064 @@
+{
+  "metadata": {
+    "generated_at": "2026-05-24T03:03:05.709564+00:00",
+    "generated_by": "scripts/build_visual_ledger.py",
+    "source_mode": "canonical_mount",
+    "source_files": [
+      "/mnt/desktop/el-monstruo/kernel/catastro/data/catastro_agentes.json",
+      "/mnt/desktop/el-monstruo/kernel/catastro/data/catastro_tools.json",
+      "/mnt/desktop/el-monstruo/kernel/catastro/data/catastro_suppliers.json"
+    ],
+    "total_nodes": 82,
+    "total_agentes": 21,
+    "total_tools": 25,
+    "total_suppliers": 36,
+    "operable_count": 1,
+    "synthetic_count": 1,
+    "policy": "DSC-G-008 cero drift — fuente única de verdad",
+    "version": "1.0.0"
+  },
+  "districts": [
+    {
+      "key": "AGENTES",
+      "label": "Agentes",
+      "subtitle": "Entidades cognitivas con autonomía parcial",
+      "color": "#FF7A1A",
+      "grid_origin": [
+        0,
+        0
+      ]
+    },
+    {
+      "key": "TOOLS",
+      "label": "Herramientas",
+      "subtitle": "Capacidades ejecutables sin voluntad propia",
+      "color": "#4FC3F7",
+      "grid_origin": [
+        12,
+        0
+      ]
+    },
+    {
+      "key": "SUPPLIERS",
+      "label": "Proveedores",
+      "subtitle": "Infraestructura, motores y aliados externos",
+      "color": "#9CCC65",
+      "grid_origin": [
+        24,
+        0
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "key": "AGENTE::agentic_browser",
+      "entity_type": "AGENTE",
+      "category": "agentic_browser",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::agentic_research_assistant",
+      "entity_type": "AGENTE",
+      "category": "agentic_research_assistant",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::autonomous_software_engineer",
+      "entity_type": "AGENTE",
+      "category": "autonomous_software_engineer",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::browser_automation_agent",
+      "entity_type": "AGENTE",
+      "category": "browser_automation_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::browser_research_agent",
+      "entity_type": "AGENTE",
+      "category": "browser_research_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::computer_use_agent",
+      "entity_type": "AGENTE",
+      "category": "computer_use_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::consumer_assistant",
+      "entity_type": "AGENTE",
+      "category": "consumer_assistant",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::embodied_robotics_agent",
+      "entity_type": "AGENTE",
+      "category": "embodied_robotics_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::enterprise_search_assistant",
+      "entity_type": "AGENTE",
+      "category": "enterprise_search_assistant",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::general_purpose_agent_platform",
+      "entity_type": "AGENTE",
+      "category": "general_purpose_agent_platform",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::humanoid_robotics_agent",
+      "entity_type": "AGENTE",
+      "category": "humanoid_robotics_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::ide_extension_coding_agent",
+      "entity_type": "AGENTE",
+      "category": "ide_extension_coding_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::ide_native_aws_coding_agent",
+      "entity_type": "AGENTE",
+      "category": "ide_native_aws_coding_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::ide_native_coding_agent",
+      "entity_type": "AGENTE",
+      "category": "ide_native_coding_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::long_context_agentic_llm",
+      "entity_type": "AGENTE",
+      "category": "long_context_agentic_llm",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::managed_cloud_coding_agent",
+      "entity_type": "AGENTE",
+      "category": "managed_cloud_coding_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::no_code_workflow_agent",
+      "entity_type": "AGENTE",
+      "category": "no_code_workflow_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::open_source_general_agent",
+      "entity_type": "AGENTE",
+      "category": "open_source_general_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::open_source_gui_agent",
+      "entity_type": "AGENTE",
+      "category": "open_source_gui_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::specialized_research_agent",
+      "entity_type": "AGENTE",
+      "category": "specialized_research_agent",
+      "count": 1
+    },
+    {
+      "key": "AGENTE::voice_first_agent",
+      "entity_type": "AGENTE",
+      "category": "voice_first_agent",
+      "count": 1
+    },
+    {
+      "key": "SUPPLIER::agencias_marketing_branding",
+      "entity_type": "SUPPLIER",
+      "category": "agencias_marketing_branding",
+      "count": 5
+    },
+    {
+      "key": "SUPPLIER::camaras_y_colegios",
+      "entity_type": "SUPPLIER",
+      "category": "camaras_y_colegios",
+      "count": 5
+    },
+    {
+      "key": "SUPPLIER::desarrolladoras_software_ti",
+      "entity_type": "SUPPLIER",
+      "category": "desarrolladoras_software_ti",
+      "count": 4
+    },
+    {
+      "key": "SUPPLIER::despachos_contables_fiscales",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_contables_fiscales",
+      "count": 5
+    },
+    {
+      "key": "SUPPLIER::despachos_legales_notarias",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_legales_notarias",
+      "count": 5
+    },
+    {
+      "key": "SUPPLIER::estudios_arquitectura_interiores",
+      "entity_type": "SUPPLIER",
+      "category": "estudios_arquitectura_interiores",
+      "count": 5
+    },
+    {
+      "key": "SUPPLIER::imprentas_eventos_catering_logistica",
+      "entity_type": "SUPPLIER",
+      "category": "imprentas_eventos_catering_logistica",
+      "count": 4
+    },
+    {
+      "key": "SUPPLIER::productoras_audiovisuales",
+      "entity_type": "SUPPLIER",
+      "category": "productoras_audiovisuales",
+      "count": 3
+    },
+    {
+      "key": "TOOL::ai_search_rag",
+      "entity_type": "TOOL",
+      "category": "ai_search_rag",
+      "count": 3
+    },
+    {
+      "key": "TOOL::code_generation",
+      "entity_type": "TOOL",
+      "category": "code_generation",
+      "count": 3
+    },
+    {
+      "key": "TOOL::data_extraction_web_scraping",
+      "entity_type": "TOOL",
+      "category": "data_extraction_web_scraping",
+      "count": 3
+    },
+    {
+      "key": "TOOL::document_parsing",
+      "entity_type": "TOOL",
+      "category": "document_parsing",
+      "count": 3
+    },
+    {
+      "key": "TOOL::image_generation",
+      "entity_type": "TOOL",
+      "category": "image_generation",
+      "count": 4
+    },
+    {
+      "key": "TOOL::renderers_3d_ai",
+      "entity_type": "TOOL",
+      "category": "renderers_3d_ai",
+      "count": 3
+    },
+    {
+      "key": "TOOL::video_generation",
+      "entity_type": "TOOL",
+      "category": "video_generation",
+      "count": 3
+    },
+    {
+      "key": "TOOL::voice_ai",
+      "entity_type": "TOOL",
+      "category": "voice_ai",
+      "count": 3
+    }
+  ],
+  "nodes": [
+    {
+      "id": "agt_agent_s",
+      "name": "Agent S",
+      "entity_type": "AGENTE",
+      "category": "computer_use_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Simular AI",
+      "version": "v3.0",
+      "description": "Generalist computer use agent open-source con jerárquica manager-worker para automatizar GUI multi-OS",
+      "lessons": "Patrón manager-worker para descomponer tareas largas; reflection loop tras cada subtask",
+      "interfaces": [
+        "api_python",
+        "open_source_github"
+      ],
+      "auth_pattern": "self_hosted_api_key",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_AGENT_S.md",
+      "biblia_size_bytes": 69916,
+      "synthetic": false,
+      "grid_position": [
+        5,
+        0
+      ]
+    },
+    {
+      "id": "agt_claude_code",
+      "name": "Claude Code",
+      "entity_type": "AGENTE",
+      "category": "ide_native_coding_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Anthropic",
+      "version": "v2.x",
+      "description": "Coding agent CLI nativo con file system access directo + integración MCP",
+      "lessons": "Tool harness con sandboxing por proceso; MCP como protocolo de extensión universal",
+      "interfaces": [
+        "cli",
+        "mcp_server",
+        "anthropic_api"
+      ],
+      "auth_pattern": "api_key_env_var",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_CLAUDE_CODE.md",
+      "biblia_size_bytes": 65761,
+      "synthetic": false,
+      "grid_position": [
+        3,
+        1
+      ]
+    },
+    {
+      "id": "agt_claude_cowork",
+      "name": "Claude Cowork",
+      "entity_type": "AGENTE",
+      "category": "managed_cloud_coding_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Anthropic",
+      "version": "v1.x",
+      "description": "Cloud-managed coding agent con OAuth proxy a herramientas MCP externas — credenciales NUNCA en el harness",
+      "lessons": "Patrón OAuth proxy para credenciales: el harness nunca ve tokens, solo el proxy consulta el vault. Aplicar al kernel del Monstruo.",
+      "interfaces": [
+        "cloud_dashboard",
+        "mcp_proxy",
+        "anthropic_api"
+      ],
+      "auth_pattern": "oauth_proxy_with_vault",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_CLAUDE_COWORK.md",
+      "biblia_size_bytes": 48080,
+      "synthetic": false,
+      "grid_position": [
+        5,
+        1
+      ]
+    },
+    {
+      "id": "agt_cline",
+      "name": "Cline",
+      "entity_type": "AGENTE",
+      "category": "ide_extension_coding_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Cline (open source)",
+      "version": "v3.81",
+      "description": "Coding agent open-source human-in-the-loop con integración profunda VS Code + browser use + MCP dinámico",
+      "lessons": "MCP dinámico: el agente puede generar nuevos servidores MCP on-demand desde descripción humana. Patrón 'add a tool' para extensibilidad.",
+      "interfaces": [
+        "vscode_extension",
+        "mcp_dynamic",
+        "openrouter"
+      ],
+      "auth_pattern": "byo_llm_api_key",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_CLINE.md",
+      "biblia_size_bytes": 93514,
+      "synthetic": false,
+      "grid_position": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "agt_devin",
+      "name": "Devin",
+      "entity_type": "AGENTE",
+      "category": "autonomous_software_engineer",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Cognition AI",
+      "version": "v2.2",
+      "description": "Autonomous software engineer con planning + execution + self-correction multi-step largo",
+      "lessons": "Planning explícito con plan visible al humano antes de ejecutar; ChatOps como interfaz primaria",
+      "interfaces": [
+        "slack",
+        "web_dashboard",
+        "rest_api"
+      ],
+      "auth_pattern": "saas_oauth",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_DEVIN.md",
+      "biblia_size_bytes": 84884,
+      "synthetic": false,
+      "grid_position": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": "agt_gemini_robotics",
+      "name": "Gemini Robotics",
+      "entity_type": "AGENTE",
+      "category": "embodied_robotics_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Google DeepMind",
+      "version": "v2.x",
+      "description": "Multimodal embodied agent para robots físicos con vision-language-action model (VLA)",
+      "lessons": "Safety layer separado del modelo principal; loop de control de baja latencia para acciones que tocan el mundo físico/digital",
+      "interfaces": [
+        "gemini_api",
+        "robotics_sdk"
+      ],
+      "auth_pattern": "google_oauth",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_GEMINI_ROBOTICS.md",
+      "biblia_size_bytes": 70082,
+      "synthetic": false,
+      "grid_position": [
+        7,
+        0
+      ]
+    },
+    {
+      "id": "agt_grok_voice",
+      "name": "Grok Voice",
+      "entity_type": "AGENTE",
+      "category": "voice_first_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "xAI",
+      "version": "v4.x",
+      "description": "Voice-first agent con baja latencia conversacional + acceso real-time X (Twitter)",
+      "lessons": "Voice como interfaz primaria reduce fricción; acceso real-time a fuentes vivas como ventaja diferencial",
+      "interfaces": [
+        "xai_api",
+        "voice_stream"
+      ],
+      "auth_pattern": "api_key_env_var",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_GROK_VOICE.md",
+      "biblia_size_bytes": 62902,
+      "synthetic": false,
+      "grid_position": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "agt_hermes_agent",
+      "name": "Hermes Agent",
+      "entity_type": "AGENTE",
+      "category": "open_source_general_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Nous Research",
+      "version": "v3.x",
+      "description": "Open-source agent con steerable system prompt + structured outputs + tool calling robusto",
+      "lessons": "System prompt steering como mecanismo de gobernanza del comportamiento del agente; JSON mode para outputs auditables",
+      "interfaces": [
+        "self_host",
+        "hf_inference",
+        "openrouter"
+      ],
+      "auth_pattern": "byo_inference_endpoint",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_HERMES_AGENT.md",
+      "biblia_size_bytes": 103910,
+      "synthetic": false,
+      "grid_position": [
+        7,
+        1
+      ]
+    },
+    {
+      "id": "agt_kimi_k26",
+      "name": "Kimi K2.6",
+      "entity_type": "AGENTE",
+      "category": "long_context_agentic_llm",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Moonshot AI",
+      "version": "v2.6",
+      "description": "Long-context agentic LLM con 200K+ tokens + tool use nativo + razonamiento extendido",
+      "lessons": "Long context permite agentes que recuerdan toda la sesión sin RAG; tool calling nativo como ciudadano de primera clase",
+      "interfaces": [
+        "moonshot_api",
+        "openrouter"
+      ],
+      "auth_pattern": "api_key_env_var",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_KIMI_K2.6.md",
+      "biblia_size_bytes": 87874,
+      "synthetic": false,
+      "grid_position": [
+        4,
+        1
+      ]
+    },
+    {
+      "id": "agt_kiro",
+      "name": "Kiro",
+      "entity_type": "AGENTE",
+      "category": "ide_native_aws_coding_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "AWS",
+      "version": "v1.x",
+      "description": "AWS-native coding agent con integración profunda CDK + CloudFormation + spec-driven development",
+      "lessons": "Spec-driven workflow: el agente parte de una spec versionable, no de prompts efímeros — alineado con DSC-G-007",
+      "interfaces": [
+        "vscode_fork",
+        "bedrock_api"
+      ],
+      "auth_pattern": "aws_iam",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_KIRO.md",
+      "biblia_size_bytes": 76272,
+      "synthetic": false,
+      "grid_position": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "agt_laguna_xs2",
+      "name": "Laguna XS2",
+      "entity_type": "AGENTE",
+      "category": "specialized_research_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Laguna AI",
+      "version": "v2.x",
+      "description": "Research agent especializado en deep research multi-source con citation graph",
+      "lessons": "Citation graph para auditar de dónde vino cada claim; cross-source validation para detectar contradicciones",
+      "interfaces": [
+        "web_dashboard",
+        "rest_api"
+      ],
+      "auth_pattern": "saas_oauth",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_LAGUNA_XS2.md",
+      "biblia_size_bytes": 51845,
+      "synthetic": false,
+      "grid_position": [
+        9,
+        1
+      ]
+    },
+    {
+      "id": "agt_lindy",
+      "name": "Lindy",
+      "entity_type": "AGENTE",
+      "category": "no_code_workflow_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Lindy.ai",
+      "version": "v3.x",
+      "description": "No-code agent builder visual con triggers + actions + integraciones SaaS pre-baked",
+      "lessons": "Visual workflow editor como surface no-code; trigger-based architecture para agentes reactivos",
+      "interfaces": [
+        "web_dashboard",
+        "webhooks"
+      ],
+      "auth_pattern": "saas_oauth_per_integration",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_LINDY.md",
+      "biblia_size_bytes": 75104,
+      "synthetic": false,
+      "grid_position": [
+        6,
+        1
+      ]
+    },
+    {
+      "id": "agt_manus",
+      "name": "Manus",
+      "entity_type": "AGENTE",
+      "category": "general_purpose_agent_platform",
+      "status": "vigente_2026_self_referencia",
+      "is_operable": false,
+      "provider": "Manus team",
+      "version": "v3 (referencia)",
+      "description": "General-purpose agent con sandbox virtual + filesystem persistente + tool ecosystem amplio + skills modulares",
+      "lessons": "Skills modulares como abstracción de capacidades; sandbox VM como aislamiento; tool harness universal. Esta es la biblia de referencia más rica del catastro (319KB).",
+      "interfaces": [
+        "web_dashboard",
+        "manus_api",
+        "mcp_servers"
+      ],
+      "auth_pattern": "manus_session_oauth",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_MANUS_v3_REFERENCIA.md",
+      "biblia_size_bytes": 319579,
+      "synthetic": false,
+      "grid_position": [
+        9,
+        0
+      ]
+    },
+    {
+      "id": "agt_meta_ai_agent",
+      "name": "Meta AI Agent",
+      "entity_type": "AGENTE",
+      "category": "consumer_assistant",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Meta",
+      "version": "v2.x",
+      "description": "Consumer-grade assistant integrado en WhatsApp/Instagram/Messenger con Llama 4",
+      "lessons": "Distribución masiva via apps existentes (WhatsApp es el canal real en LATAM); voice/image como inputs naturales",
+      "interfaces": [
+        "whatsapp",
+        "instagram",
+        "ray_ban_glasses"
+      ],
+      "auth_pattern": "meta_oauth",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_META_AI_AGENT.md",
+      "biblia_size_bytes": 61674,
+      "synthetic": false,
+      "grid_position": [
+        6,
+        0
+      ]
+    },
+    {
+      "id": "agt_metis",
+      "name": "Metis",
+      "entity_type": "AGENTE",
+      "category": "agentic_research_assistant",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "OpenAI",
+      "version": "v1.x",
+      "description": "Agentic research assistant con multi-step deep research + structured report output",
+      "lessons": "Multi-step research con plan visible; report synthesis estructurado con citations auditables",
+      "interfaces": [
+        "chatgpt_pro",
+        "openai_api"
+      ],
+      "auth_pattern": "openai_api_key",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_METIS.md",
+      "biblia_size_bytes": 90951,
+      "synthetic": false,
+      "grid_position": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "agt_neo",
+      "name": "Neo",
+      "entity_type": "AGENTE",
+      "category": "humanoid_robotics_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "1X Technologies",
+      "version": "v1.x",
+      "description": "Humanoid robot con embodied AI para tareas domésticas — primer humanoid commercial-grade 2026",
+      "lessons": "Teleop fallback como safety: cuando el agente no sabe, escala a humano remoto. Aplicable al kernel: HITL como escalación natural.",
+      "interfaces": [
+        "1x_console",
+        "robotics_sdk"
+      ],
+      "auth_pattern": "1x_oauth",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_NEO.md",
+      "biblia_size_bytes": 59742,
+      "synthetic": false,
+      "grid_position": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "agt_openai_operator",
+      "name": "OpenAI Operator",
+      "entity_type": "AGENTE",
+      "category": "browser_automation_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "OpenAI",
+      "version": "v2.x",
+      "description": "Browser automation agent con CUA (Computer Use Agent) en cloud — autonomous web tasks",
+      "lessons": "CUA model especializado en visión + acción en pixel-space; safety filters separados del modelo principal",
+      "interfaces": [
+        "chatgpt_operator",
+        "openai_api"
+      ],
+      "auth_pattern": "openai_api_key",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_OPENAI_OPERATOR.md",
+      "biblia_size_bytes": 81428,
+      "synthetic": false,
+      "grid_position": [
+        3,
+        0
+      ]
+    },
+    {
+      "id": "agt_perplexity_computer",
+      "name": "Perplexity Comet",
+      "entity_type": "AGENTE",
+      "category": "agentic_browser",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Perplexity",
+      "version": "v1.x",
+      "description": "Agentic browser con búsqueda en tiempo real + automatización de tareas web nativas",
+      "lessons": "Browser-as-agent: en lugar de un agente que controla un browser externo, el browser ES el agente. UX más fluida.",
+      "interfaces": [
+        "comet_browser",
+        "perplexity_api"
+      ],
+      "auth_pattern": "perplexity_oauth",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_PERPLEXITY_COMPUTER.md",
+      "biblia_size_bytes": 68838,
+      "synthetic": false,
+      "grid_position": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "agt_perplexity_enterprise",
+      "name": "Perplexity Enterprise",
+      "entity_type": "AGENTE",
+      "category": "enterprise_search_assistant",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Perplexity",
+      "version": "v1.x",
+      "description": "Enterprise search con conectores SaaS internos + answer synthesis + citation tracking + RBAC",
+      "lessons": "Enterprise connectors como dominio claro; RBAC layer obligatorio para datos sensibles",
+      "interfaces": [
+        "perplexity_enterprise",
+        "sonar_api"
+      ],
+      "auth_pattern": "enterprise_sso_saml",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_PERPLEXITY_ENTERPRISE.md",
+      "biblia_size_bytes": 59844,
+      "synthetic": false,
+      "grid_position": [
+        8,
+        0
+      ]
+    },
+    {
+      "id": "agt_project_mariner",
+      "name": "Project Mariner",
+      "entity_type": "AGENTE",
+      "category": "browser_research_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Google DeepMind",
+      "version": "v2.x",
+      "description": "Browser research agent con Gemini en Chrome para tareas multi-tab simultáneas",
+      "lessons": "Multi-tab orchestration: una tarea = N tabs paralelos coordinados. Patrón parallel research.",
+      "interfaces": [
+        "chrome_extension",
+        "gemini_api"
+      ],
+      "auth_pattern": "google_oauth",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_PROJECT_MARINER.md",
+      "biblia_size_bytes": 57270,
+      "synthetic": false,
+      "grid_position": [
+        4,
+        0
+      ]
+    },
+    {
+      "id": "agt_ui_tars",
+      "name": "UI-TARS",
+      "entity_type": "AGENTE",
+      "category": "open_source_gui_agent",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "ByteDance",
+      "version": "v1.5",
+      "description": "Open-source GUI agent end-to-end con vision-language model especializado en pixel-perfect actions",
+      "lessons": "VLM end-to-end (vs. modelo general + tool de visión separados) reduce fricción; pixel-perfect grounding como capability core",
+      "interfaces": [
+        "self_host",
+        "hf_inference"
+      ],
+      "auth_pattern": "byo_inference_endpoint",
+      "biblia_path": "docs/biblias_agentes_2026/BIBLIA_UI_TARS.md",
+      "biblia_size_bytes": 82736,
+      "synthetic": false,
+      "grid_position": [
+        8,
+        1
+      ]
+    },
+    {
+      "id": "tool_hyper3d_rodin",
+      "name": "Hyper3D.ai (Rodin)",
+      "entity_type": "TOOL",
+      "category": "renderers_3d_ai",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "DeemosTech",
+      "url": "https://hyper3d.ai",
+      "pricing": "Free para generar, pay-per-download",
+      "description": "Closest to production-ready 3D assets with clean quad topology and PBR textures",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Hunyuan3D"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        18,
+        1
+      ]
+    },
+    {
+      "id": "tool_meshy_ai",
+      "name": "Meshy AI",
+      "entity_type": "TOOL",
+      "category": "renderers_3d_ai",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Meshy",
+      "url": "https://www.meshy.ai",
+      "pricing": "Free tier / Pro $20/mes",
+      "description": "Fast iteration con plugins establecidos para Blender, Unity y Unreal",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Hunyuan3D"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        19,
+        1
+      ]
+    },
+    {
+      "id": "tool_tripo_ai",
+      "name": "Tripo AI",
+      "entity_type": "TOOL",
+      "category": "renderers_3d_ai",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Tripo",
+      "url": "https://www.tripo3d.ai",
+      "pricing": "Free tier / Professional $15.9/mes",
+      "description": "Game-ready topology y auto-rigging para gamedev rapido",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Hunyuan3D"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        20,
+        1
+      ]
+    },
+    {
+      "id": "tool_google_veo_31",
+      "name": "Google Veo 3.1",
+      "entity_type": "TOOL",
+      "category": "video_generation",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Google",
+      "url": "https://cloud.google.com/veo",
+      "pricing": "100 free credits/mes; AI Pro $19.99/mes (1k credits); Ultra $249.99/mes (25k credits)",
+      "description": "Calidad alta, prompt adherence fuerte, real-time rendering, herramientas creativas extensivas",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Mochi 1 (Genmo)"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        21,
+        1
+      ]
+    },
+    {
+      "id": "tool_runway_gen45",
+      "name": "Runway Gen-4.5",
+      "entity_type": "TOOL",
+      "category": "video_generation",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Runway ML",
+      "url": "https://runwayml.com/",
+      "pricing": "Free 125 credits; Standard $15/mes (625 credits); Pro $35/mes; Unlimited $95/mes",
+      "description": "Camera controls avanzados, multi-motion brush, custom AI training para filmmakers",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Aleph"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        12,
+        2
+      ]
+    },
+    {
+      "id": "tool_openai_sora_2",
+      "name": "Sora 2",
+      "entity_type": "TOOL",
+      "category": "video_generation",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "OpenAI",
+      "url": "https://openai.com/sora",
+      "pricing": "Incluido en ChatGPT Plus $20/mes (limitado) o Pro $200/mes",
+      "description": "Long-form video con narrative y temporal consistency fuertes",
+      "api_available": "waitlist",
+      "maturity": "beta",
+      "oss_alternatives": [
+        "Mochi 1"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        13,
+        2
+      ]
+    },
+    {
+      "id": "tool_elevenlabs_v3",
+      "name": "ElevenLabs v3",
+      "entity_type": "TOOL",
+      "category": "voice_ai",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "ElevenLabs",
+      "url": "https://elevenlabs.io",
+      "pricing": "Free / Starter $6/mes / Creator $11/mes / Pro $99/mes",
+      "description": "Voice cloning profesional y TTS multilingüe alta calidad",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Coqui TTS",
+        "Bark"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        15,
+        2
+      ]
+    },
+    {
+      "id": "tool_openai_voice_engine",
+      "name": "OpenAI Voice Engine",
+      "entity_type": "TOOL",
+      "category": "voice_ai",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "OpenAI",
+      "url": "https://openai.com/api/pricing/",
+      "pricing": "Audio input $32/1M tokens, output $64/1M tokens (gpt-realtime-1.5)",
+      "description": "Voz tiempo real con latencia ultra baja integrada con LLMs",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Whisper (STT)",
+        "VITS"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        16,
+        2
+      ]
+    },
+    {
+      "id": "tool_cartesia_sonic3",
+      "name": "Cartesia Sonic-3",
+      "entity_type": "TOOL",
+      "category": "voice_ai",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Cartesia",
+      "url": "https://cartesia.ai",
+      "pricing": "Free / Pro $4/mes / Startup $39/mes / Scale $239/mes",
+      "description": "TTS latencia ultra baja (90ms) optimizado para agentes conversacionales",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Parler-TTS"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        14,
+        2
+      ]
+    },
+    {
+      "id": "tool_llamaparse",
+      "name": "LlamaParse",
+      "entity_type": "TOOL",
+      "category": "document_parsing",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "LlamaIndex",
+      "url": "https://www.llamaindex.ai/pricing",
+      "pricing": "Free 10K credits/mes; PAYG $1.25/1k credits (~1 credit/page)",
+      "description": "Agentic document parsing con smart tier routing y layout-aware optimizado para LLMs",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "LlamaIndex OSS",
+        "Marker"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        21,
+        0
+      ]
+    },
+    {
+      "id": "tool_unstructured_platform",
+      "name": "Unstructured Platform",
+      "entity_type": "TOOL",
+      "category": "document_parsing",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Unstructured",
+      "url": "https://unstructured.io/pricing",
+      "pricing": "Free 15k pages; PAYG $0.03/page",
+      "description": "Enterprise platform que transforma 64+ tipos de archivos en inputs AI-ready con human-level accuracy",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Unstructured OSS"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        13,
+        1
+      ]
+    },
+    {
+      "id": "tool_reducto_ai",
+      "name": "Reducto",
+      "entity_type": "TOOL",
+      "category": "document_parsing",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Reducto AI",
+      "url": "https://reducto.ai/pricing",
+      "pricing": "Free 15K credits; PAYG $0.015/credit",
+      "description": "Document ingestion API alta accuracy (MIT team), especializado en docs complejos (PDFs, spreadsheets, slides)",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Docling"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        12,
+        1
+      ]
+    },
+    {
+      "id": "tool_cursor",
+      "name": "Cursor",
+      "entity_type": "TOOL",
+      "category": "code_generation",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Anysphere",
+      "url": "https://cursor.com",
+      "pricing": "Free 2K completions/mes; Pro $20/mes; Business $40/user/mes",
+      "description": "AI-native IDE con la mayor base de usuarios y completions ilimitados en Pro",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Cline",
+        "Zed"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        16,
+        0
+      ]
+    },
+    {
+      "id": "tool_windsurf",
+      "name": "Windsurf",
+      "entity_type": "TOOL",
+      "category": "code_generation",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Codeium",
+      "url": "https://windsurf.com",
+      "pricing": "Free; Pro $15/mes; Teams $30/user/mes",
+      "description": "Primer IDE AI-nativo centrado en agentic workflows (Cascade) con precios accesibles",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Trae",
+        "Continue.dev"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        17,
+        0
+      ]
+    },
+    {
+      "id": "tool_claude_code_anthropic",
+      "name": "Claude Code",
+      "entity_type": "TOOL",
+      "category": "code_generation",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Anthropic",
+      "url": "https://claude.ai",
+      "pricing": "Pro $20/mes; Max $100-$200/mes (o pago por uso API)",
+      "description": "Agente terminal nativo sin lock-in IDE, ideal para razonamiento multi-paso complejo",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "OpenCode",
+        "Aider"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        15,
+        0
+      ]
+    },
+    {
+      "id": "tool_midjourney_v8",
+      "name": "Midjourney v8",
+      "entity_type": "TOOL",
+      "category": "image_generation",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Midjourney, Inc.",
+      "url": "https://www.midjourney.com/",
+      "pricing": "Desde $10/mes (Basic). Sin API oficial.",
+      "description": "Calidad artística y estética visual más alta del mercado",
+      "api_available": "no",
+      "maturity": "production_ready",
+      "oss_alternatives": [],
+      "synthetic": false,
+      "grid_position": [
+        15,
+        1
+      ]
+    },
+    {
+      "id": "tool_flux_2_pro",
+      "name": "FLUX.2 Pro",
+      "entity_type": "TOOL",
+      "category": "image_generation",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Black Forest Labs",
+      "url": "https://bfl.ai/",
+      "pricing": "$0.05-$0.055 por imagen (API)",
+      "description": "Fotorealismo con prompt adherence excelente y text rendering preciso",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "FLUX.2 Dev",
+        "FLUX.2 Schnell"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        14,
+        1
+      ]
+    },
+    {
+      "id": "tool_recraft_v3",
+      "name": "Recraft V3",
+      "entity_type": "TOOL",
+      "category": "image_generation",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Recraft",
+      "url": "https://www.recraft.ai/",
+      "pricing": "$0.04 por imagen (API)",
+      "description": "Control de diseño avanzado, text rendering confiable, vector image generation",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [],
+      "synthetic": false,
+      "grid_position": [
+        17,
+        1
+      ]
+    },
+    {
+      "id": "tool_firecrawl",
+      "name": "Firecrawl",
+      "entity_type": "TOOL",
+      "category": "data_extraction_web_scraping",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Mendable",
+      "url": "https://www.firecrawl.dev",
+      "pricing": "Free 500 credits; desde $16/mes",
+      "description": "API-first crawler que convierte URL en Markdown/JSON LLM-ready en segundos",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Scrapy",
+        "Puppeteer"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        20,
+        0
+      ]
+    },
+    {
+      "id": "tool_browserbase",
+      "name": "Browserbase",
+      "entity_type": "TOOL",
+      "category": "data_extraction_web_scraping",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Browserbase",
+      "url": "https://www.browserbase.com",
+      "pricing": "Free; desde $20/mes",
+      "description": "Usage-based browser agent infrastructure para que IAs interactuen con la web",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "BrowserStation",
+        "Agent Browser"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        19,
+        0
+      ]
+    },
+    {
+      "id": "tool_apify",
+      "name": "Apify",
+      "entity_type": "TOOL",
+      "category": "data_extraction_web_scraping",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Apify",
+      "url": "https://apify.com",
+      "pricing": "Free $5/mes credits; desde $49/mes",
+      "description": "Plataforma con 27,000+ Actors pre-built para scraping y automatizacion",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "Scrapy",
+        "Selenium"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        18,
+        0
+      ]
+    },
+    {
+      "id": "tool_perplexity_api",
+      "name": "Perplexity API",
+      "entity_type": "TOOL",
+      "category": "ai_search_rag",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Perplexity AI",
+      "url": "https://docs.perplexity.ai/docs/getting-started/pricing",
+      "pricing": "Tokens + por request (ej. Sonar Deep Research). $20/mes Pro para usuarios finales.",
+      "description": "Answer engine con citas web en tiempo real y modelos de razonamiento profundo",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "SearxNG",
+        "ChatQA"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        13,
+        0
+      ]
+    },
+    {
+      "id": "tool_exa_search",
+      "name": "Exa Search API",
+      "entity_type": "TOOL",
+      "category": "ai_search_rag",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "Exa AI",
+      "url": "https://exa.ai/pricing",
+      "pricing": "$7/1k req (Search); $12-15/1k req (Deep Search); $1/1k pages (Contents)",
+      "description": "Búsqueda neuronal optimizada para agentes con recuperación token-eficiente",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "SearxNG"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        12,
+        0
+      ]
+    },
+    {
+      "id": "tool_you_com_api",
+      "name": "You.com API",
+      "entity_type": "TOOL",
+      "category": "ai_search_rag",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "provider": "You.com",
+      "url": "https://you.com/pricing",
+      "pricing": "$5/1k calls (Search); $1/1k pages (Contents); $12/1k calls (Research Lite)",
+      "description": "Infraestructura de búsqueda web masiva con foco en privacidad y answers source-backed",
+      "api_available": "si",
+      "maturity": "production_ready",
+      "oss_alternatives": [
+        "SearxNG"
+      ],
+      "synthetic": false,
+      "grid_position": [
+        14,
+        0
+      ]
+    },
+    {
+      "id": "tool_nano_banana_pro",
+      "name": "Nano Banana Pro",
+      "entity_type": "TOOL",
+      "category": "image_generation",
+      "status": "vigente_2026",
+      "is_operable": true,
+      "provider": "Google DeepMind",
+      "url": "https://ai.google.dev/gemini-api/docs/image-generation",
+      "pricing": null,
+      "description": "Generación y edición de imágenes con calidad profesional vía Gemini 3 Pro Image Preview — la única candidata operable hoy desde el HUD.",
+      "api_available": null,
+      "maturity": "production_ready",
+      "oss_alternatives": [],
+      "synthetic": true,
+      "grid_position": [
+        16,
+        1
+      ]
+    },
+    {
+      "id": "sup_canaco_servytur_merida",
+      "name": "Cámara Nacional de Comercio, Servicios y Turismo de Mérida (CANACO SERVYTUR Mérida)",
+      "entity_type": "SUPPLIER",
+      "category": "camaras_y_colegios",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Av. Itzáes No. 273 por 31 y 33 Col. García Ginerés C.P. 97070",
+      "url": "https://www.canacomerida.com.mx/",
+      "phone": "+52 999 942 8850",
+      "email": "contacto@canacomerida.com",
+      "description": "Comercio, Servicios y Turismo",
+      "representative_cases": "Empresas comerciales, prestadores de servicios y sector turístico en Yucatán",
+      "synthetic": false,
+      "grid_position": [
+        33,
+        0
+      ]
+    },
+    {
+      "id": "sup_cmic_yucatan",
+      "name": "Cámara Mexicana de la Industria de la Construcción (CMIC) Delegación Yucatán",
+      "entity_type": "SUPPLIER",
+      "category": "camaras_y_colegios",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 50 No. 310 x 21 Col. Roma C.P. 97218",
+      "url": "https://cmicyucatan.org/",
+      "phone": "+52 999 925 3060",
+      "email": "contacto@cmicyucatan.org",
+      "description": "Industria de la Construcción",
+      "representative_cases": "Constructoras, contratistas y proveedores de materiales de construcción",
+      "synthetic": false,
+      "grid_position": [
+        32,
+        0
+      ]
+    },
+    {
+      "id": "sup_ampi_merida",
+      "name": "Asociación Mexicana de Profesionales Inmobiliarios (AMPI) Sección Mérida",
+      "entity_type": "SUPPLIER",
+      "category": "camaras_y_colegios",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 20 93, Itzimná, 97100 Plaza Itzimná",
+      "url": "https://ampimerida.com/",
+      "phone": "+52 999 351 5299",
+      "email": "capacitacion@ampimerida.com",
+      "description": "Sector Inmobiliario",
+      "representative_cases": "Agentes, brokers, desarrolladores y asesores de bienes raíces",
+      "synthetic": false,
+      "grid_position": [
+        29,
+        0
+      ]
+    },
+    {
+      "id": "sup_colegio_abogados_yucatan",
+      "name": "Colegio de Abogados de Yucatán A.C.",
+      "entity_type": "SUPPLIER",
+      "category": "camaras_y_colegios",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 90 No. 486 entre 47 y 90-A Col. Inalámbrica",
+      "url": "https://colegiodeabogadosdeyucatan.wordpress.com/",
+      "phone": "+52 999 920 0888",
+      "email": "colegiodeabogadosyucatan@hotmail.com",
+      "description": "Servicios Legales y Jurídicos",
+      "representative_cases": "Abogados litigantes, despachos jurídicos, notarios y asesores legales",
+      "synthetic": false,
+      "grid_position": [
+        31,
+        0
+      ]
+    },
+    {
+      "id": "sup_cicy",
+      "name": "Centro de Investigación Científica de Yucatán A.C. (CICY)",
+      "entity_type": "SUPPLIER",
+      "category": "camaras_y_colegios",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 43 No. 130 x 32 y 34 Chuburná de Hidalgo C.P. 97200",
+      "url": "https://www.cicy.mx/",
+      "phone": "+52 999 942 8330",
+      "email": "contacto@cicy.mx",
+      "description": "Investigación Científica y Biotecnología",
+      "representative_cases": "Investigadores, posgrado, biotecnología y energía renovable",
+      "synthetic": false,
+      "grid_position": [
+        30,
+        0
+      ]
+    },
+    {
+      "id": "sup_deloitte_merida",
+      "name": "Deloitte (Oficina Mérida)",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_contables_fiscales",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 32, 298 | Edificio City 32, Piso 10, Oficina 2, C.P. 97113",
+      "url": "https://www.deloitte.com/latam/es/offices/latam-offices/mx-merida.html",
+      "phone": "+52 999 913 4032",
+      "email": null,
+      "description": "Auditoría, assurance, consultoría, asesoría financiera, riesgos, impuestos y servicios legales",
+      "representative_cases": "Clientes públicos y privados de diversas industrias",
+      "synthetic": false,
+      "grid_position": [
+        28,
+        1
+      ]
+    },
+    {
+      "id": "sup_faller_seijo",
+      "name": "Faller Seijo Asesores",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_contables_fiscales",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 16 235B Col. México, México Oriente, C.P. 97137",
+      "url": "https://despachocontablecerca.com.mx/ciudades/merida/",
+      "phone": "+52 999 926 2201",
+      "email": null,
+      "description": "Contabilidad, auditoría, impuestos y fiscal, consultoría financiera, maquilas de nómina",
+      "representative_cases": "Empresas locales y regionales",
+      "synthetic": false,
+      "grid_position": [
+        29,
+        1
+      ]
+    },
+    {
+      "id": "sup_jb_soluciones_tributarias",
+      "name": "JB Soluciones Tributarias SCP",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_contables_fiscales",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 72 411, Centro, C.P. 97000",
+      "url": "https://despachocontablecerca.com.mx/ciudades/merida/",
+      "phone": "+52 999 920 5731",
+      "email": null,
+      "description": "CPA, declaración de impuestos, contabilidad fiscal, auditoría, asesoría contable, planificación tributaria",
+      "representative_cases": "Empresas locales y regionales",
+      "synthetic": false,
+      "grid_position": [
+        30,
+        1
+      ]
+    },
+    {
+      "id": "sup_ofelia_camara_asociados",
+      "name": "Ofelia Cámara y Asociados Auditores y Consultores S.C.P.",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_contables_fiscales",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 25 496-E, Jesús Carranza, C.P. 97109",
+      "url": "https://despachocontablecerca.com.mx/ciudades/merida/",
+      "phone": "+52 999 926 1987",
+      "email": null,
+      "description": "Asesoría de negocios, asesoría legal, accounting services, corporate law, legal auditing, tax consulting",
+      "representative_cases": "Empresas locales y regionales",
+      "synthetic": false,
+      "grid_position": [
+        31,
+        1
+      ]
+    },
+    {
+      "id": "sup_rosel_aguiar",
+      "name": "Rosel Aguiar Contadores",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_contables_fiscales",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 40 441, entre 23, Los Pinos, C.P. 97138",
+      "url": "https://despachocontablecerca.com.mx/ciudades/merida/",
+      "phone": "+52 999 351 9095",
+      "email": null,
+      "description": "Análisis financiero, auditorías contables, contabilidad de nóminas, planificación de impuestos, defensa fiscal, estrategia fiscal",
+      "representative_cases": "Empresas locales y regionales",
+      "synthetic": false,
+      "grid_position": [
+        32,
+        1
+      ]
+    },
+    {
+      "id": "sup_rfs_abogados",
+      "name": "RFS Abogados",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_legales_notarias",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 11 No.310 por 12B y 12C Col. Santa Gertrudis Copó C.P. 97305",
+      "url": "https://rfsabogados.com.mx/",
+      "phone": "+52 999 737 3613",
+      "email": "contacto@rfsabogados.com.mx",
+      "description": "Derecho Corporativo/Empresarial, Inmobiliario, Civil y Notarial",
+      "representative_cases": "Creación, modificación y fusión de empresas. Asesoría a desarrollos inmobiliarios (fideicomisos, permisos, contratos)",
+      "synthetic": false,
+      "grid_position": [
+        27,
+        2
+      ]
+    },
+    {
+      "id": "sup_despacho_juridico_falcon",
+      "name": "Despacho Jurídico Falcón",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_legales_notarias",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": null,
+      "url": "https://despachojuridicofalcon.com/",
+      "phone": "+52 999 905 5824",
+      "email": "FALCONRUBI@HOTMAIL.COM",
+      "description": "Derecho Civil, Familiar, Corporativo, Penal, Laboral, Notarial, Mercantil e Internacional",
+      "representative_cases": "Conflictos contractuales, recuperación de propiedades, estudios de títulos, trámites notariales",
+      "synthetic": false,
+      "grid_position": [
+        26,
+        2
+      ]
+    },
+    {
+      "id": "sup_acevedo_asociados",
+      "name": "Despacho Acevedo y Asociados, S.C.P.",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_legales_notarias",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 22 No. 199 F x 17 y 19 Col. García Ginerés C.P. 97070",
+      "url": "http://acevedoyasociados.com.mx/",
+      "phone": "+52 999 920 2811",
+      "email": "info@acevedoyasociados.com.mx",
+      "description": "Servicios Notariales (Notaría Pública 67), Corporativos, Laborales, Litigio y Fiscales",
+      "representative_cases": "Industria refresquera, automotriz, hidrocarburos, construcciones inmobiliarias, bancos y dependencias gubernamentales",
+      "synthetic": false,
+      "grid_position": [
+        25,
+        2
+      ]
+    },
+    {
+      "id": "sup_base_boutique_legal",
+      "name": "Base Boutique Legal",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_legales_notarias",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Av. Líbano 106 Col. México C.P. 97125",
+      "url": "https://asistencialegalyucatan.com/",
+      "phone": "+52 990 101 5323",
+      "email": "baseboutiquelegal@gmail.com",
+      "description": "Derecho empresarial, registro de marcas, inversiones inmobiliarias, gestión de activos y project management jurídico",
+      "representative_cases": "Empresas e inversiones, registro de marcas y propiedad intelectual, inversiones inmobiliarias",
+      "synthetic": false,
+      "grid_position": [
+        24,
+        2
+      ]
+    },
+    {
+      "id": "sup_as_abogados",
+      "name": "A.S. Abogados Despacho Jurídico",
+      "entity_type": "SUPPLIER",
+      "category": "despachos_legales_notarias",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 42 514, entre 25 y 27, Los Pinos, C.P. 97138",
+      "url": "https://abogadoinmobiliarioenmerida.com/",
+      "phone": "+52 999 215 4465",
+      "email": "contacto@abogadoinmobiliarioenmerida.com",
+      "description": "Derecho Inmobiliario",
+      "representative_cases": "Regularización de propiedades, compra-venta, litigios, asesoría a desarrolladores y empresarios, derecho de arrendamiento",
+      "synthetic": false,
+      "grid_position": [
+        33,
+        1
+      ]
+    },
+    {
+      "id": "sup_gyral",
+      "name": "Gyral",
+      "entity_type": "SUPPLIER",
+      "category": "agencias_marketing_branding",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Mérida, Yucatán",
+      "url": "https://gyral.com.mx/",
+      "phone": "+52 999 343 3775",
+      "email": "hello@gyral.com.mx",
+      "description": "Desarrollo web, automatización de procesos, marketing digital, desarrollo de software y apps",
+      "representative_cases": "Estrategias de marketing digital para empresas, integración con CRM/ERP",
+      "synthetic": false,
+      "grid_position": [
+        24,
+        0
+      ]
+    },
+    {
+      "id": "sup_markora_marketing",
+      "name": "Márkora Marketing",
+      "entity_type": "SUPPLIER",
+      "category": "agencias_marketing_branding",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Mérida, Yucatán",
+      "url": "https://www.markoramarketing.com/",
+      "phone": "+52 999 339 6814",
+      "email": null,
+      "description": "Branding, redes sociales, SEO, CRO, ROI, marketing digital para PyMES",
+      "representative_cases": "SuStyle, Relojería Víctor, Leona Restaurante Bar, Alex Herrera",
+      "synthetic": false,
+      "grid_position": [
+        26,
+        0
+      ]
+    },
+    {
+      "id": "sup_marketthink",
+      "name": "Marketthink",
+      "entity_type": "SUPPLIER",
+      "category": "agencias_marketing_branding",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Mérida, Yucatán",
+      "url": "https://marketthink.com.mx/",
+      "phone": "+52 999 908 4040",
+      "email": "ventas@marketthink.com.mx",
+      "description": "SEO, PPC, sitios web, CRM, Inbound marketing",
+      "representative_cases": "Empresas de Mérida y México con foco en posicionamiento web y generación de leads",
+      "synthetic": false,
+      "grid_position": [
+        25,
+        0
+      ]
+    },
+    {
+      "id": "sup_addere_mx",
+      "name": "addereMX",
+      "entity_type": "SUPPLIER",
+      "category": "agencias_marketing_branding",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Miguel Alemán, Mérida, Yucatán",
+      "url": "https://www.addere.mx/",
+      "phone": "+52 999 361 2665",
+      "email": "contacto@addere.mx",
+      "description": "Marketing, branding, comunicación, lead generation, proyectos estratégicos",
+      "representative_cases": "Consultoría en marketing y transformación digital",
+      "synthetic": false,
+      "grid_position": [
+        28,
+        0
+      ]
+    },
+    {
+      "id": "sup_recreativos_marketing",
+      "name": "Recreativos Marketing",
+      "entity_type": "SUPPLIER",
+      "category": "agencias_marketing_branding",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Mérida, Yucatán",
+      "url": "https://marketing.recreativos.com.mx/",
+      "phone": "+52 999 220 6803",
+      "email": null,
+      "description": "Marketing inmobiliario, embudos de ventas, redes sociales, generación de contenido",
+      "representative_cases": "Agencias inmobiliarias y empresas que buscan prospectos rápido",
+      "synthetic": false,
+      "grid_position": [
+        27,
+        0
+      ]
+    },
+    {
+      "id": "sup_erase_una_vez_productora",
+      "name": "Érase una vez... casa productora",
+      "entity_type": "SUPPLIER",
+      "category": "productoras_audiovisuales",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Mérida, Yucatán",
+      "url": "https://www.eraseunavez.mx/",
+      "phone": "+52 999 944 3976",
+      "email": "dmarcin@eraseunavez.mx",
+      "description": "Producción audiovisual para empresas, contenido audiovisual, comerciales",
+      "representative_cases": "Trabajan en todo el país, especialmente sureste mexicano",
+      "synthetic": false,
+      "grid_position": [
+        29,
+        3
+      ]
+    },
+    {
+      "id": "sup_blue_cam_estudio",
+      "name": "Blue Cam Estudio",
+      "entity_type": "SUPPLIER",
+      "category": "productoras_audiovisuales",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Mérida, Yucatán",
+      "url": "https://www.facebook.com/BlueCamEstudio.Mx/",
+      "phone": "+52 999 566 5471",
+      "email": "bluecamestudio.1@gmail.com",
+      "description": "Producción audiovisual para empresas, fotografía y video empresarial",
+      "representative_cases": "Videos publicitarios para empresas",
+      "synthetic": false,
+      "grid_position": [
+        27,
+        3
+      ]
+    },
+    {
+      "id": "sup_nora_garrett_photo",
+      "name": "Nora Garrett Photography",
+      "entity_type": "SUPPLIER",
+      "category": "productoras_audiovisuales",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 45, No. 158, Benito Juárez Nte., C.P. 97119",
+      "url": "https://www.noragarrettphotography.com/",
+      "phone": "+52 999 368 5374",
+      "email": null,
+      "description": "Fotografía de retrato exteriores, infantil, embarazo, familiar, eventos, bautizos",
+      "representative_cases": "Sesiones familiares y de eventos",
+      "synthetic": false,
+      "grid_position": [
+        28,
+        3
+      ]
+    },
+    {
+      "id": "sup_bc_studio_arq",
+      "name": "BC STUDIO",
+      "entity_type": "SUPPLIER",
+      "category": "estudios_arquitectura_interiores",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 10 No. 257 x calle 7 y Calle 5, Vista Alegre Norte, C.P. 97130",
+      "url": "https://bcstudio.com.mx/",
+      "phone": "+52 999 278 1770",
+      "email": "info@bcstudio.com.mx",
+      "description": "Residenciales unifamiliares y multifamiliares de alta gama, comerciales y hotelería",
+      "representative_cases": "Casa Blanca 2024",
+      "synthetic": false,
+      "grid_position": [
+        30,
+        2
+      ]
+    },
+    {
+      "id": "sup_fmt_estudio",
+      "name": "FMT Estudio",
+      "entity_type": "SUPPLIER",
+      "category": "estudios_arquitectura_interiores",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Mérida, Yucatán",
+      "url": "https://fmtestudio.com/",
+      "phone": null,
+      "email": "press@fmtestudio.mx",
+      "description": "Arquitectura y diseño de interiores con enfoque ambiental, hospitalidad, residencial y cultural",
+      "representative_cases": "Casa Chuburná, La 68 Cultural Center",
+      "synthetic": false,
+      "grid_position": [
+        32,
+        2
+      ]
+    },
+    {
+      "id": "sup_ancona_arquitectos",
+      "name": "Ancona + Ancona Arquitectos",
+      "entity_type": "SUPPLIER",
+      "category": "estudios_arquitectura_interiores",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 56, 500, Mérida, Yucatán",
+      "url": "https://anconayancona.com/",
+      "phone": "+52 999 292 1366",
+      "email": "contacto@anconayancona.com",
+      "description": "Residencial, comercial e inversión de alta gama",
+      "representative_cases": "Más de 30 años en sureste de México",
+      "synthetic": false,
+      "grid_position": [
+        29,
+        2
+      ]
+    },
+    {
+      "id": "sup_aida_traconis",
+      "name": "Aida Traconis Arquitectos",
+      "entity_type": "SUPPLIER",
+      "category": "estudios_arquitectura_interiores",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Mérida, Yucatán",
+      "url": "https://aidatraconis.com/",
+      "phone": "+52 999 512 7949",
+      "email": "arq.traconis@gmail.com",
+      "description": "Diseño arquitectónico, diseño de interiores y sustentabilidad de lujo",
+      "representative_cases": "Ganadores Luxury Lifestyle Awards en interiores",
+      "synthetic": false,
+      "grid_position": [
+        28,
+        2
+      ]
+    },
+    {
+      "id": "sup_desnivel_arquitectos",
+      "name": "Desnivel Arquitectos",
+      "entity_type": "SUPPLIER",
+      "category": "estudios_arquitectura_interiores",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 19 #88 por 16 y 18 Col. México",
+      "url": "https://www.desnivel.mx/",
+      "phone": "+52 999 839 6928",
+      "email": "taller@desnivel.mx",
+      "description": "Proyectos arquitectónicos versátiles enfocados en usuario, funcionalidad y estética",
+      "representative_cases": "Espacios residenciales y comerciales centrados en el usuario",
+      "synthetic": false,
+      "grid_position": [
+        31,
+        2
+      ]
+    },
+    {
+      "id": "sup_koud",
+      "name": "KOUD",
+      "entity_type": "SUPPLIER",
+      "category": "desarrolladoras_software_ti",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Sede principal Zapopan, JAL — servicios locales en Mérida",
+      "url": "https://koud.mx/desarrollo-de-software-en-merida/",
+      "phone": "+52 1 6183284359",
+      "email": "letskoud@koud.mx",
+      "description": "Desarrollo a medida, mobile, integración de sistemas, IA empresarial",
+      "representative_cases": "Sistema de inventario para supermercados, app de citas para clínica",
+      "synthetic": false,
+      "grid_position": [
+        25,
+        1
+      ]
+    },
+    {
+      "id": "sup_ia_invision",
+      "name": "IA Invision",
+      "entity_type": "SUPPLIER",
+      "category": "desarrolladoras_software_ti",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 32, Av. Andrés García Lavín 298, Montebello, C.P. 97113",
+      "url": "https://invisiongo.com/servicios/servicio-de-desarrollo-de-software-para-empresas-en-merida/",
+      "phone": "+52 999 508 8391",
+      "email": "contacto@invisiongo.com",
+      "description": "Automatización con IA, desarrollo a medida, web y SaaS, sistemas empresariales, RAG local y cloud",
+      "representative_cases": "Arquitectura de software y automatización enterprise",
+      "synthetic": false,
+      "grid_position": [
+        24,
+        1
+      ]
+    },
+    {
+      "id": "sup_software_house_merida",
+      "name": "Software House Mérida",
+      "entity_type": "SUPPLIER",
+      "category": "desarrolladoras_software_ti",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Mérida, Yucatán",
+      "url": "https://shmerida.mx/",
+      "phone": null,
+      "email": "info@shmerida.mx",
+      "description": "Desarrollo IA-powered, IT staffing, web modernas, dashboards, soluciones escalables",
+      "representative_cases": "GPS ORION, Mantix4 LLC, ClearTrust Claims LLP",
+      "synthetic": false,
+      "grid_position": [
+        27,
+        1
+      ]
+    },
+    {
+      "id": "sup_sescom",
+      "name": "SESCOM",
+      "entity_type": "SUPPLIER",
+      "category": "desarrolladoras_software_ti",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 25, 102, Chuburná de Hidalgo, C.P. 97205",
+      "url": "https://www.sescomti.com/",
+      "phone": "+52 800 737 2661 / +52 999 981 0397",
+      "email": "ventas@sescom.com.mx",
+      "description": "TI, soporte, gestión de proyectos, redes y comunicaciones, seguridad electrónica",
+      "representative_cases": "Lenovo, Okidata de México",
+      "synthetic": false,
+      "grid_position": [
+        26,
+        1
+      ]
+    },
+    {
+      "id": "sup_antal_impresiones",
+      "name": "Antal Impresiones",
+      "entity_type": "SUPPLIER",
+      "category": "imprentas_eventos_catering_logistica",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Chichi Suárez, Mérida, Yucatán",
+      "url": "https://www.antalimpresiones.com/",
+      "phone": "+52 999 750 4874",
+      "email": "ventas@antalimpresiones.com",
+      "description": "Impresión digital, DTF textil, gran formato, sublimación, corte láser",
+      "representative_cases": "CODERE, MACROPLAZA, BACHOCO, FARMACIAS YZA, POTZOLLCALLI, SSP YUCATÁN, GOB. YUC, HACIENDA TEYA",
+      "synthetic": false,
+      "grid_position": [
+        33,
+        2
+      ]
+    },
+    {
+      "id": "sup_bravo_catering",
+      "name": "Bravo Catering",
+      "entity_type": "SUPPLIER",
+      "category": "imprentas_eventos_catering_logistica",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 18 No. 117 entre 5 y 7 Col. Montecristo, C.P. 97133",
+      "url": "https://bravocatering.site/",
+      "phone": "+52 999 933 5924",
+      "email": null,
+      "description": "Banquetes alto nivel, catering premium para bodas y eventos",
+      "representative_cases": "Bodas exclusivas en haciendas y casonas de Yucatán",
+      "synthetic": false,
+      "grid_position": [
+        24,
+        3
+      ]
+    },
+    {
+      "id": "sup_tz_logistica",
+      "name": "TZ Logística",
+      "entity_type": "SUPPLIER",
+      "category": "imprentas_eventos_catering_logistica",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Sede Mérida, almacenes Cancún y Villahermosa",
+      "url": "https://tzlogistica.com/",
+      "phone": "+52 999 276 1590",
+      "email": "contacto@tzlogistica.com",
+      "description": "3PL, almacenaje, cross docking, distribución última milla, picking & packing",
+      "representative_cases": "Tercerización de procesos logísticos en el sureste",
+      "synthetic": false,
+      "grid_position": [
+        26,
+        3
+      ]
+    },
+    {
+      "id": "sup_ipro_eventos",
+      "name": "IPro Eventos (Iluminación y Producciones)",
+      "entity_type": "SUPPLIER",
+      "category": "imprentas_eventos_catering_logistica",
+      "status": "vigente_2026",
+      "is_operable": false,
+      "city": "Mérida",
+      "address": "Calle 50 #301 x 61 y 63 Paseos del Conquistador C.P. 97203",
+      "url": "https://www.iproeventos.com/",
+      "phone": "+52 999 298 9278",
+      "email": "ipromerida@gmail.com",
+      "description": "Producción eventos sociales, iluminación ambiental y arquitectónica, DJ",
+      "representative_cases": "Bodas y eventos sociales en Mérida y Yucatán",
+      "synthetic": false,
+      "grid_position": [
+        25,
+        3
+      ]
+    }
+  ]
+}

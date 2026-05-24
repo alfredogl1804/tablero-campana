@@ -16,6 +16,7 @@ import { Omnibox } from "@/components/hud/Omnibox";
 import { TopToolbar } from "@/components/hud/TopToolbar";
 import { TutorialOverlay } from "@/components/hud/TutorialOverlay";
 import { NanoBananaStudio } from "@/components/studio/NanoBananaStudio";
+import { CatastroCluster } from "@/components/catastro/CatastroCluster";
 import boardDataRaw from "@/data/board_data.json";
 import type { BoardData } from "@/lib/board-types";
 
@@ -28,6 +29,7 @@ export default function Home() {
   const [zoomLevel, setZoomLevel] = useState(28);
   const [showTutorial, setShowTutorial] = useState(false);
   const [studioOpen, setStudioOpen] = useState(false);
+  const [catastroOpen, setCatastroOpen] = useState(false);
 
   useEffect(() => {
     const seen = localStorage.getItem(TUTORIAL_KEY);
@@ -41,6 +43,16 @@ export default function Home() {
     () => boardData.nodes.find((n) => n.id === selectedNodeId) ?? null,
     [selectedNodeId]
   );
+
+  // Si el usuario selecciona el nodo "catastro" del distrito Cognición,
+  // en lugar de mostrar el ContextCard normal, abrimos el CatastroCluster.
+  useEffect(() => {
+    if (selectedNodeId === "catastro") {
+      setCatastroOpen(true);
+      // soltamos la selección para que el ContextCard normal no se muestre
+      setSelectedNodeId(null);
+    }
+  }, [selectedNodeId]);
 
   const handleCloseTutorial = () => {
     localStorage.setItem(TUTORIAL_KEY, "true");
@@ -101,6 +113,16 @@ export default function Home() {
 
       {/* Nano Banana Studio (operable) */}
       <NanoBananaStudio open={studioOpen} onClose={() => setStudioOpen(false)} />
+
+      {/* Catastro Cluster — vista isométrica de las 82 candidatas reales */}
+      <CatastroCluster
+        open={catastroOpen}
+        onClose={() => setCatastroOpen(false)}
+        onOpenStudio={() => {
+          setCatastroOpen(false);
+          setStudioOpen(true);
+        }}
+      />
     </div>
   );
 }

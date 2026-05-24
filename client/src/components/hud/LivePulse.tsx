@@ -9,6 +9,7 @@
 import { motion } from "framer-motion";
 import { Activity, AlertTriangle, CheckCircle2, Hammer, Clock } from "lucide-react";
 import type { BoardData } from "@/lib/board-types";
+import { trpc } from "@/lib/trpc";
 
 interface LivePulseProps {
   data: BoardData;
@@ -16,6 +17,14 @@ interface LivePulseProps {
 }
 
 export function LivePulse({ data, onSelectDistrict }: LivePulseProps) {
+  // Pulso vivo del Supabase (Memoria Soberana). Si la red falla, el footer
+  // simplemente cae al estado "sin conexión" sin tirar la app.
+  const supabaseHealth = trpc.supabase.health.useQuery(undefined, {
+    refetchInterval: 30_000,
+    refetchOnWindowFocus: false,
+    staleTime: 15_000,
+  });
+
   const stats = {
     active: data.nodes.filter((n) => n.status === "ACTIVE").length,
     degraded: data.nodes.filter((n) => n.status === "DEGRADED").length,
@@ -36,8 +45,20 @@ export function LivePulse({ data, onSelectDistrict }: LivePulseProps) {
         {/* Header */}
         <div className="px-5 pt-5 pb-4 border-b border-white/5">
           <div className="flex items-center gap-2 text-[10px] font-mono tracking-[0.2em] text-amber-500/70 uppercase mb-1">
-            <span className="size-1.5 rounded-full bg-amber-500" />
-            Snapshot · {new Date(data.meta.timestamp).toLocaleDateString("es-MX", { day: "numeric", month: "short" })}
+            <span
+              className={`size-1.5 rounded-full ${
+                supabaseHealth.data?.ok
+                  ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]"
+                  : "bg-amber-500 animate-pulse"
+              }`}
+            />
+            {supabaseHealth.data?.ok ? "En vivo" : "Snapshot"} ·{" "}
+            {new Date().toLocaleString("es-MX", {
+              day: "numeric",
+              month: "short",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </div>
           <h2 className="text-xl font-bold text-foreground tracking-tight">
             El Monstruo
@@ -157,13 +178,33 @@ export function LivePulse({ data, onSelectDistrict }: LivePulseProps) {
           </div>
         </div>
 
-        {/* Footer — kernel health */}
-        <div className="px-5 py-3 border-t border-white/5 bg-black/30">
+        {/* Footer — kernel + memoria viva (Supabase) */}
+        <div className="px-5 py-3 border-t border-white/5 bg-black/30 space-y-1.5">
           <div className="flex items-center gap-2 text-[10px] font-mono">
             <Activity className="size-3 text-amber-400/60" />
             <span className="text-muted-foreground">kernel</span>
-            <span className="text-muted-foreground/70">v0.84.8 · sin conexión</span>
+            <span className="text-muted-foreground/70">v0.84.8 · web</span>
             <span className="ml-auto text-muted-foreground/50">Railway · MX</span>
+          </div>
+          <div className="flex items-center gap-2 text-[10px] font-mono">
+            <span
+              className={`size-1.5 rounded-full ${
+                supabaseHealth.data?.ok
+                  ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]"
+                  : supabaseHealth.isLoading
+                    ? "bg-amber-400 animate-pulse"
+                    : "bg-stone-500"
+              }`}
+            />
+            <span className="text-muted-foreground">memoria</span>
+            <span className="text-muted-foreground/70">
+              {supabaseHealth.data?.ok
+                ? `${supabaseHealth.data.tables_visible} tablas vivas`
+                : supabaseHealth.isLoading
+                  ? "verificando…"
+                  : "sin conexión"}
+            </span>
+            <span className="ml-auto text-muted-foreground/50">supabase</span>
           </div>
         </div>
       </div>
