@@ -24,4 +24,16 @@
 - [x] Listener `webglcontextlost` / `webglcontextrestored` mantenido como red de seguridad
 - [x] 19 tests verdes
 - [x] Checkpoint v2.3 (version 4487d922)
-- [ ] Validación final en iPhone (después de publicar) — bloqueado en mano del usuario
+- [x] Validación final en iPhone — cubierta por Fase 8 con v2.4 (af22604f)
+
+## Fase 8 — Causa raíz real del Canvas (v2.4, decisión Sabio #1 GPT-5.5 Pro)
+- [x] Probe `RenderLoopProbe` reveló que useFrame NUNCA corría (render loop suspendido)
+- [x] Identificada causa raíz: `<Text font="https://fonts.gstatic.com/...">` en DistrictPlatform y Building suspendía R3F
+- [x] Removido `font` URL externo de DistrictPlatform.tsx (drei usa fuente default empacada)
+- [x] Removido `font` URL externo de Building.tsx
+- [x] Removido `<Environment preset="warehouse">` (cargaba HDRI de threejs.org, mejora robustez)
+- [x] Retirado RenderLoopProbe tras validación
+- [x] 19 tests verdes
+- [x] Checkpoint v2.4 (version af22604f)
+- [x] Validación auditable: nuevo `server/canvas.no_remote_assets.test.ts` (4 tests) que prohíbe URLs remotas en componentes del board. 23/23 tests verdes.
+- [x] Validación visual reproducible: monstruo-fmpgkidx.manus.space publicado v2.4 con board completamente renderizado en Safari iPhone real (capturas IMG_5493 / IMG_5494)
