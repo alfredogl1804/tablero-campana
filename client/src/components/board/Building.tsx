@@ -5,7 +5,7 @@
  * - Material según estado: ACTIVE, DEGRADED, SPRINT, FUTURE
  * - Forja: bordes biselados, brillo emisivo cálido
  */
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
@@ -24,6 +24,12 @@ interface BuildingProps {
   onPointerOut: () => void;
   /** T3 Sprint v3.0 — label aplicada al tono actual (Modo Papá vs técnico). */
   displayLabel?: string;
+  /** T4 Sprint v3.0 — capa activa: color override (hex). */
+  layerColor?: string;
+  /** T4 Sprint v3.0 — capa activa: altura override (escala 3D). */
+  layerHeight?: number;
+  /** T4 Sprint v3.0 — si true, ignora districtColor/locToHeight y usa los overrides. */
+  useLayerOverride?: boolean;
 }
 
 // Escala log para que un nodo de 50 LOC y otro de 2000 LOC sean diferenciables
@@ -44,13 +50,27 @@ export function Building({
   onPointerOver,
   onPointerOut,
   displayLabel,
+  layerColor,
+  layerHeight,
+  useLayerOverride,
 }: BuildingProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
+  const targetHeightRef = useRef<number>(useLayerOverride && layerHeight !== undefined ? layerHeight : locToHeight(node.loc));
+  const currentHeightRef = useRef<number>(targetHeightRef.current);
 
-  const height = useMemo(() => locToHeight(node.loc), [node.loc]);
+  const baseHeight = useMemo(() => locToHeight(node.loc), [node.loc]);
+  const height = useLayerOverride && layerHeight !== undefined ? layerHeight : baseHeight;
   const width = tileSize * 0.65;
+
+  // T4: actualizar target de altura cuando cambia la capa (anima en useFrame)
+  useEffect(() => {
+    targetHeightRef.current = height;
+  }, [height]);
+
+  // T4: si hay override de capa, ese color manda; si no, district color.
+  const baseColor = useLayerOverride && layerColor ? layerColor : districtColor;
 
   // Material por estado
   const { color, emissive, emissiveIntensity, opacity, isWireframe, isPulsing } =
@@ -58,7 +78,7 @@ export function Building({
       switch (node.status) {
         case "ACTIVE":
           return {
-            color: new THREE.Color(districtColor).lerp(new THREE.Color("#fff"), 0.1),
+            color: new THREE.Color(baseColor).lerp(new THREE.Color("#fff"), 0.1),
             emissive: new THREE.Color("#F97316"),
             emissiveIntensity: 0.4,
             opacity: 1,
@@ -76,7 +96,7 @@ export function Building({
           };
         case "SPRINT":
           return {
-            color: new THREE.Color(districtColor),
+            color: new THREE.Color(baseColor),
             emissive: new THREE.Color("#F97316"),
             emissiveIntensity: 0.8,
             opacity: 0.55,
@@ -93,11 +113,21 @@ export function Building({
             isPulsing: false,
           };
       }
-    }, [node.status, districtColor]);
+    }, [node.status, baseColor]);
 
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.elapsedTime;
+
+    // T4: lerp suave de la altura cuando cambia la capa.
+    const dh = targetHeightRef.current - currentHeightRef.current;
+    if (Math.abs(dh) > 0.001) {
+      currentHeightRef.current += dh * 0.12;
+      if (meshRef.current) {
+        meshRef.current.scale.y = currentHeightRef.current / baseHeight;
+        meshRef.current.position.y = currentHeightRef.current / 2;
+      }
+    }
 
     // Respiración sutil para activos
     if (node.status === "ACTIVE") {

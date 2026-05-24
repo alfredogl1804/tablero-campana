@@ -100,3 +100,18 @@
 - [x] Tests Vitest: 5 nuevos en server/omnibox.ask.test.ts (shape, citas válidas, fallback graceful, queries cortas/largas rechazadas)
 - [x] Validación end-to-end: pregunta real "¿Cómo piensas?" → 7 citas IDs reales del genoma, ~12-15s latencia
 - [x] 73/73 tests vitest verde
+
+
+## Sprint v3.0 — T4: Capas conmutables del board (COMPLETO)
+- [x] Crear client/src/lib/board-layers.ts: 5 capas (Distrito, Salud, Antigüedad, Tamaño, Cambio) con getColor + getHeight + legend
+- [x] Funciones puras auxiliares: locToHeight, mixHex, nodeAgeDays
+- [x] Hook client/src/hooks/useLayer.ts con persistencia localStorage + sync entre pestañas
+- [x] Componente client/src/components/hud/LayerSwitcher.tsx (chip + dropdown + leyenda hidratada con distritos vivos)
+- [x] Wire en Home.tsx (HUD overlay)
+- [x] Extender Building.tsx con props layerColor, layerHeight, useLayerOverride
+- [x] Lerp suave de altura en useFrame (transición visual al cambiar capa)
+- [x] BuildingsLayer en IsometricBoard usa useLayer y pasa overrides a cada Building
+- [x] LayerSwitcher respeta tono Modo Papá (label cambia entre técnico/papá)
+- [x] Tests Vitest: 18 nuevos en server/board.layers.test.ts (registro, getColor, getHeight, mixHex, nodeAgeDays, pureza)
+- [x] 91/91 tests vitest verde (13 archivos)
+- [x] HMR limpio, 0 errores TypeScript

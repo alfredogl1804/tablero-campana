@@ -15,6 +15,7 @@ import { ContextCard } from "@/components/hud/ContextCard";
 import { Omnibox } from "@/components/hud/Omnibox";
 import { TopToolbar } from "@/components/hud/TopToolbar";
 import { TutorialOverlay } from "@/components/hud/TutorialOverlay";
+import { LayerSwitcher } from "@/components/hud/LayerSwitcher";
 import { NanoBananaStudio } from "@/components/studio/NanoBananaStudio";
 import { CatastroCluster } from "@/components/catastro/CatastroCluster";
 import { trpc } from "@/lib/trpc";
@@ -142,6 +143,7 @@ export default function Home() {
           onOpenHelp={() => setShowTutorial(true)}
         />
         <Omnibox data={boardData} onSelectNode={setSelectedNodeId} />
+        <LayerSwitcher data={boardData} />
       </div>
 
       {/* Tutorial */}

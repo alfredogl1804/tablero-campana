@@ -16,6 +16,7 @@ import { DistrictPlatform } from "./DistrictPlatform";
 import { Building } from "./Building";
 import { ConnectionLines } from "./ConnectionLines";
 import { useTone } from "@/hooks/useTone";
+import { useLayer } from "@/hooks/useLayer";
 
 interface IsometricBoardProps {
   data: BoardData;
@@ -312,6 +313,8 @@ function BuildingsLayer({
   onHoverNode: (id: string | null) => void;
 }) {
   const tn = useTone();
+  // T4 Sprint v3.0 — capa activa decide color y altura.
+  const { layer } = useLayer();
   return (
     <>
       {data.nodes.map((node) => {
@@ -324,6 +327,9 @@ function BuildingsLayer({
             position={pos}
             tileSize={TILE_SIZE}
             districtColor={district?.color ?? "#F97316"}
+            layerColor={layer.getColor(node, data)}
+            layerHeight={layer.getHeight(node, data)}
+            useLayerOverride={layer.id !== "district"}
             isSelected={selectedNodeId === node.id}
             isHovered={hoveredNodeId === node.id}
             isDimmed={selectedNodeId !== null && selectedNodeId !== node.id}
