@@ -15,6 +15,7 @@ import type { BoardData, BoardNode, BoardDistrict } from "@/lib/board-types";
 import { DistrictPlatform } from "./DistrictPlatform";
 import { Building } from "./Building";
 import { ConnectionLines } from "./ConnectionLines";
+import { useTone } from "@/hooks/useTone";
 
 interface IsometricBoardProps {
   data: BoardData;
@@ -247,27 +248,14 @@ export function IsometricBoard({
       ))}
 
       {/* Edificios (nodos) */}
-      {data.nodes.map((node) => {
-        const district = data.districts.find((d) => d.id === node.district);
-        const pos = gridToWorld(node.grid_position[0], node.grid_position[1]);
-        return (
-          <Building
-            key={node.id}
-            node={node}
-            position={pos}
-            tileSize={TILE_SIZE}
-            districtColor={district?.color ?? "#F97316"}
-            isSelected={selectedNodeId === node.id}
-            isHovered={hoveredNodeId === node.id}
-            isDimmed={
-              selectedNodeId !== null && selectedNodeId !== node.id
-            }
-            onClick={() => onSelectNode(node.id === selectedNodeId ? null : node.id)}
-            onPointerOver={() => onHoverNode(node.id)}
-            onPointerOut={() => onHoverNode(null)}
-          />
-        );
-      })}
+      <BuildingsLayer
+        data={data}
+        selectedNodeId={selectedNodeId}
+        hoveredNodeId={hoveredNodeId}
+        gridToWorld={gridToWorld}
+        onSelectNode={onSelectNode}
+        onHoverNode={onHoverNode}
+      />
 
       {/* Líneas de conexión */}
       <ConnectionLines
@@ -297,5 +285,57 @@ export function IsometricBoard({
         Las luces de ForjaLighting bastan para iluminar la escena sin HDRI.
       */}
     </Canvas>
+  );
+}
+
+// ───────────────────────────────────────────────────────────────────
+// BuildingsLayer (T3 Sprint v3.0)
+//
+// Subcomponente que vive DENTRO del Canvas y por tanto sigue compartiendo
+// el React tree principal (no es un context root separado). Esto permite
+// usar `useTone()` y traducir los labels al tono actual del usuario antes
+// de pasarlos al `<Text>` de drei.
+// ───────────────────────────────────────────────────────────────────
+function BuildingsLayer({
+  data,
+  selectedNodeId,
+  hoveredNodeId,
+  gridToWorld,
+  onSelectNode,
+  onHoverNode,
+}: {
+  data: BoardData;
+  selectedNodeId: string | null;
+  hoveredNodeId: string | null;
+  gridToWorld: (gx: number, gy: number) => [number, number, number];
+  onSelectNode: (id: string | null) => void;
+  onHoverNode: (id: string | null) => void;
+}) {
+  const tn = useTone();
+  return (
+    <>
+      {data.nodes.map((node) => {
+        const district = data.districts.find((d) => d.id === node.district);
+        const pos = gridToWorld(node.grid_position[0], node.grid_position[1]);
+        return (
+          <Building
+            key={node.id}
+            node={node}
+            position={pos}
+            tileSize={TILE_SIZE}
+            districtColor={district?.color ?? "#F97316"}
+            isSelected={selectedNodeId === node.id}
+            isHovered={hoveredNodeId === node.id}
+            isDimmed={selectedNodeId !== null && selectedNodeId !== node.id}
+            onClick={() =>
+              onSelectNode(node.id === selectedNodeId ? null : node.id)
+            }
+            onPointerOver={() => onHoverNode(node.id)}
+            onPointerOut={() => onHoverNode(null)}
+            displayLabel={tn.label(node.id, node.label)}
+          />
+        );
+      })}
+    </>
   );
 }

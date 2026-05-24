@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, ArrowRight, Sparkles, Mic } from "lucide-react";
 import Fuse from "fuse.js";
 import type { BoardData, BoardNode } from "@/lib/board-types";
+import { useTone } from "@/hooks/useTone";
 
 interface OmniboxProps {
   data: BoardData;
@@ -18,6 +19,8 @@ export function Omnibox({ data, onSelectNode }: OmniboxProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  // T3 Sprint v3.0 — traducción a tono Modo Papá.
+  const tn = useTone();
 
   // Índice Fuse.js para búsqueda fuzzy tolerante a errores
   const fuse = useMemo(
@@ -165,14 +168,14 @@ export function Omnibox({ data, onSelectNode }: OmniboxProps) {
                         />
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-medium text-foreground truncate">
-                            {n.label}
+                            {tn.label(n.id, n.label)}
                           </div>
                           <div className="text-[12px] text-muted-foreground truncate">
                             {n.description}
                           </div>
                         </div>
                         <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/40 text-muted-foreground border border-white/5 flex-shrink-0">
-                          {district?.label}
+                          {district ? tn.district(district.id, district.label) : ""}
                         </span>
                         <ArrowRight className="size-4 text-muted-foreground group-hover:text-orange-400 transition flex-shrink-0" />
                       </button>

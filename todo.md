@@ -66,3 +66,19 @@
 - [x] Test board.scheduled: 403 sin header, dev bypass válido, x-manus-cron-task-uid válido, idempotencia
 - [x] Fallback local auditable: scripts/board_sources/MONSTRUO_GENOME.yaml + lógica de selección canonical_mount vs local_snapshot_fallback en build_board_data.py
 - [ ] Crear cron POST-DEPLOY: manus-heartbeat create --name refresh-tablero --cron "0 */5 * * * *" --path /api/scheduled/refreshBoard
+
+
+## Sprint v3.0 — T3: Modo Papá funcional (COMPLETO)
+- [x] Crear client/src/lib/tone.ts con diccionario canónico
+- [x] NODE_LABEL_PAPA con 64 traducciones cardinales del genoma vivo (cobertura ≥40%, en realidad ~80%)
+- [x] STATUS_LABEL_PAPA + STATUS_DESCRIPTION_PAPA (4 enum traducidos)
+- [x] DISTRICT_LABEL_PAPA (5 distritos: cognicion/interfaces/infraestructura/capacidades/futuro)
+- [x] KERNEL_TERM_PAPA (jerga del kernel: deploy/uptime/api/trpc/etc.)
+- [x] humanizeMetric: LOC → buckets cualitativos (Chiquita/Mediana/Grande/Enorme)
+- [x] Hook useTone() en client/src/hooks/useTone.ts
+- [x] Aplicar a LivePulse: header, distritos, footer (kernel/tablero/memoria)
+- [x] Aplicar a ContextCard: label, status, métricas, conexiones
+- [x] Aplicar a Omnibox: results dropdown
+- [x] Aplicar a Building 3D vía nuevo BuildingsLayer dentro del Canvas R3F
+- [x] Tests Vitest: 21 nuevos en server/tone.dictionary.test.ts (status, distritos, labels, métricas, drift detection ≥40%, cardinales)
+- [x] 68/68 tests verde

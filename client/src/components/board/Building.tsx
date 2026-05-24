@@ -22,6 +22,8 @@ interface BuildingProps {
   onClick: () => void;
   onPointerOver: () => void;
   onPointerOut: () => void;
+  /** T3 Sprint v3.0 — label aplicada al tono actual (Modo Papá vs técnico). */
+  displayLabel?: string;
 }
 
 // Escala log para que un nodo de 50 LOC y otro de 2000 LOC sean diferenciables
@@ -41,6 +43,7 @@ export function Building({
   onClick,
   onPointerOver,
   onPointerOut,
+  displayLabel,
 }: BuildingProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
@@ -208,7 +211,7 @@ export function Building({
           outlineWidth={0.025}
           outlineColor="#0a0806"
         >
-          {node.label}
+          {displayLabel ?? node.label}
         </Text>
       )}
     </group>

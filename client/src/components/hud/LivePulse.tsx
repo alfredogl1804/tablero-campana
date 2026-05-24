@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { Activity, AlertTriangle, CheckCircle2, Hammer, Clock } from "lucide-react";
 import type { BoardData } from "@/lib/board-types";
 import { trpc } from "@/lib/trpc";
+import { useTone } from "@/hooks/useTone";
 
 /**
  * Estado del feed vivo del Tablero (T1).
@@ -38,6 +39,9 @@ export function LivePulse({
   liveCapturedAt = null,
   liveSourceMode = null,
 }: LivePulseProps) {
+  // T3 Sprint v3.0 — traducción a tono Modo Papá.
+  const tn = useTone();
+
   // Pulso vivo del Supabase (Memoria Soberana). Si la red falla, el footer
   // simplemente cae al estado "sin conexión" sin tirar la app.
   const supabaseHealth = trpc.supabase.health.useQuery(undefined, {
@@ -85,7 +89,9 @@ export function LivePulse({
             El Monstruo
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Tablero de campaña · v2.0
+            {tn.isPapa
+              ? "Tablero · ¿qué está haciendo hoy?"
+              : "Tablero de campaña · v3.0"}
           </p>
         </div>
 
@@ -93,7 +99,7 @@ export function LivePulse({
         <div className="px-5 py-5 border-b border-white/5">
           <div className="flex items-baseline justify-between mb-3">
             <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
-              Salud del sistema
+              {tn.isPapa ? "¿Cómo va?" : "Salud del sistema"}
             </span>
             <span className="text-3xl font-bold text-orange-500 font-mono tabular-nums">
               {healthPct}%
@@ -114,7 +120,9 @@ export function LivePulse({
             />
           </div>
           <p className="text-[11px] text-muted-foreground mt-2 leading-relaxed">
-            {data.meta.total_nodes} piezas en operación · actualizado{" "}
+            {tn.isPapa
+              ? `${data.meta.total_nodes} piezas en marcha · última foto `
+              : `${data.meta.total_nodes} piezas en operación · actualizado `}
             {new Date(data.meta.timestamp).toLocaleDateString("es-MX", {
               day: "numeric",
               month: "short",
@@ -158,7 +166,7 @@ export function LivePulse({
         {/* Distritos */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
           <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 font-mono mb-3">
-            Distritos
+            {tn.isPapa ? "Áreas" : "Distritos"}
           </div>
           <div className="space-y-2">
             {data.districts.map((d, i) => (
@@ -177,7 +185,7 @@ export function LivePulse({
                       style={{ background: d.color, boxShadow: `0 0 8px ${d.color}80` }}
                     />
                     <span className="text-[13px] font-medium text-foreground">
-                      {d.label}
+                      {tn.district(d.id, d.label)}
                     </span>
                   </div>
                   <span className="text-[10px] font-mono tabular-nums text-muted-foreground">
@@ -203,7 +211,7 @@ export function LivePulse({
         <div className="px-5 py-3 border-t border-white/5 bg-black/30 space-y-1.5">
           <div className="flex items-center gap-2 text-[10px] font-mono">
             <Activity className="size-3 text-amber-400/60" />
-            <span className="text-muted-foreground">kernel</span>
+            <span className="text-muted-foreground">{tn.term("kernel")}</span>
             <span className="text-muted-foreground/70">v0.84.8 · web</span>
             <span className="ml-auto text-muted-foreground/50">Railway · MX</span>
           </div>
@@ -220,15 +228,15 @@ export function LivePulse({
                       : "bg-stone-500"
               }`}
             />
-            <span className="text-muted-foreground">tablero</span>
+            <span className="text-muted-foreground">{tn.term("tablero")}</span>
             <span className="text-muted-foreground/70">
               {liveStatus === "live" && liveCapturedAt
                 ? formatRelative(liveCapturedAt)
                 : liveStatus === "loading"
-                  ? "sincronizando…"
+                  ? tn.isPapa ? "actualizando…" : "sincronizando…"
                   : liveStatus === "error"
-                    ? "error de conexión"
-                    : "snapshot local"}
+                    ? tn.isPapa ? "sin conexión" : "error de conexión"
+                    : tn.isPapa ? "datos viejos" : "snapshot local"}
             </span>
             <span className="ml-auto text-muted-foreground/50">
               {liveSourceMode === "canonical_mount"
@@ -250,7 +258,7 @@ export function LivePulse({
                     : "bg-stone-500"
               }`}
             />
-            <span className="text-muted-foreground">memoria</span>
+            <span className="text-muted-foreground">{tn.term("memoria")}</span>
             <span className="text-muted-foreground/70">
               {supabaseHealth.data?.ok
                 ? `${supabaseHealth.data.tables_visible} tablas vivas`

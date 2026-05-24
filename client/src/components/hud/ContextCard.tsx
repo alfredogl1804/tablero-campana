@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import type { BoardNode, BoardData } from "@/lib/board-types";
 import { Button } from "@/components/ui/button";
+import { useTone } from "@/hooks/useTone";
 
 interface ContextCardProps {
   node: BoardNode | null;
@@ -99,11 +100,19 @@ function ContextCardContent({
   onSelectNode: (id: string) => void;
   onOpenStudio?: () => void;
 }) {
+  // T3 Sprint v3.0 — traducción a tono Modo Papá.
+  const tn = useTone();
   const isNanoBanana = node.id === "nano_banana_pro";
   const district = data.districts.find((d) => d.id === node.district);
   const statusMeta = STATUS_META[node.status];
   const StatusIcon = statusMeta.icon;
   const nodeMap = new Map(data.nodes.map((n) => [n.id, n]));
+  const humanLabel = tn.label(node.id, node.label);
+  const humanStatus = tn.status(node.status);
+  const humanStatusDescription = tn.statusDescription(node.status) || statusMeta.description;
+  const humanDistrictLabel = district
+    ? tn.district(district.id, district.label)
+    : "";
 
   return (
     <div className="forja-panel forja-grain rounded-lg h-full flex flex-col overflow-hidden">
@@ -124,13 +133,13 @@ function ContextCardContent({
               style={{ background: district.color }}
             />
             <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-mono">
-              {district.label}
+              {humanDistrictLabel}
             </span>
           </div>
         )}
 
         <h3 className="text-2xl font-bold text-foreground tracking-tight pr-8 leading-tight">
-          {node.label}
+          {humanLabel}
         </h3>
 
         {/* Estado badge */}
@@ -139,7 +148,7 @@ function ContextCardContent({
         >
           <StatusIcon className={`size-3 ${statusMeta.color}`} />
           <span className={`text-[11px] font-medium ${statusMeta.color}`}>
-            {statusMeta.label}
+            {humanStatus}
           </span>
         </div>
       </div>
@@ -149,7 +158,7 @@ function ContextCardContent({
         {/* Descripción humana */}
         <div>
           <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 font-mono mb-1.5">
-            Qué es
+            {tn.isPapa ? "¿Qué hace?" : "Qué es"}
           </div>
           <p className="text-[14px] leading-relaxed text-foreground/90">
             {node.description}
@@ -159,10 +168,10 @@ function ContextCardContent({
         {/* Estado explicado */}
         <div>
           <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 font-mono mb-1.5">
-            Estado actual
+            {tn.isPapa ? "¿Cómo está?" : "Estado actual"}
           </div>
           <p className="text-[13px] leading-relaxed text-foreground/80">
-            {statusMeta.description}
+            {humanStatusDescription}
           </p>
           {node.gap && (
             <div className="mt-2 p-2.5 rounded border border-amber-500/20 bg-amber-500/5">
@@ -177,37 +186,44 @@ function ContextCardContent({
         </div>
 
         {/* Métricas */}
-        {node.loc > 0 && (
-          <div className="grid grid-cols-2 gap-2">
-            <MiniStat
-              icon={<Code2 className="size-3" />}
-              label="Tamaño"
-              value={node.loc.toLocaleString()}
-              unit="líneas"
-            />
-            <MiniStat
-              icon={<Calendar className="size-3" />}
-              label="Última act."
-              value={new Date(node.last_updated).toLocaleDateString("es-MX", {
-                day: "numeric",
-                month: "short",
-              })}
-            />
-          </div>
-        )}
+        {node.loc > 0 && (() => {
+          const sizeMetric = tn.metric("loc", node.loc);
+          return (
+            <div className="grid grid-cols-2 gap-2">
+              <MiniStat
+                icon={<Code2 className="size-3" />}
+                label={tn.isPapa ? "Tamaño" : "Tamaño"}
+                value={sizeMetric.value}
+                unit={sizeMetric.unit}
+              />
+              <MiniStat
+                icon={<Calendar className="size-3" />}
+                label={tn.isPapa ? "Última vez que se tocó" : "Última act."}
+                value={new Date(node.last_updated).toLocaleDateString("es-MX", {
+                  day: "numeric",
+                  month: "short",
+                })}
+              />
+            </div>
+          );
+        })()}
 
         {/* Conexiones */}
         {(node.connections_in.length > 0 || node.connections_out.length > 0) && (
           <div>
             <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70 font-mono mb-2">
-              Conexiones
+              {tn.isPapa ? "¿Con quién trabaja?" : "Conexiones"}
             </div>
 
             {node.connections_out.length > 0 && (
               <div className="mb-3">
                 <div className="flex items-center gap-1.5 text-[11px] text-orange-400/90 mb-1.5">
                   <ArrowUpRight className="size-3" />
-                  <span>Envía a {node.connections_out.length}</span>
+                  <span>
+                    {tn.isPapa
+                      ? `Le manda información a ${node.connections_out.length}`
+                      : `Envía a ${node.connections_out.length}`}
+                  </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {node.connections_out.map((id) => {
@@ -219,7 +235,7 @@ function ContextCardContent({
                         onClick={() => onSelectNode(id)}
                         className="px-2 py-1 rounded text-[11px] bg-orange-500/10 border border-orange-500/20 text-orange-200 hover:bg-orange-500/20 hover:border-orange-500/40 transition"
                       >
-                        {target.label}
+                        {tn.label(target.id, target.label)}
                       </button>
                     );
                   })}
@@ -231,7 +247,11 @@ function ContextCardContent({
               <div>
                 <div className="flex items-center gap-1.5 text-[11px] text-blue-400/90 mb-1.5">
                   <ArrowDownRight className="size-3" />
-                  <span>Recibe de {node.connections_in.length}</span>
+                  <span>
+                    {tn.isPapa
+                      ? `Recibe información de ${node.connections_in.length}`
+                      : `Recibe de ${node.connections_in.length}`}
+                  </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {node.connections_in.map((id) => {
@@ -243,7 +263,7 @@ function ContextCardContent({
                         onClick={() => onSelectNode(id)}
                         className="px-2 py-1 rounded text-[11px] bg-blue-500/10 border border-blue-500/20 text-blue-200 hover:bg-blue-500/20 hover:border-blue-500/40 transition"
                       >
-                        {target.label}
+                        {tn.label(target.id, target.label)}
                       </button>
                     );
                   })}
@@ -275,7 +295,7 @@ function ContextCardContent({
             // Placeholder Fase 2: Pedir mejora vía Gemini reasoning
           }}
         >
-          {isNanoBanana ? "Pedir mejora a esta pieza" : "Pedir mejora a esta pieza"}
+          {tn.isPapa ? "Pedirle al Monstruo que la mejore" : "Pedir mejora a esta pieza"}
         </Button>
       </div>
     </div>
