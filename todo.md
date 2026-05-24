@@ -115,3 +115,33 @@
 - [x] Tests Vitest: 18 nuevos en server/board.layers.test.ts (registro, getColor, getHeight, mixHex, nodeAgeDays, pureza)
 - [x] 91/91 tests vitest verde (13 archivos)
 - [x] HMR limpio, 0 errores TypeScript
+
+
+## Sprint v3.0 — T7: Gestos táctiles iPhone (COMPLETO)
+- [x] Verificar @use-gesture/react sigue instalado tras upgrade del template
+- [x] Crear client/src/hooks/useBoardGestures.ts con helper puro pinchToZoom + binder useGesture
+- [x] Pinch zoom con scaleBounds + rubberband para sensación natural
+- [x] Doble tap detection (delta <320ms) → onDoubleTap callback
+- [x] Prevenir gesturestart/change/end nativos del Safari iOS para no romper pinch
+- [x] Wire en Home.tsx (gestureBind aplicado al div del Canvas)
+- [x] zoomBounds [14, 60] (mismo rango que TopToolbar)
+- [x] handleResetView reutilizado para doble tap
+- [x] touch-none en el wrapper para evitar pull-to-refresh y scroll bouncy
+- [x] Tests Vitest: 8 nuevos en server/board.gestures.test.ts (pinchToZoom, bounds, pureza)
+- [x] 99/99 tests vitest verde
+- [x] HMR limpio, 0 errores TypeScript
+
+## Sprint v3.0 — T6: Acciones desde ContextCard (en ejecución)
+- [ ] Crear tablas Drizzle: board_incidents (id, node_id, kind, message, severity, created_at, resolved_at) + board_overrides (id, node_id, status_override, note, expires_at)
+- [ ] pnpm db:push para aplicar migración con RLS por defecto
+- [ ] Crear server/routers/contextActions.ts con procedures: reportIncident, listIncidents, setOverride, clearOverride, askAbout
+- [ ] askAbout = especialización de omnibox.ask con prompt enfocado en un node específico
+- [ ] Wire contextActionsRouter en server/routers.ts
+- [ ] Extender ContextCard.tsx: 3 botones nuevos (Anotar incidente / Cambiar estado / Preguntar al Monstruo)
+- [ ] Modal IncidentForm con kind (BUG/IDEA/RIESGO/OBSERVACIÓN) + severity + message
+- [ ] Modal StatusOverride con dropdown ACTIVE/DEGRADED/FUTURE/PLANNED + nota + TTL
+- [ ] AskAbout inline: pregunta libre + Gemini responde citando solo el nodo activo
+- [ ] Mostrar incidentes recientes en ContextCard (list de los últimos 3)
+- [ ] Modo Papá: traducir botones y formularios
+- [ ] Tests Vitest: contrato de cada procedure + integración end-to-end
+- [ ] 99 + nuevos tests verdes

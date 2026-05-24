@@ -16,6 +16,7 @@ import { Omnibox } from "@/components/hud/Omnibox";
 import { TopToolbar } from "@/components/hud/TopToolbar";
 import { TutorialOverlay } from "@/components/hud/TutorialOverlay";
 import { LayerSwitcher } from "@/components/hud/LayerSwitcher";
+import { useBoardGestures } from "@/hooks/useBoardGestures";
 import { NanoBananaStudio } from "@/components/studio/NanoBananaStudio";
 import { CatastroCluster } from "@/components/catastro/CatastroCluster";
 import { trpc } from "@/lib/trpc";
@@ -98,10 +99,21 @@ export default function Home() {
     setZoomLevel(28);
   };
 
+  // T7 Sprint v3.0 — gestos táctiles iPhone (pinch zoom + double-tap reset)
+  const gestureBind = useBoardGestures({
+    zoom: zoomLevel,
+    setZoom: setZoomLevel,
+    onDoubleTap: handleResetView,
+    zoomBounds: { min: 14, max: 60 },
+  });
+
   return (
     <div className="fixed inset-0 overflow-hidden bg-background">
       {/* Canvas 3D */}
-      <div className="absolute inset-0 z-0">
+      <div
+        className="absolute inset-0 z-0 touch-none"
+        {...gestureBind()}
+      >
         <IsometricBoard
           data={boardData}
           selectedNodeId={selectedNodeId}
