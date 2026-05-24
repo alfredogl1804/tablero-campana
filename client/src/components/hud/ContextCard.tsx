@@ -22,6 +22,7 @@ import {
 import type { BoardNode, BoardData } from "@/lib/board-types";
 import { Button } from "@/components/ui/button";
 import { useTone } from "@/hooks/useTone";
+import { ContextActionsPanel } from "@/components/hud/ContextActionsPanel";
 
 interface ContextCardProps {
   node: BoardNode | null;
@@ -208,6 +209,9 @@ function ContextCardContent({
           );
         })()}
 
+        {/* T6 — Acciones, override activo e incidentes recientes */}
+        <ContextActionsPanel node={node} />
+
         {/* Conexiones */}
         {(node.connections_in.length > 0 || node.connections_out.length > 0) && (
           <div>
@@ -274,9 +278,9 @@ function ContextCardContent({
         )}
       </div>
 
-      {/* Acciones */}
-      <div className="px-5 py-4 border-t border-white/5 bg-black/20 space-y-2">
-        {isNanoBanana && onOpenStudio && (
+      {/* Acción especial: Studio operable solo para nano_banana_pro */}
+      {isNanoBanana && onOpenStudio && (
+        <div className="px-5 py-4 border-t border-white/5 bg-black/20">
           <Button
             variant="default"
             size="sm"
@@ -286,18 +290,8 @@ function ContextCardContent({
             <Sparkles className="size-4 mr-2" />
             Abrir Studio operable
           </Button>
-        )}
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full border-white/10 hover:bg-white/5"
-          onClick={() => {
-            // Placeholder Fase 2: Pedir mejora vía Gemini reasoning
-          }}
-        >
-          {tn.isPapa ? "Pedirle al Monstruo que la mejore" : "Pedir mejora a esta pieza"}
-        </Button>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

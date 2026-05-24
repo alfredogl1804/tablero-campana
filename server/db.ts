@@ -1,9 +1,13 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, gt, isNull, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
+  boardIncidents,
   boardNodes,
+  boardOverrides,
   boardSnapshots,
+  InsertBoardIncident,
   InsertBoardNode,
+  InsertBoardOverride,
   InsertBoardSnapshot,
   InsertUser,
   users,
@@ -201,3 +205,151 @@ export async function getBoardSnapshotById(id: number) {
   return rows.length > 0 ? rows[0] : null;
 }
 
+
+
+// ───────────────────────────────────────────────────────────────────
+// BOARD INCIDENTS HELPERS — Sprint v3.0 / T6 Acciones desde ContextCard
+// ───────────────────────────────────────────────────────────────────
+
+/**
+ * Inserta una nueva incidencia atada a un nodo del genoma.
+ * El nodeId no está bajo FK (no se valida contra board_nodes) porque las
+ * incidencias persisten más allá del snapshot vigente.
+ */
+export async function insertBoardIncident(incident: InsertBoardIncident) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot insert board incident: database not available");
+    return null;
+  }
+
+  await db.insert(boardIncidents).values(incident);
+  const [latest] = await db
+    .select()
+    .from(boardIncidents)
+    .where(eq(boardIncidents.nodeId, incident.nodeId))
+    .orderBy(desc(boardIncidents.id))
+    .limit(1);
+  return latest ?? null;
+}
+
+/**
+ * Lista las incidencias de un nodo, ordenadas de más reciente a más antigua.
+ * Default: limit 20, incluye resueltas y abiertas.
+ */
+export async function listBoardIncidentsForNode(nodeId: string, limit = 20) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return db
+    .select()
+    .from(boardIncidents)
+    .where(eq(boardIncidents.nodeId, nodeId))
+    .orderBy(desc(boardIncidents.createdAt))
+    .limit(limit);
+}
+
+/**
+ * Cuenta las incidencias abiertas (sin resolver) de un nodo.
+ * Útil para badges en el HUD.
+ */
+export async function countOpenIncidentsForNode(nodeId: string): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+
+  const rows = await db
+    .select({ id: boardIncidents.id })
+    .from(boardIncidents)
+    .where(
+      and(eq(boardIncidents.nodeId, nodeId), isNull(boardIncidents.resolvedAt))
+    );
+  return rows.length;
+}
+
+/**
+ * Marca una incidencia como resuelta. Devuelve la fila actualizada o null.
+ */
+export async function resolveBoardIncident(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  await db
+    .update(boardIncidents)
+    .set({ resolvedAt: new Date() })
+    .where(eq(boardIncidents.id, id));
+
+  const [row] = await db
+    .select()
+    .from(boardIncidents)
+    .where(eq(boardIncidents.id, id))
+    .limit(1);
+  return row ?? null;
+}
+
+// ───────────────────────────────────────────────────────────────────
+// BOARD OVERRIDES HELPERS — Sprint v3.0 / T6
+// ───────────────────────────────────────────────────────────────────
+
+/**
+ * Inserta un nuevo override de status para un nodo.
+ * No reemplaza overrides anteriores (queda historia); el más reciente vigente
+ * se obtiene con getActiveOverrideForNode.
+ */
+export async function insertBoardOverride(override: InsertBoardOverride) {
+  const db = await getDb();
+  if (!db) return null;
+
+  await db.insert(boardOverrides).values(override);
+  const [latest] = await db
+    .select()
+    .from(boardOverrides)
+    .where(eq(boardOverrides.nodeId, override.nodeId))
+    .orderBy(desc(boardOverrides.id))
+    .limit(1);
+  return latest ?? null;
+}
+
+/**
+ * Devuelve el override vigente para un nodo: el más reciente con clearedAt
+ * NULL y (expiresAt NULL o expiresAt > now). Si no hay ninguno, retorna null.
+ */
+export async function getActiveOverrideForNode(nodeId: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const now = new Date();
+
+  const rows = await db
+    .select()
+    .from(boardOverrides)
+    .where(
+      and(
+        eq(boardOverrides.nodeId, nodeId),
+        isNull(boardOverrides.clearedAt),
+        or(isNull(boardOverrides.expiresAt), gt(boardOverrides.expiresAt, now))
+      )
+    )
+    .orderBy(desc(boardOverrides.createdAt), desc(boardOverrides.id))
+    .limit(1);
+
+  return rows[0] ?? null;
+}
+
+/**
+ * Limpia un override (lo desactiva). Marca clearedAt = now.
+ */
+export async function clearBoardOverride(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  await db
+    .update(boardOverrides)
+    .set({ clearedAt: new Date() })
+    .where(eq(boardOverrides.id, id));
+
+  const [row] = await db
+    .select()
+    .from(boardOverrides)
+    .where(eq(boardOverrides.id, id))
+    .limit(1);
+  return row ?? null;
+}

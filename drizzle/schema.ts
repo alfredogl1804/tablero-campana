@@ -96,3 +96,98 @@ export const boardNodes = mysqlTable(
 
 export type BoardNodeRow = typeof boardNodes.$inferSelect;
 export type InsertBoardNode = typeof boardNodes.$inferInsert;
+
+
+/**
+ * board_incidents — Anotaciones operativas que el usuario adjunta a un nodo.
+ *
+ * Don Alfredo (o cualquier operador del Monstruo) puede levantar incidencias
+ * desde el ContextCard cuando ve algo raro en una pieza. Las anotaciones
+ * persisten más allá del snapshot vivo: aunque el nodo cambie en el genoma,
+ * la conversación queda atada al `nodeId` (no al `snapshotId`).
+ *
+ * Tipos de anotación:
+ *   - BUG          → algo está roto y necesita arreglarse
+ *   - IDEA         → propuesta de evolución para esta pieza
+ *   - RIESGO       → algo puede reventar si no se atiende
+ *   - OBSERVACION  → comentario informativo sin acción inmediata
+ */
+export const boardIncidents = mysqlTable(
+  "board_incidents",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    /** ID del nodo en el genoma (string canónico, p.ej. 'embrion_loop'). */
+    nodeId: varchar("nodeId", { length: 128 }).notNull(),
+    /** Snapshot bajo el cual se levantó la incidencia (trazabilidad histórica). */
+    snapshotId: int("snapshotId").references(() => boardSnapshots.id, {
+      onDelete: "set null",
+    }),
+    /** Quién la levantó: 'system' | openId del user. Para MVP se acepta 'system'. */
+    reporter: varchar("reporter", { length: 128 }).notNull().default("system"),
+    /** Categoría de la anotación. */
+    kind: mysqlEnum("kind", ["BUG", "IDEA", "RIESGO", "OBSERVACION"]).notNull(),
+    /** Severidad: 'low' | 'med' | 'high' (3 niveles, sencillo). */
+    severity: mysqlEnum("severity", ["low", "med", "high"])
+      .notNull()
+      .default("med"),
+    /** Texto libre del incidente (markdown sencillo permitido). */
+    message: text("message").notNull(),
+    /** Si fue resuelto, cuándo. NULL = sigue abierto. */
+    resolvedAt: timestamp("resolvedAt"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => ({
+    nodeIdIdx: index("board_incidents_nodeId_idx").on(table.nodeId),
+    createdAtIdx: index("board_incidents_createdAt_idx").on(table.createdAt),
+    kindIdx: index("board_incidents_kind_idx").on(table.kind),
+  })
+);
+
+export type BoardIncident = typeof boardIncidents.$inferSelect;
+export type InsertBoardIncident = typeof boardIncidents.$inferInsert;
+
+/**
+ * board_overrides — Re-declaración manual de estado para un nodo.
+ *
+ * El genoma vivo dice que un nodo está ACTIVE pero Don Alfredo sabe que ya
+ * no funciona en producción. O al revés: un nodo marcado FUTURE ya está
+ * empezando a operar. Este override pisa el status calculado por el extractor
+ * hasta que expire o se limpie manualmente.
+ *
+ * Sólo el override más reciente (ORDER BY createdAt DESC) por `nodeId` está
+ * activo. Los anteriores quedan como historia.
+ */
+export const boardOverrides = mysqlTable(
+  "board_overrides",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    nodeId: varchar("nodeId", { length: 128 }).notNull(),
+    /** Status declarado manualmente (ACTIVE/DEGRADED/SPRINT/FUTURE). */
+    statusOverride: mysqlEnum("statusOverride", [
+      "ACTIVE",
+      "DEGRADED",
+      "SPRINT",
+      "FUTURE",
+    ]).notNull(),
+    /** Razón humana de por qué se sobrescribió. */
+    note: text("note"),
+    /** Quién lo sobrescribió: 'system' | openId del user. */
+    reporter: varchar("reporter", { length: 128 }).notNull().default("system"),
+    /**
+     * Cuándo expira el override. NULL = permanente hasta limpiarlo manualmente.
+     * Cuando expira, vuelve a vigencia el status del genoma vivo.
+     */
+    expiresAt: timestamp("expiresAt"),
+    /** Si fue limpiado manualmente, cuándo. NULL = sigue activo. */
+    clearedAt: timestamp("clearedAt"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => ({
+    nodeIdIdx: index("board_overrides_nodeId_idx").on(table.nodeId),
+    createdAtIdx: index("board_overrides_createdAt_idx").on(table.createdAt),
+  })
+);
+
+export type BoardOverride = typeof boardOverrides.$inferSelect;
+export type InsertBoardOverride = typeof boardOverrides.$inferInsert;

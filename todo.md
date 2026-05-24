@@ -131,17 +131,25 @@
 - [x] 99/99 tests vitest verde
 - [x] HMR limpio, 0 errores TypeScript
 
-## Sprint v3.0 — T6: Acciones desde ContextCard (en ejecución)
-- [ ] Crear tablas Drizzle: board_incidents (id, node_id, kind, message, severity, created_at, resolved_at) + board_overrides (id, node_id, status_override, note, expires_at)
-- [ ] pnpm db:push para aplicar migración con RLS por defecto
-- [ ] Crear server/routers/contextActions.ts con procedures: reportIncident, listIncidents, setOverride, clearOverride, askAbout
-- [ ] askAbout = especialización de omnibox.ask con prompt enfocado en un node específico
-- [ ] Wire contextActionsRouter en server/routers.ts
-- [ ] Extender ContextCard.tsx: 3 botones nuevos (Anotar incidente / Cambiar estado / Preguntar al Monstruo)
-- [ ] Modal IncidentForm con kind (BUG/IDEA/RIESGO/OBSERVACIÓN) + severity + message
-- [ ] Modal StatusOverride con dropdown ACTIVE/DEGRADED/FUTURE/PLANNED + nota + TTL
-- [ ] AskAbout inline: pregunta libre + Gemini responde citando solo el nodo activo
-- [ ] Mostrar incidentes recientes en ContextCard (list de los últimos 3)
-- [ ] Modo Papá: traducir botones y formularios
-- [ ] Tests Vitest: contrato de cada procedure + integración end-to-end
-- [ ] 99 + nuevos tests verdes
+## Sprint v3.0 — T6: Acciones desde ContextCard (COMPLETO)
+- [x] Drizzle schema: board_incidents (kind, severity, message, snapshotId, resolvedAt) + board_overrides (statusOverride, note, expiresAt, clearedAt)
+- [x] pnpm db:push aplicado (5 tablas vivas en TiDB: users, board_snapshots, board_nodes, board_incidents, board_overrides)
+- [x] server/db.ts helpers: insertBoardIncident, listBoardIncidents, resolveBoardIncident, setBoardOverride, getActiveOverrideForNode, clearBoardOverride (con tie-breaker DESC id ante empates de timestamp)
+- [x] server/routers/contextActions.ts con 7 procedures: reportIncident, listIncidents, resolveIncident, setOverride, getActiveOverride, clearOverride, askAbout
+- [x] askAbout: Gemini 3 Pro Reasoning con contexto focal (nodo + nodos conectados), respuesta validada, fallback graceful
+- [x] Validación Zod robusta: nodeId regex /^[a-z0-9_]+$/i, message min(2)max(2000), enums kind/severity/status
+- [x] Wire contextActionsRouter en server/routers.ts
+- [x] client/src/components/hud/ContextActionsPanel.tsx: 3 modales (Anotar / Redeclarar / Preguntar)
+- [x] Modal IncidentForm con kind (BUG/IDEA/RIESGO/OBSERVACIÓN) + severity + message
+- [x] Modal StatusOverride con 4 estados + nota + opción de borrar
+- [x] Modal AskAbout con Gemini focal y resultado en línea
+- [x] Chip violeta de override activo en ContextCard cuando hay redeclaración vigente
+- [x] Lista de los 3 incidentes más recientes con badge abierto/resuelto
+- [x] Modo Papá aplicado al 100% del componente (etiquetas, placeholders, botones, severity en lenguaje natural)
+- [x] Wire en ContextCard.tsx reemplazando el footer placeholder por el panel funcional
+- [x] Tests Vitest: 7 nuevos en server/contextActions.test.ts (ciclo completo incidentes, ciclo completo overrides, vigencia expiresAt, validaciones Zod, NOT_FOUND)
+- [x] Test dedicado server/contextActions.askAbout.test.ts: 4 tests (fallback estructurado nodo inexistente, shape válido con nodo real, validaciones Zod) cubren Gemini focal y latencia ~13s
+- [x] Auditoría de implementación askAbout: usa GEMINI_MODELS.REASONING_TOP, contexto restringido a nodo + connections_in/out, parseo permisivo con fallback a texto crudo capado, fallback estructurado en cada error path
+- [x] Schema columnas validadas con grep: snapshotId (FK boardSnapshots, set null), kind/severity como mysqlEnum, statusOverride enum 4 valores, clearedAt timestamp
+- [x] 110/110 tests verde · 16 archivos · 0 regresiones (incremento neto +11 tests del T6 incluyendo askAbout dedicado)
+- [x] HMR limpio, 0 errores TypeScript
