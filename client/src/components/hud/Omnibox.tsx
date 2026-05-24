@@ -78,7 +78,7 @@ export function Omnibox({ data, onSelectNode }: OmniboxProps) {
   const isCommandLike = query.trim().length > 12 && matches.length === 0;
 
   return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto">
+    <div className="absolute bottom-[calc(env(safe-area-inset-bottom,0)+1.5rem)] sm:bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-auto w-[calc(100vw-1.5rem)] sm:w-auto px-3 sm:px-0">
       <AnimatePresence mode="wait">
         {!open ? (
           <motion.button
@@ -88,7 +88,7 @@ export function Omnibox({ data, onSelectNode }: OmniboxProps) {
             exit={{ opacity: 0, y: 16 }}
             transition={{ duration: 0.3 }}
             onClick={() => setOpen(true)}
-            className="forja-panel forja-bevel rounded-full px-5 py-3 flex items-center gap-3 hover:scale-[1.02] transition-transform group"
+            className="forja-panel forja-bevel rounded-full px-5 py-3 flex items-center gap-3 hover:scale-[1.02] transition-transform group max-w-full"
           >
             <Search className="size-4 text-orange-500 group-hover:text-orange-400" />
             <span className="text-sm text-muted-foreground">
@@ -105,7 +105,7 @@ export function Omnibox({ data, onSelectNode }: OmniboxProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ type: "spring", stiffness: 300, damping: 26 }}
-            className="forja-panel rounded-xl w-[640px] overflow-hidden"
+            className="forja-panel rounded-xl w-full sm:w-[640px] max-w-[640px] overflow-hidden"
             style={{
               boxShadow:
                 "0 0 0 1px rgba(249,115,22,0.3), 0 24px 80px -20px rgba(249,115,22,0.25), 0 32px 80px -16px rgba(0,0,0,0.6)",
@@ -119,7 +119,8 @@ export function Omnibox({ data, onSelectNode }: OmniboxProps) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Pide algo... ej: «¿qué le falta a la app móvil?»"
-                className="flex-1 bg-transparent outline-none text-lg text-foreground placeholder:text-muted-foreground/60 font-medium"
+                className="flex-1 bg-transparent outline-none text-base sm:text-lg text-foreground placeholder:text-muted-foreground/60 font-medium min-w-0"
+                style={{ fontSize: "max(16px, 1rem)" }}
               />
               <button
                 className="size-8 rounded flex items-center justify-center hover:bg-white/5 text-muted-foreground hover:text-orange-400 transition mr-1"

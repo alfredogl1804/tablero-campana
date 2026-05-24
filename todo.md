@@ -37,3 +37,11 @@
 - [x] Checkpoint v2.4 (version af22604f)
 - [x] Validación auditable: nuevo `server/canvas.no_remote_assets.test.ts` (4 tests) que prohíbe URLs remotas en componentes del board. 23/23 tests verdes.
 - [x] Validación visual reproducible: monstruo-fmpgkidx.manus.space publicado v2.4 con board completamente renderizado en Safari iPhone real (capturas IMG_5493 / IMG_5494)
+
+## Fase 9 — Fix Omnibox responsive iPhone (v2.4.2)
+- [x] Diagnosticado: `w-[640px]` fijo desbordaba viewport iPhone (≤414px)
+- [x] Fix aplicado: `w-full sm:w-[640px] max-w-[640px]` + wrapper con `100vw-1.5rem`
+- [x] Prevención del zoom-on-focus de iOS: `fontSize: max(16px, 1rem)` en input
+- [x] safe-area-inset-bottom respetado para iPhones con notch
+- [x] Test de regresión `server/omnibox.responsive.test.ts` (3 tests) bloquea futuras regresiones
+- [x] 26/26 tests verdes
