@@ -82,3 +82,21 @@
 - [x] Aplicar a Building 3D vía nuevo BuildingsLayer dentro del Canvas R3F
 - [x] Tests Vitest: 21 nuevos en server/tone.dictionary.test.ts (status, distritos, labels, métricas, drift detection ≥40%, cardinales)
 - [x] 68/68 tests verde
+
+
+## Sprint v3.0 — T2: Cerebro narrativo del Omnibox (COMPLETO)
+- [x] Crear server/routers/omnibox.ts con procedure ask basado en Gemini 3 Pro reasoning
+- [x] Wire omniboxRouter en server/routers.ts (board, gemini, omnibox, supabase)
+- [x] System prompt riguroso: español Latam, citas obligatorias `[@node_id]`, prohibido inventar IDs, tono según query
+- [x] Validación de citas en backend: filtra IDs inexistentes en payload del snapshot
+- [x] Fallback estructurado: { fallback: true, reason: "...", answer: "" } cuando Gemini falla o snapshot no existe
+- [x] Reescribir Omnibox.tsx con modo dual: literal (Fuse.js mientras tecleas) + ask (Enter llama a Gemini)
+- [x] Estado "El Monstruo está pensando" con loader y query citada (mientras Gemini razona ~10-20s)
+- [x] AnswerCard con regex `\[@id\]` → chips clickeables que abren ContextCard
+- [x] Defensa frontend: cita inválida no rompe render (texto plano fallback)
+- [x] Validación de citas frontend con Map<id,node> del snapshot vivo
+- [x] Suggestions clickeables: "¿Cómo piensas?" / "¿Qué le falta a la app móvil?" / "¿Dónde guardas la memoria?" / "¿Qué piezas están degradadas?"
+- [x] ErrorCard con reintentar
+- [x] Tests Vitest: 5 nuevos en server/omnibox.ask.test.ts (shape, citas válidas, fallback graceful, queries cortas/largas rechazadas)
+- [x] Validación end-to-end: pregunta real "¿Cómo piensas?" → 7 citas IDs reales del genoma, ~12-15s latencia
+- [x] 73/73 tests vitest verde

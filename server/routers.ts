@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { boardRouter } from "./routers/board";
 import { geminiRouter } from "./routers/gemini";
+import { omniboxRouter } from "./routers/omnibox";
 import { supabaseRouter } from "./routers/supabase";
 
 export const appRouter = router({
@@ -20,6 +21,7 @@ export const appRouter = router({
   }),
   board: boardRouter,
   gemini: geminiRouter,
+  omnibox: omniboxRouter,
   supabase: supabaseRouter,
 });
 
