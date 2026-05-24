@@ -201,16 +201,32 @@ export function IsometricBoard({
 
   return (
     <Canvas
-      shadows
-      dpr={[1, 2]}
+      shadows={false}
+      dpr={[1, 1.5]}
       gl={{
         antialias: true,
         alpha: false,
-        powerPreference: "high-performance",
+        powerPreference: "default",
+        // Retiene el frame para que el screenshot del sandbox/headless lo capture.
+        // Sin esto, WebGL limpia el drawing buffer después del swap y el screenshot
+        // sólo atrapa el clear color por defecto (negro). Validado empíricamente v2.3.
+        preserveDrawingBuffer: true,
+        failIfMajorPerformanceCaveat: false,
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 1.0,
       }}
-      style={{ background: "transparent" }}
+      style={{ background: "transparent", width: "100%", height: "100%" }}
+      onCreated={(state) => {
+        const canvas = state.gl.domElement;
+        console.log("[IsometricBoard] Canvas created | size:", state.size, " | dpr:", state.gl.getPixelRatio());
+        canvas.addEventListener("webglcontextlost", (event) => {
+          event.preventDefault();
+          console.error("[IsometricBoard] WebGL context LOST — the GPU detached the renderer");
+        });
+        canvas.addEventListener("webglcontextrestored", () => {
+          console.log("[IsometricBoard] WebGL context restored");
+        });
+      }}
     >
       <color attach="background" args={["#16110d"]} />
       <fog attach="fog" args={["#16110d", 30, 90]} />

@@ -161,8 +161,6 @@ export function Building({
       <mesh
         ref={meshRef}
         position={[0, height / 2, 0]}
-        castShadow
-        receiveShadow
       >
         <boxGeometry args={[width, height, width]} />
         <meshStandardMaterial

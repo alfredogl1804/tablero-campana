@@ -13,4 +13,15 @@
 ## Fase 6 — Datos vivos en LivePulse
 - [x] LivePulse consume trpc.supabase.health (refetch 30s)
 - [x] Footer muestra `N tablas vivas` con dot verde/ámbar/gris
-- [ ] Checkpoint v2.2
+- [x] Checkpoint v2.2 (version 9430a301)
+
+## Fase 7 — Reparación del Canvas 3D (v2.3, decisión Sabio #3 Gemini)
+- [x] Diagnóstico empírico con probe magenta (confirmó H1 al 100%)
+- [x] Fix definitivo: `preserveDrawingBuffer: true` en gl options
+- [x] Restaurar `meshStandardMaterial` en Building.tsx (después de descartar luces como causa)
+- [x] Restaurar zoom default 28 en Home.tsx
+- [x] Retirar sonda de diagnóstico del IsometricBoard
+- [x] Listener `webglcontextlost` / `webglcontextrestored` mantenido como red de seguridad
+- [x] 19 tests verdes
+- [ ] Checkpoint v2.3
+- [ ] Validación final en iPhone (después de publicar)
