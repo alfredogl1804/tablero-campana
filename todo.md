@@ -153,3 +153,22 @@
 - [x] Schema columnas validadas con grep: snapshotId (FK boardSnapshots, set null), kind/severity como mysqlEnum, statusOverride enum 4 valores, clearedAt timestamp
 - [x] 110/110 tests verde · 16 archivos · 0 regresiones (incremento neto +11 tests del T6 incluyendo askAbout dedicado)
 - [x] HMR limpio, 0 errores TypeScript
+
+
+## Sprint v3.0 — T5: Memoria histórica del board (COMPLETO)
+- [x] Backend ya operativo desde T1: board.history (metadata sin payload pesado, lazy) y board.byId (reconstrucción completa)
+- [x] Crear client/src/components/hud/TimelineSlider.tsx con burbujas por snapshot
+- [x] Tamaño de burbuja proporcional a totalNodes (sqrt scaled, 22-38px)
+- [x] Color de borde según systemHealth (verde >0.75, ámbar 0.55-0.75, rojo <0.55)
+- [x] Tooltip con capturedAt relativo (hace X min/h/d), nodos, salud
+- [x] Burbuja "ahora" destacada con punto amarillo
+- [x] Estado de viaje en el tiempo (badge ámbar + botón "Volver al ahora")
+- [x] Modo Papá: "snapshots" → "fotografías", "live" → "ahora"
+- [x] Wire en Home.tsx con state travelSnapshotId
+- [x] travelBoard query (board.byId) habilitada solo cuando hay travelSnapshotId
+- [x] Pausar refetch del live (refetchInterval: false) cuando se está viajando
+- [x] Prioridad en boardData useMemo: travelBoard > liveBoard > staticFallback
+- [x] Animación: T4 lerp de altura ya soporta transición suave entre snapshots
+- [x] Tests Vitest: 9 nuevos en server/board.history.test.ts (metadata válida, lazy loading, límite, byId reconstruye, null para inexistente, consistencia history↔current, shape igual a current, validaciones Zod)
+- [x] 119/119 tests verde · 17 archivos · 0 regresiones (incremento neto +9 tests del T5)
+- [x] HMR limpio, 0 errores TypeScript

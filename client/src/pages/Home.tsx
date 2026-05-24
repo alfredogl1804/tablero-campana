@@ -16,6 +16,7 @@ import { Omnibox } from "@/components/hud/Omnibox";
 import { TopToolbar } from "@/components/hud/TopToolbar";
 import { TutorialOverlay } from "@/components/hud/TutorialOverlay";
 import { LayerSwitcher } from "@/components/hud/LayerSwitcher";
+import { TimelineSlider } from "@/components/hud/TimelineSlider";
 import { useBoardGestures } from "@/hooks/useBoardGestures";
 import { NanoBananaStudio } from "@/components/studio/NanoBananaStudio";
 import { CatastroCluster } from "@/components/catastro/CatastroCluster";
@@ -35,22 +36,44 @@ export default function Home() {
   const [showTutorial, setShowTutorial] = useState(false);
   const [studioOpen, setStudioOpen] = useState(false);
   const [catastroOpen, setCatastroOpen] = useState(false);
+  // T5 — viaje en el tiempo: null = viendo el ahora, número = snapshot histórico activo
+  const [travelSnapshotId, setTravelSnapshotId] = useState<number | null>(null);
 
   // Sincronización viva: el tablero refleja el snapshot más reciente del Monstruo,
   // refrescado automáticamente cada 60s sin acción del usuario (T1 del Sprint v3.0).
+  // Cuando el usuario viaja al pasado (T5), el refetch del live se pausa para no
+  // sobrescribir el snapshot histórico que está mirando.
   const liveBoard = trpc.board.current.useQuery(undefined, {
-    refetchInterval: 60_000,
-    refetchOnWindowFocus: true,
+    refetchInterval: travelSnapshotId === null ? 60_000 : false,
+    refetchOnWindowFocus: travelSnapshotId === null,
     retry: 1,
   });
 
+  // T5 — cuando hay un id de viaje activo, traemos ese snapshot histórico
+  const travelBoard = trpc.board.byId.useQuery(
+    { id: travelSnapshotId ?? 0 },
+    {
+      enabled: travelSnapshotId !== null,
+      staleTime: 5 * 60 * 1000,
+    },
+  );
+
   const boardData: BoardData = useMemo(() => {
+    // Prioridad 1: snapshot histórico activo (viaje en el tiempo)
+    if (travelSnapshotId !== null && travelBoard.data?.payload) {
+      const histPayload = travelBoard.data.payload as unknown as BoardData | undefined;
+      if (histPayload && Array.isArray(histPayload.nodes) && histPayload.nodes.length > 0) {
+        return histPayload;
+      }
+    }
+    // Prioridad 2: snapshot vivo (live)
     const livePayload = liveBoard.data?.payload as BoardData | undefined;
     if (livePayload && Array.isArray(livePayload.nodes) && livePayload.nodes.length > 0) {
       return livePayload;
     }
+    // Prioridad 3: fallback estático empacado
     return staticBoardData;
-  }, [liveBoard.data]);
+  }, [liveBoard.data, travelBoard.data, travelSnapshotId]);
 
   // Derivar el estado explícito de la sincronización viva para que el HUD
   // pueda mostrarlo. "stale" = el frontend está sirviendo el JSON estático
@@ -156,6 +179,11 @@ export default function Home() {
         />
         <Omnibox data={boardData} onSelectNode={setSelectedNodeId} />
         <LayerSwitcher data={boardData} />
+        <TimelineSlider
+          activeSnapshotId={travelSnapshotId}
+          currentSnapshotId={liveBoard.data?.id ?? null}
+          onSelectSnapshot={setTravelSnapshotId}
+        />
       </div>
 
       {/* Tutorial */}
