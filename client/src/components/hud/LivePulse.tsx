@@ -11,12 +11,33 @@ import { Activity, AlertTriangle, CheckCircle2, Hammer, Clock } from "lucide-rea
 import type { BoardData } from "@/lib/board-types";
 import { trpc } from "@/lib/trpc";
 
+/**
+ * Estado del feed vivo del Tablero (T1).
+ * - `loading`: la primera consulta a board.current sigue pendiente.
+ * - `live`: hay un snapshot reciente desde DB / mount canónico.
+ * - `stale`: el frontend cayó al fallback estático (no hay snapshot vivo).
+ * - `error`: la consulta lanzó excepción (DB caída, script roto).
+ */
+export type BoardLiveStatus = "loading" | "live" | "stale" | "error";
+
 interface LivePulseProps {
   data: BoardData;
   onSelectDistrict?: (id: string) => void;
+  /** Estado de la sincronización viva (T1). Default `"stale"` si no se pasa. */
+  liveStatus?: BoardLiveStatus;
+  /** Timestamp ISO del último snapshot vivo (para mostrar "hace Xm"). */
+  liveCapturedAt?: string | Date | null;
+  /** Modo de fuente del snapshot vivo (canonical_mount | local_snapshot_fallback). */
+  liveSourceMode?: string | null;
 }
 
-export function LivePulse({ data, onSelectDistrict }: LivePulseProps) {
+export function LivePulse({
+  data,
+  onSelectDistrict,
+  liveStatus = "stale",
+  liveCapturedAt = null,
+  liveSourceMode = null,
+}: LivePulseProps) {
   // Pulso vivo del Supabase (Memoria Soberana). Si la red falla, el footer
   // simplemente cae al estado "sin conexión" sin tirar la app.
   const supabaseHealth = trpc.supabase.health.useQuery(undefined, {
@@ -178,13 +199,46 @@ export function LivePulse({ data, onSelectDistrict }: LivePulseProps) {
           </div>
         </div>
 
-        {/* Footer — kernel + memoria viva (Supabase) */}
+        {/* Footer — kernel + memoria viva (Supabase) + tablero vivo (T1) */}
         <div className="px-5 py-3 border-t border-white/5 bg-black/30 space-y-1.5">
           <div className="flex items-center gap-2 text-[10px] font-mono">
             <Activity className="size-3 text-amber-400/60" />
             <span className="text-muted-foreground">kernel</span>
             <span className="text-muted-foreground/70">v0.84.8 · web</span>
             <span className="ml-auto text-muted-foreground/50">Railway · MX</span>
+          </div>
+          {/* Indicador de sincronización viva del Tablero (T1 Sprint v3.0) */}
+          <div className="flex items-center gap-2 text-[10px] font-mono">
+            <span
+              className={`size-1.5 rounded-full ${
+                liveStatus === "live"
+                  ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]"
+                  : liveStatus === "loading"
+                    ? "bg-amber-400 animate-pulse"
+                    : liveStatus === "error"
+                      ? "bg-red-500"
+                      : "bg-stone-500"
+              }`}
+            />
+            <span className="text-muted-foreground">tablero</span>
+            <span className="text-muted-foreground/70">
+              {liveStatus === "live" && liveCapturedAt
+                ? formatRelative(liveCapturedAt)
+                : liveStatus === "loading"
+                  ? "sincronizando…"
+                  : liveStatus === "error"
+                    ? "error de conexión"
+                    : "snapshot local"}
+            </span>
+            <span className="ml-auto text-muted-foreground/50">
+              {liveSourceMode === "canonical_mount"
+                ? "mount"
+                : liveSourceMode === "local_snapshot_fallback"
+                  ? "fallback"
+                  : liveStatus === "stale"
+                    ? "static"
+                    : "—"}
+            </span>
           </div>
           <div className="flex items-center gap-2 text-[10px] font-mono">
             <span
@@ -210,6 +264,19 @@ export function LivePulse({ data, onSelectDistrict }: LivePulseProps) {
       </div>
     </motion.div>
   );
+}
+
+/**
+ * Formatea un timestamp como "hace 2m" / "hace 1h" / fecha corta.
+ */
+function formatRelative(ts: string | Date): string {
+  const date = typeof ts === "string" ? new Date(ts) : ts;
+  if (isNaN(date.getTime())) return "—";
+  const seconds = Math.max(0, (Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return "hace <1m";
+  if (seconds < 3600) return `hace ${Math.floor(seconds / 60)}m`;
+  if (seconds < 86400) return `hace ${Math.floor(seconds / 3600)}h`;
+  return date.toLocaleDateString("es-MX", { day: "numeric", month: "short" });
 }
 
 function StatRow({

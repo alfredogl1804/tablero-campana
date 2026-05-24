@@ -1,7 +1,14 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
-import { ENV } from './_core/env';
+import {
+  boardNodes,
+  boardSnapshots,
+  InsertBoardNode,
+  InsertBoardSnapshot,
+  InsertUser,
+  users,
+} from "../drizzle/schema";
+import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -89,4 +96,108 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// ───────────────────────────────────────────────────────────────────
+// BOARD SNAPSHOT HELPERS — Sprint v3.0 / T1 Sincronización viva
+// ───────────────────────────────────────────────────────────────────
+
+/**
+ * Inserta un snapshot completo del Tablero junto con todos sus nodos.
+ * Usa transacción para garantizar atomicidad: si falla la inserción de nodos,
+ * el snapshot también se revierte.
+ */
+export async function insertBoardSnapshot(
+  snapshot: InsertBoardSnapshot,
+  nodes: Omit<InsertBoardNode, "snapshotId">[],
+): Promise<{ snapshotId: number; nodesInserted: number } | null> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot insert board snapshot: database not available");
+    return null;
+  }
+
+  // mysql2/drizzle no soporta returning() en MySQL/TiDB.
+  // Hacemos insert simple y luego leemos el último id.
+  await db.insert(boardSnapshots).values(snapshot);
+  const [latest] = await db
+    .select({ id: boardSnapshots.id })
+    .from(boardSnapshots)
+    .orderBy(desc(boardSnapshots.id))
+    .limit(1);
+
+  if (!latest) {
+    throw new Error("insertBoardSnapshot: no se pudo recuperar el id del snapshot recién insertado");
+  }
+
+  const snapshotId = latest.id;
+
+  if (nodes.length > 0) {
+    // Bulk insert en lotes de 100 para evitar payloads excesivos
+    const BATCH = 100;
+    for (let i = 0; i < nodes.length; i += BATCH) {
+      const slice = nodes.slice(i, i + BATCH).map(n => ({ ...n, snapshotId }));
+      await db.insert(boardNodes).values(slice);
+    }
+  }
+
+  return { snapshotId, nodesInserted: nodes.length };
+}
+
+/**
+ * Devuelve el snapshot más reciente del Tablero, o null si no hay ninguno.
+ * No incluye los nodos relacionales (esos viven dentro del payload JSON).
+ */
+export async function getCurrentBoardSnapshot() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot read current board snapshot: database not available");
+    return null;
+  }
+
+  const rows = await db
+    .select()
+    .from(boardSnapshots)
+    .orderBy(desc(boardSnapshots.capturedAt), desc(boardSnapshots.id))
+    .limit(1);
+
+  return rows.length > 0 ? rows[0] : null;
+}
+
+/**
+ * Lista los últimos N snapshots ordenados de más reciente a más antiguo.
+ * Devuelve solo metadata (sin payload completo) para listas de timeline.
+ */
+export async function listBoardSnapshots(limit = 30) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return db
+    .select({
+      id: boardSnapshots.id,
+      capturedAt: boardSnapshots.capturedAt,
+      sourceCommit: boardSnapshots.sourceCommit,
+      sourceMode: boardSnapshots.sourceMode,
+      totalNodes: boardSnapshots.totalNodes,
+      systemHealth: boardSnapshots.systemHealth,
+    })
+    .from(boardSnapshots)
+    .orderBy(desc(boardSnapshots.capturedAt), desc(boardSnapshots.id))
+    .limit(limit);
+}
+
+/**
+ * Recupera un snapshot específico por id, con su payload completo.
+ * Útil para el TimelineSlider de T5.
+ */
+export async function getBoardSnapshotById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const rows = await db
+    .select()
+    .from(boardSnapshots)
+    .where(eq(boardSnapshots.id, id))
+    .limit(1);
+
+  return rows.length > 0 ? rows[0] : null;
+}
+

@@ -45,3 +45,24 @@
 - [x] safe-area-inset-bottom respetado para iPhones con notch
 - [x] Test de regresión `server/omnibox.responsive.test.ts` (3 tests) bloquea futuras regresiones
 - [x] 26/26 tests verdes
+
+
+## Sprint v3.0 — T1: Sincronización viva (COMPLETO)
+- [x] Crear tablas Drizzle: board_snapshots, board_nodes
+- [x] pnpm db:push para aplicar migración
+- [x] Crear scripts/build_board_data.py (lee del mount canónico, fallback a snapshot local)
+- [x] Snapshot local de respaldo en scripts/board_sources/
+- [x] Crear server/db.ts helpers: insertBoardSnapshot, getCurrentBoardSnapshot, listBoardSnapshots, getBoardSnapshotById
+- [x] Crear server/routers/board.ts con board.current, board.refresh, board.history, board.byId
+- [x] Wire en server/routers.ts
+- [x] Reemplazar import estático en client/src/pages/Home.tsx por trpc.board.current con refetchInterval 60s
+- [x] Manejo de loading/error/fallback con boardData estático como último recurso (useMemo)
+- [x] Tests Vitest: shape de snapshot + idempotencia + ejecución real (14 tests, todos verdes)
+- [x] Handler /api/scheduled/refreshBoard montado en server/_core/index.ts (Heartbeat-ready, requiere deploy)
+- [x] Validación end-to-end: 62 nodos, system_health 0.735, source_mode canonical_mount, 403 sin header de cron
+- [x] 47/47 tests vitest verdes (añadidos: 3 board.diff + 4 board.scheduled)
+- [x] UI explícita de loading/live/stale/error en LivePulse footer (badge "tablero")
+- [x] Test board.diff: determinismo + diff entre snapshots + source_mode coincide con FS
+- [x] Test board.scheduled: 403 sin header, dev bypass válido, x-manus-cron-task-uid válido, idempotencia
+- [x] Fallback local auditable: scripts/board_sources/MONSTRUO_GENOME.yaml + lógica de selección canonical_mount vs local_snapshot_fallback en build_board_data.py
+- [ ] Crear cron POST-DEPLOY: manus-heartbeat create --name refresh-tablero --cron "0 */5 * * * *" --path /api/scheduled/refreshBoard
