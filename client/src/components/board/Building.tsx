@@ -207,7 +207,6 @@ export function Building({
           fillOpacity={1}
           outlineWidth={0.025}
           outlineColor="#0a0806"
-          font="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff"
         >
           {node.label}
         </Text>

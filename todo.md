@@ -23,5 +23,5 @@
 - [x] Retirar sonda de diagnóstico del IsometricBoard
 - [x] Listener `webglcontextlost` / `webglcontextrestored` mantenido como red de seguridad
 - [x] 19 tests verdes
-- [ ] Checkpoint v2.3
-- [ ] Validación final en iPhone (después de publicar)
+- [x] Checkpoint v2.3 (version 4487d922)
+- [ ] Validación final en iPhone (después de publicar) — bloqueado en mano del usuario

@@ -74,7 +74,6 @@ export function DistrictPlatform({
         color={district.color}
         anchorX="center"
         anchorY="middle"
-        font="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff"
         fillOpacity={0.95}
         outlineWidth={0.02}
         outlineColor="#0a0806"

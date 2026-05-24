@@ -8,7 +8,7 @@
  * - Estados visuales por material: ACTIVE / DEGRADED / SPRINT / FUTURE
  */
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrthographicCamera, Environment, Grid } from "@react-three/drei";
+import { OrthographicCamera, Grid } from "@react-three/drei";
 import { useMemo, useRef, useState, useCallback, useEffect } from "react";
 import * as THREE from "three";
 import type { BoardData, BoardNode, BoardDistrict } from "@/lib/board-types";
@@ -217,11 +217,12 @@ export function IsometricBoard({
       }}
       style={{ background: "transparent", width: "100%", height: "100%" }}
       onCreated={(state) => {
+        // Red de seguridad: si en el futuro el GPU pierde contexto en algún dispositivo,
+        // dejamos rastro para diagnóstico (ver postmortem v2.4 — Google Fonts suspender).
         const canvas = state.gl.domElement;
-        console.log("[IsometricBoard] Canvas created | size:", state.size, " | dpr:", state.gl.getPixelRatio());
         canvas.addEventListener("webglcontextlost", (event) => {
           event.preventDefault();
-          console.error("[IsometricBoard] WebGL context LOST — the GPU detached the renderer");
+          console.error("[IsometricBoard] WebGL context LOST — GPU detached the renderer");
         });
         canvas.addEventListener("webglcontextrestored", () => {
           console.log("[IsometricBoard] WebGL context restored");
@@ -287,7 +288,14 @@ export function IsometricBoard({
         <meshBasicMaterial transparent opacity={0} />
       </mesh>
 
-      <Environment preset="warehouse" environmentIntensity={0.25} />
+      {/*
+        <Environment preset="warehouse" /> intentaba cargar un HDRI desde
+        threejs.org (CDN externa). En este sandbox la CDN está bloqueada,
+        así que el componente quedaba suspendido para siempre y todo el
+        Canvas se congelaba (sin render loop, sin frames, sin meshes).
+        Causa raíz validada con probe de GPT-5.5 Pro (Sabio #1) v2.4.
+        Las luces de ForjaLighting bastan para iluminar la escena sin HDRI.
+      */}
     </Canvas>
   );
 }
