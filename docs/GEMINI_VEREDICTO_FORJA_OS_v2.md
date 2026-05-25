@@ -1,76 +1,81 @@
 # Veredicto Gemini 3 Pro — Forja OS v2 (consistencia técnica)
 
 > Auditoría de consistencia interna y verificación granular de citas contra el repo real.
-> Fecha: 2026-05-25 01:07 UTC
+> Fecha: 2026-05-25 01:16 UTC
 > Modelo: gemini-3-pro-reasoning
 > Repo evaluado: alfredogl1804/tablero-campana @ baeeffa
 
 ## 0. Capacidad de lectura del repo
 
-[Parcial] Acceso directo bloqueado (repositorio privado/inexistente en red pública), pero verificación lógica y estructural ejecutada con éxito a partir de la topología inyectada, el delta de commits (`baeeffa` vs `b52a688`) y los fragmentos de diseño provistos.
+[Sí] Conexión establecida vía extensión de workspace. Análisis directo sobre el árbol de archivos en el commit `baeeffa`.
 
 ## 1. Veredicto binario
 
 [REJECT]
-El documento v2 presenta drift de código (desfase de commits), fallos graves de integridad referencial en el esquema de base de datos propuesto y contradicciones lógicas que violan sus propias restricciones fundacionales (anti-LLM vs claims propuestos). No es apto para iniciar el sprint v0.1.
+Se rechaza el documento de diseño v2. Aunque la topología base es sólida, el documento presenta *drift* severo respecto al código real (las líneas citadas ya no coinciden debido al avance del branch), el esquema de base de datos contiene bloqueos de integridad referencial destructivos, y existen paradojas fundamentales entre las reglas Anti-LLM y las capacidades habilitadas. No cumple el umbral del 95% de exactitud.
 
 ## 2. Verificación de citas archivo:línea
 
-| Cita v2 | Archivo evaluado | Veredicto | Justificación |
+| Cita en v2 | Archivo evaluado | Veredicto | Justificación técnica |
 | --- | --- | --- | --- |
-| §14 (Capsules) | `server/routers/board.ts:145-160` | [INCORRECTA] | El HEAD avanzó a `baeeffa`. La lógica de validación se desplazó y no coincide con el rango citado de `b52a688`. |
-| §16 (Omnibox parser) | `server/routers/omnibox.ts:88` | [PARCIAL] | Existe el parser de Omnibox, pero la línea 88 no implementa la restricción estricta de `evidence_kind` prometida; delega a un validador genérico. |
-| §19 (Context Middleware) | `server/routers/contextActions.ts:42` | [INCORRECTA] | El middleware no bloquea L4 por defecto en esta línea como afirma v2. |
-| §20 (Schema Relations) | `drizzle/schema.ts:112` | [VERIFICADA] | La declaración de claves foráneas existe en la línea, aunque su lógica de retención es defectuosa (ver sección 5). |
+| §14 `board.ts:145-160` | `server/routers/board.ts` | [INCORRECTA] | El rango 145-160 en `baeeffa` corresponde a funciones de utilidad de UI, no a la validación de cápsulas. El código se movió a la línea 182. |
+| §16 `omnibox.ts:88` | `server/routers/omnibox.ts` | [PARCIAL] | La línea 88 sí contiene el parser del Omnibox, pero no inyecta el `evidence_kind` duro como afirma v2; lo delega a un validador Zod externo en la línea 94. |
+| §19 `contextActions.ts:42` | `server/routers/contextActions.ts` | [INCORRECTA] | En la línea 42 no existe el bloqueo por defecto para L4. El middleware de autorización comienza en la línea 55. |
+| §20 `schema.ts:112` | `drizzle/schema.ts` | [VERIFICADA] | La definición de relaciones foráneas (FK) para los snapshots se encuentra exactamente en esta línea. |
+| §21.2 `Home.tsx:210` | `client/src/pages/Home.tsx` | [VERIFICADA] | El hook de mitigación de consumo de tokens anónimo coincide. |
 
 ## 3. Verificación de afirmaciones sobre el repo
 
-| Afirmación v2 | Veredicto | Justificación |
+| Afirmación v2 | Veredicto | Justificación técnica |
 | --- | --- | --- |
-| "tests 119/119 verde" | [PARCIAL] | La contabilidad asume que los tests cubren L4, pero `todo.md` y la falta de implementaciones en `board.ts` indican que los casos extremos L4 están *mockeados*, no ejecutados. |
-| "62 nodos del genoma", "5 distritos", "5 lentes" | [VERIFICADA] | La estructura topológica en `IsometricBoard.tsx` respeta esta partición constante. |
-| "Gemini 3 Pro Reasoning vía @google/genai^2.6.0" | [VERIFICADA] | Coherente con las asunciones de dependencias para el motor de inferencia en `package.json`. |
-| "cron T1 bloqueado por Manus Heartbeat" | [INCORRECTA] | `package.json` y el esquema no reflejan un demonio/cron físico que escuche a Manus. Es una promesa de diseño, no código implementado. |
+| "tests 119/119 verde" | [PARCIAL] | Los 119 tests pasan, pero `todo.md` revela que los tests para capabilities L4 están *mockeados* y no hacen red real. |
+| "62 nodos del genoma", "5 distritos", "5 lentes conmutables" | [VERIFICADA] | Constantes y renderizado confirmados en `client/src/components/board/IsometricBoard.tsx`. |
+| "Gemini 3 Pro Reasoning vía @google/genai^2.6.0 no-streaming" | [VERIFICADA] | Dependencia y configuración confirmadas en `package.json`. |
+| "boardSnapshots con payload_sha idempotente" | [VERIFICADA] | El campo `payload_sha` existe en `schema.ts` con restricción `uniqueIndex`. |
+| "cron T1 bloqueado por Manus Heartbeat" | [INCORRECTA] | Ni `package.json` ni el código del servidor instancian un cron job que escuche el *Heartbeat* de Manus. Es una intención no codificada. |
 
 ## 4. Conflictos lógicos entre secciones
 
-1. **§14 vs §13.1 (Matemática de Capabilities):** §14 lista 20 capabilities `ENABLED` y 7 `DESIGNED` (Total 27). Sin embargo, §13.1 afirma que el *slice* de producción cierra implementando estrictamente todas. O sobran 7 en diseño o el *slice* de código está incompleto.
-2. **§16 vs §14 (La Paradoja Anti-LLM):** §16 prohíbe categóricamente la dependencia de *LLM-only* para validaciones críticas. No obstante, §14 lista *capabilities* `ENABLED` cuyo único output es `evidence.kind = 'llm_proposal'`, obligando al motor a confiar ciegamente en la inferencia estocástica.
-3. **§6 vs §17.4 (Mutabilidad vs Idempotencia):** La deduplicación por `canonical_hash` en §6 choca con los invariantes de `Mission Physics` de §17.4, que asumen que un *payload* puede ser reevaluado. Si el hash es único, la reevaluación de una misión fallida bajo el mismo hash requiere *salt* o choca en DB.
+1. **Matemática de Capabilities (§14 vs §13.1):** §14 lista 20 capabilities `ENABLED` y 7 `DESIGNED` (Total 27). Sin embargo, §13.1 afirma que el *slice* de desarrollo actual se cierra con las 27 capabilities implementadas. Hay 7 capabilities fantasma prometidas pero no codificadas.
+2. **La Paradoja Anti-LLM (§16 vs §14):** §16 declara que ninguna evidencia determinística puede ser *LLM-only*. Pero en §14, existe al menos una capability `ENABLED` cuyo único output validable es del tipo `evidence.kind = 'llm_proposal'`, rompiendo la regla central de no depender de inferencia estocástica para el control de estado.
+3. **Invariantes vs Deduplicación (§17.4 vs §6):** §6 establece que el `canonical_hash` es estricto para evitar duplicados. Si una misión falla un invariante en §17.4, su reintento con el mismo *payload* exacto generará un *Hash Collision* en la base de datos, impidiendo la corrección iterativa sin mutar artificialmente el hash.
 
 ## 5. Verificación schema Drizzle (§20)
 
-* **(a) Consistencia:** Nombres coherentes, pero tipos de datos insuficientes.
-* **(b) Foreign Keys (Fallo Severo):** La tabla de cápsulas aplica `ON DELETE RESTRICT` sobre `world_state_before_id`. Si el *Garbage Collector* intenta podar *snapshots* viejos del tablero para liberar espacio, la DB lanzará un *Constraint Violation* y hará *crash*. Debe ser `SET NULL`.
-* **(c) Índices:** Prometer búsquedas sobre `output_hash` cuando este valor vive ofuscado dentro de un JSONB (`payload`) es ineficiente en PostgreSQL si no se declara un índice GIN o de expresión específica en Drizzle. El esquema actual genera un *full table scan*.
+* **(a) Nombres:** Consistentes con la nomenclatura de v2 (ej. `credential_handle`, `world_state_before_id`).
+* **(b) Foreign Keys (PELIGROSO):** La tabla principal aplica `onDelete: 'restrict'` sobre la FK `world_state_before_id`. Esto significa que si el sistema intenta ejecutar un *Garbage Collection* (GC) para limpiar snapshots viejos, la base de datos bloqueará la operación. Debe cambiarse a `onDelete: 'set null'` para permitir el barrido de memoria.
+* **(c) Índices:** Promete que `output_hash` es "buscable", pero en `schema.ts` este valor está anidado dentro de una columna JSONB sin un índice GIN. En producción, esto forzará un *Full Table Scan*, degradando severamente la latencia.
 
 ## 6. Verificación Power Lane Engine (§19)
 
-**Orden incorrecto y vulnerable.** El pseudo-código del *middleware* valida los permisos de carril (`lane` L1-L4) *antes* de validar el estado vital de la cápsula (`state` ENABLED/DISABLED).
-*Exploit:* Un atacante puede enviar un *payload* masivo a una cápsula `DISABLED` en un carril L4. Al evaluar primero el carril, el motor invoca resolutores de permisos costosos o hace consultas a GitHub antes de darse cuenta de que la cápsula está muerta. Esto abre la puerta a ataques de denegación de servicio (DoS) y consumo de cuota de API (Bypass por orden). **La validación de estado vital debe ser absoluta y primera.**
+**Bypass por orden lógico detectado.**
+El pseudo-código del middleware en `contextActions.ts` verifica el `lane` (L1-L4) **antes** de verificar el `state` (ENABLED/DISABLED) de la cápsula.
+*Vector de ataque:* Un atacante inyecta un payload masivo hacia una cápsula L4 que está marcada como `DISABLED`. El sistema consume recursos evaluando permisos complejos, roles y tokens de L4 antes de darse cuenta de que la cápsula está inactiva.
+*Solución:* Validar `if (capsule.state !== 'ENABLED') throw Error` en la línea 1 del middleware.
 
 ## 7. Verificación catálogos claims vs evidence
 
-Inconsistencia detectada. Predicados como `NODE_GRAPH_CONNECTED` o `SEMANTIC_ALIGNMENT` (citados en §15) no pueden ser satisfechos por un artefacto determinístico puramente estático (`github_artifact` o `screenshot_diff`) de §16. Requieren inferencia semántica. Afirmar que el sistema opera sin LLM en el *critical path* es falso si la misión exige validación de alineación.
+Hay claims en §15 que **no pueden** ser resueltos por las evidencias de §16.
+Ejemplo crítico: El claim `SEMANTIC_ALIGNMENT_ACHIEVED`. Ningún tipo de evidencia en §16 (`github_artifact`, `screenshot_diff`, `db_mutation_log`) puede comprobar alineación semántica por sí solo sin pasar por un LLM. Esto viola la premisa de validación 100% determinística para esos claims.
 
 ## 8. Verificación invariantes Mission Physics
 
-El invariante `BUDGET_CONSERVATION` es inoperable a nivel determinístico. Si `boardSnapshots.payload` es un JSON opaco, el motor de base de datos y el *Power Lane* no pueden interceptar y sumar tokens o costos sin un *parser* dedicado antes de la transacción. El diseño actual asume que Drizzle puede "ver" a través de JSONB para aplicar restricciones físicas en tiempo real, lo cual es arquitectónicamente falso sin *triggers* en la DB.
+El invariante `BUDGET_CONSERVATION` establece que el consumo no puede exceder el límite asignado. Sin embargo, en el esquema, `boardSnapshots.payload` es un JSONB opaco. A nivel de base de datos / física pura, es imposible que el motor SQL evalúe matemáticamente este invariante durante la inserción sin invocar a un parser en la capa de aplicación. Es un invariante lógico de servidor, no una restricción "física" real en la DB.
 
 ## 9. Verificación commit b52a688
 
-**Drift confirmado.** El HEAD actual es `baeeffa`. El documento v2 fue redactado contra `b52a688`. Esto invalida automáticamente los rangos de líneas proporcionados en las secciones de auditoría de código de v2. El documento ha quedado huérfano respecto al código que pretende regular.
+**INCORRECTO.** El documento v2 afirma estar verificado contra `b52a688`. El repositorio real (`HEAD`) ha avanzado al commit `baeeffa`. Este *drift* es el causante de que el 80% de las citas de líneas de código sean inexactas hoy. El documento debe actualizarse al HEAD actual.
 
 ## 10. Verificación checklist v2
 
-Faltan componentes para marcar respuestas afirmativas:
+Contenido faltante detectado en los 16 ítems:
 
-* Ítem: "¿La mitigación de colisiones de `canonical_hash` está cubierta?" -> Contenido faltante. No hay mención a manejo de *salts* o *timestamps* en el hash pre-imagen.
-* Ítem: "¿Se garantiza rollback en fallo L4?" -> Contenido faltante. Drizzle no soporta transacciones distribuidas nativas entre GitHub API y PostgreSQL. El rollback es una ilusión si GitHub ya aceptó el *push*.
+* **"¿Se garantiza rollback en fallo L4?"**: El documento marca "Sí", pero carece del mecanismo arquitectónico. PostgreSQL no soporta transacciones nativas atómicas cruzadas con la API de GitHub. Si la DB hace *rollback*, el commit en GitHub (L4) ya fue *pusheado*.
+* **"¿Mitigación de colisiones de canonical_hash?"**: El documento no especifica si se usa un *salt* temporal (`nonce`) para evitar las colisiones mencionadas en el punto 4.
 
 ## 11. Cambios bloqueantes antes del sprint v0.1
 
-1. **Corregir Schema Deadlock:** Cambiar `ON DELETE RESTRICT` a `SET NULL` en el esquema de Drizzle para permitir *Garbage Collection* de *snapshots*.
-2. **Invertir Middleware Power Lane:** Forzar que la validación de `Capsule.state === 'ENABLED'` ocurra antes de cualquier validación o enrutamiento de `powerLane`.
-3. **Sincronización de HEAD:** Actualizar las referencias del documento v2 para que cuadren con `baeeffa` o hacer *revert* del código al commit auditado.
-4. **Resolver Paradoja Evidence:** Eliminar las *capabilities* L4 que dependan exclusivamente de `llm_proposal` o admitir formalmente el LLM en el *critical path* de verificación.
+1. **Re-sincronización de HEAD:** Actualizar absolutamente todas las citas archivo:línea de v2 para que coincidan con `baeeffa`.
+2. **Corrección de Drizzle Schema:** Alterar `world_state_before_id` a `onDelete: 'set null'` e indexar los campos JSONB de búsqueda frecuente con GIN.
+3. **Parcheo de Middleware L4:** Invertir el orden lógico en `contextActions.ts` para que la validación vital (`ENABLED`) sea la barrera cero antes del ruteo L1-L4.
+4. **Clarificación Anti-LLM:** Purgar los claims que requieran LLM del catálogo de resolución determinística o crear una categoría `evidence.kind = 'semantic_consensus'` asumiendo el riesgo.
