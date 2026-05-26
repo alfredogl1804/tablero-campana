@@ -425,3 +425,15 @@
 - [x] 16/16 tests Forja verde, 0 regresiones funcionales fuera de Forja
 - [x] Bug crítico resuelto: envelope-piloto-day2-signed.json reformateado en sandbox, recuperado bit-exacto del Mac
 - [x] Bug crítico resuelto: gateway.ts ya no recomputa canonical hash desde campos DB; confía en canonicalHash almacenado y verifica firma ed25519 sobre él
+
+
+## Forja OS v4 MONSTRUO — Sprint v0.1 Día 8 (sub-envelope primitiva)
+
+- [x] `server/forja/attenuation-verifier.ts` con función pura `verifyAttenuation` (5 invariantes monotónicos)
+- [x] `server/forja/forja.attenuation.test.ts` con 15 tests (5 válidos + 3 rechazo del plan + 7 cobertura defensiva)
+- [x] Wire-up en `server/forja/gateway.ts`: cuando `envelopeType=sub`, carga parent root y verifica atenuación
+- [x] Endpoint `forja.createSubEnvelope` en `server/forja/router.ts` con verificación canónica + firma + atenuación
+- [x] Helpers `signEd25519` y `ed25519GenerateKeypair` en `server/forja/ed25519.ts` para tests y futuro v0.2
+- [x] Nuevas violations en `types.ts`: `attenuation_violated`, `parent_envelope_not_found`, `parent_envelope_inactive`
+- [x] `server/forja/forja.subenvelope.e2e.test.ts` con 5 hitos (sub válido autorizado, scope expansion rechazado, capability addition rechazado, budget excess rechazado, parent revocado deniega gateway)
+- [x] **36/36 tests Forja verde** (15 atenuación + 11 envelope + 5 E2E Día 7 + 5 E2E sub Día 8)

@@ -80,3 +80,34 @@ function bytesToHex(bytes: Uint8Array): string {
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 }
+
+/**
+ * Sign a SHA-256 hex hash with ed25519 private key.
+ * Used only by tests and by future v0.2 agent self-signing flows.
+ * Production envelopes are signed off-machine on the operator's Mac.
+ */
+export function signEd25519(messageHashHex: string, privateKeyHex: string): string {
+  if (messageHashHex.length !== 64) {
+    throw new Error("signEd25519: message hash must be 64 hex chars");
+  }
+  if (privateKeyHex.length !== 64) {
+    throw new Error("signEd25519: private key must be 64 hex chars");
+  }
+  const messageBytes = hexToBytes(messageHashHex);
+  const privateBytes = hexToBytes(privateKeyHex);
+  const sigBytes = ed25519.sign(messageBytes, privateBytes);
+  return bytesToHex(sigBytes);
+}
+
+/**
+ * Generate a fresh ed25519 keypair (32-byte private + 32-byte public, hex-encoded).
+ * Used by tests to simulate sub-agents that sign sub-envelopes.
+ */
+export function ed25519GenerateKeypair(): { privateKeyHex: string; publicKeyHex: string } {
+  const privateBytes = ed25519.utils.randomSecretKey();
+  const publicBytes = ed25519.getPublicKey(privateBytes);
+  return {
+    privateKeyHex: bytesToHex(privateBytes),
+    publicKeyHex: bytesToHex(publicBytes),
+  };
+}

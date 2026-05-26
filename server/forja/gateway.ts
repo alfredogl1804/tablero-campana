@@ -32,6 +32,7 @@ import {
 } from "../../drizzle/schema.js";
 import { canonicalHash } from "./canonical.js";
 import { verifyEd25519 } from "./ed25519.js";
+import { verifyAttenuation } from "./attenuation-verifier.js";
 import type {
   GatewayAuthorizeRequest,
   GatewayDecision,
@@ -243,6 +244,64 @@ export async function gatewayAuthorize(
     if (!sigValid) {
       reasons.push("ed25519 signature does not verify against operator public key");
       violations.push("envelope_signature_invalid");
+    }
+  } else {
+    // Sub-envelope: verificar firma del agente que lo emitió + atenuación contra parent root.
+    const sub = envelope as typeof subEnvelopes.$inferSelect;
+    const sigValid = verifyEd25519(sub.canonicalHash, sub.signature, sub.issuedByPublicKey);
+    if (!sigValid) {
+      reasons.push("ed25519 signature of sub-envelope does not verify against issuing agent public key");
+      violations.push("envelope_signature_invalid");
+    }
+
+    // Cargar parent root y verificar atenuación monotónica.
+    const dbAtt = await getDb();
+    if (!dbAtt) {
+      reasons.push("database unavailable for attenuation check");
+      violations.push("internal_error");
+    } else {
+      const parentRows = await dbAtt
+        .select()
+        .from(rootAuthorityEnvelopes)
+        .where(eq(rootAuthorityEnvelopes.envelopeId, sub.rootEnvelopeId))
+        .limit(1);
+      const parentRoot = parentRows[0];
+      if (!parentRoot) {
+        reasons.push(`parent root envelope ${sub.rootEnvelopeId} not found`);
+        violations.push("parent_envelope_not_found");
+      } else if (!parentRoot.isActive || parentRoot.revokedAt) {
+        reasons.push(`parent root envelope ${sub.rootEnvelopeId} is inactive or revoked`);
+        violations.push("parent_envelope_inactive");
+      } else {
+        // Verificar atenuación: child ⊆ parent en los 5 invariantes.
+        const verdict = verifyAttenuation(
+          {
+            domainScope: parentRoot.domainScope,
+            capabilitiesAllowed: parentRoot.capabilitiesAllowed,
+            capabilitiesDenied: parentRoot.capabilitiesDenied,
+            budgetMaxTokens: Number(parentRoot.budgetMaxTokens),
+            budgetMaxCostUsdCents: parentRoot.budgetMaxCostUsdCents,
+            budgetMaxActions: parentRoot.budgetMaxActions,
+            budgetMaxDurationSeconds: parentRoot.budgetMaxDurationSeconds,
+            expiresAt: parentRoot.expiresAt,
+            depth: 0,
+          },
+          {
+            domainScope: sub.domainScope,
+            capabilitiesAllowed: sub.capabilitiesAllowed,
+            budgetMaxTokens: Number(sub.budgetMaxTokens),
+            budgetMaxCostUsdCents: sub.budgetMaxCostUsdCents,
+            budgetMaxActions: sub.budgetMaxActions,
+            budgetMaxDurationSeconds: sub.budgetMaxDurationSeconds,
+            expiresAt: sub.expiresAt,
+            depth: sub.depth,
+          },
+        );
+        if (!verdict.ok) {
+          reasons.push(`attenuation violated: ${verdict.violation} — ${verdict.detail}`);
+          violations.push("attenuation_violated");
+        }
+      }
     }
   }
 

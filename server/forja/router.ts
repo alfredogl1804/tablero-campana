@@ -26,6 +26,7 @@ import { TRPCError } from "@trpc/server";
 import { getDb } from "../db.js";
 import {
   rootAuthorityEnvelopes,
+  subEnvelopes,
   evidenceReceipts,
   revocationEvents,
   policyDecisions,
@@ -35,6 +36,7 @@ import {
 import { canonicalHash } from "./canonical.js";
 import { verifyEd25519 } from "./ed25519.js";
 import { gatewayAuthorize } from "./gateway.js";
+import { verifyAttenuation, FORJA_MAX_DEPTH } from "./attenuation-verifier.js";
 import type { GatewayAuthorizeRequest } from "./types.js";
 
 // ALLOWLIST de pubkeys operadoras autorizadas a firmar envelopes.
@@ -87,6 +89,34 @@ const AuthorizationRequestSchema = z.object({
   estimatedCostUsdCents: z.number().int().nonnegative().optional(),
   estimatedDurationSeconds: z.number().int().nonnegative().optional(),
   toolCallInputHash: z.string().regex(/^[0-9a-f]{64}$/i),
+});
+
+const SignedSubEnvelopeSchema = z.object({
+  subEnvelopeId: z.string().uuid(),
+  rootEnvelopeId: z.string().uuid(),
+  parentEnvelopeId: z.string().uuid(),
+  parentHash: z.string().regex(/^[0-9a-f]{64}$/i),
+  domainScope: z.object({
+    repos: z.array(z.string()),
+    envs: z.array(z.string()),
+    resources: z.array(z.string()),
+  }),
+  capabilitiesAllowed: z.array(z.string()),
+  budget: z.object({
+    maxTokens: z.number().int().nonnegative(),
+    maxCostUsdCents: z.number().int().nonnegative(),
+    maxActions: z.number().int().nonnegative(),
+    maxDurationSeconds: z.number().int().nonnegative(),
+  }),
+  ttlSeconds: z.number().int().positive(),
+  taskDescription: z.string().min(1),
+  issuedByAgentId: z.string().min(1),
+  issuedByPublicKey: z.string().regex(/^[0-9a-f]{64}$/i),
+  issuedAt: z.string(),
+  expiresAt: z.string(),
+  depth: z.number().int().min(1).max(2),
+  canonicalHash: z.string().regex(/^[0-9a-f]{64}$/i),
+  signature: z.string().regex(/^[0-9a-f]{128}$/i),
 });
 
 const ReceiptSchema = z.object({
@@ -374,6 +404,172 @@ export const forjaRouter = router({
       }
 
       return { revoked: true, envelopeId: input.envelopeId };
+    }),
+
+  /**
+   * Crear un sub-envelope firmado por un agente.
+   * Verifica:
+   *  1. Schema y firma del agente
+   *  2. canonicalHash recomputado coincide
+   *  3. Parent root existe y está activo
+   *  4. Atenuación monotónica respecto al parent (5 invariantes)
+   *  5. depth = parent.depth + 1 ≤ FORJA_MAX_DEPTH
+   *  6. subEnvelopeId no existe ya
+   */
+  createSubEnvelope: publicProcedure
+    .input(SignedSubEnvelopeSchema)
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database unavailable" });
+
+      // 1. Recompute canonical hash y comparar (algoritmo idéntico al cliente: payload sin signature/canonicalHash)
+      const payload = {
+        subEnvelopeId: input.subEnvelopeId,
+        rootEnvelopeId: input.rootEnvelopeId,
+        parentEnvelopeId: input.parentEnvelopeId,
+        parentHash: input.parentHash,
+        domainScope: input.domainScope,
+        capabilitiesAllowed: input.capabilitiesAllowed,
+        budget: input.budget,
+        ttlSeconds: input.ttlSeconds,
+        taskDescription: input.taskDescription,
+        issuedByAgentId: input.issuedByAgentId,
+        issuedByPublicKey: input.issuedByPublicKey,
+        issuedAt: input.issuedAt,
+        expiresAt: input.expiresAt,
+        depth: input.depth,
+      };
+      const recomputedHash = canonicalHash(payload);
+      if (recomputedHash !== input.canonicalHash) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `canonicalHash mismatch (recomputed ${recomputedHash}, claimed ${input.canonicalHash})`,
+        });
+      }
+
+      // 2. Verificar firma del agente emisor
+      const sigValid = verifyEd25519(input.canonicalHash, input.signature, input.issuedByPublicKey);
+      if (!sigValid) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "ed25519 signature of sub-envelope does not verify",
+        });
+      }
+
+      // 3. TTL no expirado
+      const expiresAt = new Date(input.expiresAt);
+      if (expiresAt <= new Date()) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: `sub-envelope expires in past: ${input.expiresAt}` });
+      }
+
+      // 4. Cargar parent root y validar activo
+      const parentRows = await db
+        .select()
+        .from(rootAuthorityEnvelopes)
+        .where(eq(rootAuthorityEnvelopes.envelopeId, input.rootEnvelopeId))
+        .limit(1);
+      const parentRoot = parentRows[0];
+      if (!parentRoot) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: `parent root envelope ${input.rootEnvelopeId} not found`,
+        });
+      }
+      if (!parentRoot.isActive || parentRoot.revokedAt) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: `parent root envelope ${input.rootEnvelopeId} is inactive or revoked`,
+        });
+      }
+      if (parentRoot.expiresAt <= new Date()) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: `parent root envelope ${input.rootEnvelopeId} expired at ${parentRoot.expiresAt.toISOString()}`,
+        });
+      }
+
+      // 5. Verificar parentHash (integridad del puntero al parent)
+      if (parentRoot.canonicalHash.toLowerCase() !== input.parentHash.toLowerCase()) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `parentHash mismatch: claimed ${input.parentHash}, parent has ${parentRoot.canonicalHash}`,
+        });
+      }
+
+      // 6. Verificar atenuación monotónica
+      const verdict = verifyAttenuation(
+        {
+          domainScope: parentRoot.domainScope,
+          capabilitiesAllowed: parentRoot.capabilitiesAllowed,
+          capabilitiesDenied: parentRoot.capabilitiesDenied,
+          budgetMaxTokens: Number(parentRoot.budgetMaxTokens),
+          budgetMaxCostUsdCents: parentRoot.budgetMaxCostUsdCents,
+          budgetMaxActions: parentRoot.budgetMaxActions,
+          budgetMaxDurationSeconds: parentRoot.budgetMaxDurationSeconds,
+          expiresAt: parentRoot.expiresAt,
+          depth: 0,
+        },
+        {
+          domainScope: input.domainScope,
+          capabilitiesAllowed: input.capabilitiesAllowed,
+          budgetMaxTokens: input.budget.maxTokens,
+          budgetMaxCostUsdCents: input.budget.maxCostUsdCents,
+          budgetMaxActions: input.budget.maxActions,
+          budgetMaxDurationSeconds: input.budget.maxDurationSeconds,
+          expiresAt,
+          depth: input.depth,
+        },
+      );
+      if (!verdict.ok) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: `attenuation_violated: ${verdict.violation} — ${verdict.detail}`,
+        });
+      }
+
+      // 7. Insertar sub-envelope
+      try {
+        await db.insert(subEnvelopes).values({
+          subEnvelopeId: input.subEnvelopeId,
+          rootEnvelopeId: input.rootEnvelopeId,
+          parentEnvelopeId: input.parentEnvelopeId,
+          parentHash: input.parentHash,
+          domainScope: input.domainScope,
+          capabilitiesAllowed: input.capabilitiesAllowed,
+          budgetMaxTokens: input.budget.maxTokens,
+          budgetMaxCostUsdCents: input.budget.maxCostUsdCents,
+          budgetMaxActions: input.budget.maxActions,
+          budgetMaxDurationSeconds: input.budget.maxDurationSeconds,
+          ttlSeconds: input.ttlSeconds,
+          taskDescription: input.taskDescription,
+          issuedByAgentId: input.issuedByAgentId,
+          issuedByPublicKey: input.issuedByPublicKey,
+          issuedAt: new Date(input.issuedAt),
+          expiresAt,
+          isActive: true,
+          canonicalHash: input.canonicalHash,
+          signature: input.signature,
+          depth: input.depth,
+        } as typeof subEnvelopes.$inferInsert);
+      } catch (e) {
+        if (e instanceof Error && e.message.includes("Duplicate")) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: `sub-envelope ${input.subEnvelopeId} already exists`,
+          });
+        }
+        throw e;
+      }
+
+      return {
+        subEnvelopeId: input.subEnvelopeId,
+        rootEnvelopeId: input.rootEnvelopeId,
+        depth: input.depth,
+        attenuationVerified: true,
+        maxDepth: FORJA_MAX_DEPTH,
+        verifiedAt: new Date().toISOString(),
+        expiresAt: input.expiresAt,
+      };
     }),
 
   /**

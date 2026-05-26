@@ -90,6 +90,9 @@ export type GatewayViolation =
   | "oracle_gate_failed"
   | "depth_exceeded"
   | "prohibited_action"
+  | "attenuation_violated"
+  | "parent_envelope_not_found"
+  | "parent_envelope_inactive"
   | "internal_error";
 
 /** Request al gateway por parte de un agente antes de cada tool call. */
