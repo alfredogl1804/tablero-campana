@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { boardRouter } from "./routers/board";
 import { contextActionsRouter } from "./routers/contextActions";
+import { forjaRouter } from "./forja/router";
 import { geminiRouter } from "./routers/gemini";
 import { omniboxRouter } from "./routers/omnibox";
 import { supabaseRouter } from "./routers/supabase";
@@ -22,6 +23,7 @@ export const appRouter = router({
   }),
   board: boardRouter,
   contextActions: contextActionsRouter,
+  forja: forjaRouter,
   gemini: geminiRouter,
   omnibox: omniboxRouter,
   supabase: supabaseRouter,

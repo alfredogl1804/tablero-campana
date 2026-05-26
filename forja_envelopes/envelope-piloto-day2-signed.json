@@ -1,0 +1,79 @@
+{
+  "envelopeId": "2d4c9159-327c-6c06-85e9-e06f28ea9b3a",
+  "operatorOpenId": "alfredo-gongora-soberano",
+  "missionCapsuleId": "16170029-7aae-c627-3478-7171c9832d92",
+  "domainScope": {
+    "repos": [
+      "tablero-campana"
+    ],
+    "envs": [
+      "staging"
+    ],
+    "resources": [
+      "repo:tablero-campana/branches/agent/*",
+      "env:staging"
+    ]
+  },
+  "powerLaneMax": 3,
+  "capabilitiesAllowed": [
+    "read_repo",
+    "write_branch",
+    "run_tests",
+    "deploy_staging",
+    "read_db_staging"
+  ],
+  "capabilitiesDenied": [
+    "production_deploy",
+    "write_db_prod",
+    "customer_pii_access",
+    "stripe_keys",
+    "public_communication",
+    "price_modification",
+    "root_credentials"
+  ],
+  "prohibited": [
+    {
+      "category": "production_deploy",
+      "description": "No production deploys until v0.2"
+    },
+    {
+      "category": "customer_data_access",
+      "description": "No PII access of any kind"
+    },
+    {
+      "category": "price_modification",
+      "description": "No price changes ever in v0.1"
+    },
+    {
+      "category": "public_communication",
+      "description": "No emails, posts, or external comms"
+    },
+    {
+      "category": "root_credentials",
+      "description": "No access to root keys, env vars, or 1Password"
+    }
+  ],
+  "budget": {
+    "maxTokens": 100000,
+    "maxCostUsdCents": 500,
+    "maxActions": 50,
+    "maxDurationSeconds": 21600
+  },
+  "oracleGates": [
+    {
+      "oracleId": "github_ci_status:tablero-campana:main",
+      "condition": "value === 'green'"
+    },
+    {
+      "oracleId": "staging_health:tablero-campana",
+      "condition": "value === 'ok'"
+    }
+  ],
+  "rollbackRequired": true,
+  "issuedAt": "2026-05-26T04:02:11.565Z",
+  "ttlSeconds": 21600,
+  "operatorPublicKey": "cbfd8895990a57fb9155b55ec817b5d92cfbf3416d83fb0712afbc58b4b5b064",
+  "canonicalHash": "1e179e2c65bdd9e98e2f8c63845a4ead0249812e929932a2665d49675f52543b",
+  "signature": "01040071a2fa2335120dfd1574a280603baaae1f05a2d3e282b4ddaa15e6292c2db95818e4290d59205198ee43bb5ed64f67cd5d3a13a45aabd874e251428704",
+  "_description": "Diagnose top 3 visual bugs in tablero-campana D2 board, propose fixes, apply to staging branch, run tests, deploy to staging URL"
+}
