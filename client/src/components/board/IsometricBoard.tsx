@@ -11,10 +11,13 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrthographicCamera, Grid } from "@react-three/drei";
 import { useMemo, useRef, useState, useCallback, useEffect } from "react";
 import * as THREE from "three";
-import type { BoardData, BoardNode, BoardDistrict } from "@/lib/board-types";
+import type { BoardData, BoardNode, BoardDistrict, NodeStatus } from "@/lib/board-types";
+import type { CausalState } from "@/lib/causal-animations";
 import { DistrictPlatform } from "./DistrictPlatform";
 import { Building } from "./Building";
 import { ConnectionLines } from "./ConnectionLines";
+import { EcosystemSatellites } from "./EcosystemSatellites";
+import { EventParticles } from "./EventParticles";
 import { useTone } from "@/hooks/useTone";
 import { useLayer } from "@/hooks/useLayer";
 
@@ -25,6 +28,12 @@ interface IsometricBoardProps {
   onSelectNode: (id: string | null) => void;
   onHoverNode: (id: string | null) => void;
   zoomLevel: number;
+  /**
+   * T8 Causal Timeline — mapa por nodeId que indica el estado causal del
+   * nodo (added/removed/status-changed/metric-changed) cuando el usuario
+   * está viajando en el tiempo. Si está vacío, todos los nodos son 'stable'.
+   */
+  causalStateByNode?: Map<string, CausalState>;
 }
 
 // Constantes de geometría del tablero
@@ -163,6 +172,7 @@ export function IsometricBoard({
   onSelectNode,
   onHoverNode,
   zoomLevel,
+  causalStateByNode,
 }: IsometricBoardProps) {
   // Convierte grid_position a coordenadas mundo
   const gridToWorld = useCallback(
@@ -256,15 +266,23 @@ export function IsometricBoard({
         gridToWorld={gridToWorld}
         onSelectNode={onSelectNode}
         onHoverNode={onHoverNode}
+        causalStateByNode={causalStateByNode}
       />
 
-      {/* Líneas de conexión */}
+      {/* Hito B-polish v1.1 — satélites del ecosistema en órbita */}
+      <EcosystemSatellites />
+
+      {/* Hito B-polish v1.1 — partículas de eventos firmados (bus ed25519) */}
+      <EventParticles />
+
+      {/* Líneas de conexión — Tarea 3 v4.0: consumen edges tipadas */}
       <ConnectionLines
         nodes={data.nodes}
         nodeMap={nodeMap}
         gridToWorld={gridToWorld}
         selectedNodeId={selectedNodeId}
         hoveredNodeId={hoveredNodeId}
+        edges={data.edges}
       />
 
       {/* Click vacío para deseleccionar */}
@@ -304,6 +322,7 @@ function BuildingsLayer({
   gridToWorld,
   onSelectNode,
   onHoverNode,
+  causalStateByNode,
 }: {
   data: BoardData;
   selectedNodeId: string | null;
@@ -311,10 +330,27 @@ function BuildingsLayer({
   gridToWorld: (gx: number, gy: number) => [number, number, number];
   onSelectNode: (id: string | null) => void;
   onHoverNode: (id: string | null) => void;
+  causalStateByNode?: Map<string, CausalState>;
 }) {
   const tn = useTone();
   // T4 Sprint v3.0 — capa activa decide color y altura.
   const { layer } = useLayer();
+
+  // Sprint v4.0 / T6B — índice por nodeId para resolver effectiveStatus en O(1).
+  const stateByNode = useMemo(() => {
+    const map = new Map<string, NodeStatus>();
+    const overrideMap = new Map<string, boolean>();
+    for (const state of data.node_states ?? []) {
+      // El motor puede emitir UNKNOWN; en ese caso dejamos que Building
+      // caiga al legacy node.status para no perder ícono visual.
+      if (state.effectiveStatus !== "UNKNOWN") {
+        map.set(state.nodeId, state.effectiveStatus as NodeStatus);
+      }
+      overrideMap.set(state.nodeId, state.overrideStatus !== null);
+    }
+    return { effective: map, hasOverride: overrideMap };
+  }, [data.node_states]);
+
   return (
     <>
       {data.nodes.map((node) => {
@@ -339,6 +375,9 @@ function BuildingsLayer({
             onPointerOver={() => onHoverNode(node.id)}
             onPointerOut={() => onHoverNode(null)}
             displayLabel={tn.label(node.id, node.label)}
+            effectiveStatus={stateByNode.effective.get(node.id)}
+            hasOverride={stateByNode.hasOverride.get(node.id) ?? false}
+            causalState={causalStateByNode?.get(node.id) ?? "stable"}
           />
         );
       })}

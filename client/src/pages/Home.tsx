@@ -5,7 +5,7 @@
  * - Canvas 3D isométrico (IsometricBoard)
  * - HUD 2D overlay (LivePulse, ContextCard, Omnibox, TopToolbar)
  * - Tutorial onboarding la primera vez
- * - Nano Banana Studio (operable, conectado a Gemini real)
+ * - SceneOrchestrator: monta modales/studios según el Scene Contract (T9)
  */
 import { useState, useEffect, useMemo } from "react";
 import { AnimatePresence } from "framer-motion";
@@ -17,9 +17,14 @@ import { TopToolbar } from "@/components/hud/TopToolbar";
 import { TutorialOverlay } from "@/components/hud/TutorialOverlay";
 import { LayerSwitcher } from "@/components/hud/LayerSwitcher";
 import { TimelineSlider } from "@/components/hud/TimelineSlider";
+import { SprintsPanel } from "@/components/hud/SprintsPanel";
+import { EventStream } from "@/components/hud/EventStream";
+import { StarMapPanel } from "@/components/hud/StarMapPanel";
+import { ForjaShadowPanel } from "@/components/hud/ForjaShadowPanel";
 import { useBoardGestures } from "@/hooks/useBoardGestures";
-import { NanoBananaStudio } from "@/components/studio/NanoBananaStudio";
-import { CatastroCluster } from "@/components/catastro/CatastroCluster";
+import { SceneOrchestrator } from "@/components/scene/SceneOrchestrator";
+import { resolveCapability, type NodeCapability } from "@/lib/scene-contract";
+import { useCausalDiff } from "@/hooks/useCausalDiff";
 import { trpc } from "@/lib/trpc";
 import staticBoardDataRaw from "@/data/board_data.json";
 import type { BoardData } from "@/lib/board-types";
@@ -34,10 +39,13 @@ export default function Home() {
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const [zoomLevel, setZoomLevel] = useState(28);
   const [showTutorial, setShowTutorial] = useState(false);
-  const [studioOpen, setStudioOpen] = useState(false);
-  const [catastroOpen, setCatastroOpen] = useState(false);
   // T5 — viaje en el tiempo: null = viendo el ahora, número = snapshot histórico activo
   const [travelSnapshotId, setTravelSnapshotId] = useState<number | null>(null);
+  // Sprint Observatorio v1.1 / Hito B-lite — panel de sprints fantasma.
+  const [showSprintsPanel, setShowSprintsPanel] = useState(false);
+  // Sprint Observatorio v1.1 / Hito C — mapa estelar del ecosistema.
+  const [showStarMap, setShowStarMap] = useState(false);
+  const [showForjaShadow, setShowForjaShadow] = useState(false);
 
   // Sincronización viva: el tablero refleja el snapshot más reciente del Monstruo,
   // refrescado automáticamente cada 60s sin acción del usuario (T1 del Sprint v3.0).
@@ -63,15 +71,23 @@ export default function Home() {
     if (travelSnapshotId !== null && travelBoard.data?.payload) {
       const histPayload = travelBoard.data.payload as unknown as BoardData | undefined;
       if (histPayload && Array.isArray(histPayload.nodes) && histPayload.nodes.length > 0) {
-        return histPayload;
+        // Sprint v4.0 / T6B — inyectar Truth Ledger del snapshot histórico.
+        return {
+          ...histPayload,
+          node_states: travelBoard.data.nodeStates ?? undefined,
+        } satisfies BoardData;
       }
     }
     // Prioridad 2: snapshot vivo (live)
     const livePayload = liveBoard.data?.payload as BoardData | undefined;
     if (livePayload && Array.isArray(livePayload.nodes) && livePayload.nodes.length > 0) {
-      return livePayload;
+      // Sprint v4.0 / T6B — inyectar Truth Ledger del snapshot vigente.
+      return {
+        ...livePayload,
+        node_states: liveBoard.data?.nodeStates ?? undefined,
+      } satisfies BoardData;
     }
-    // Prioridad 3: fallback estático empacado
+    // Prioridad 3: fallback estático empacado (sin Truth Ledger)
     return staticBoardData;
   }, [liveBoard.data, travelBoard.data, travelSnapshotId]);
 
@@ -97,20 +113,21 @@ export default function Home() {
     }
   }, []);
 
-  const selectedNode = useMemo(
-    () => boardData.nodes.find((n) => n.id === selectedNodeId) ?? null,
-    [selectedNodeId, boardData]
+  // T9 — Scene Contract: la capability se resuelve a partir del nodo seleccionado.
+  // Si la capability es `context-card`, la HUD card se muestra normal.
+  // Si es `modal` o `studio`, el SceneOrchestrator monta el componente y
+  // la HUD card se oculta porque el nodo seleccionado se "consume" en la transición.
+  const capability: NodeCapability = useMemo(
+    () => resolveCapability(selectedNodeId),
+    [selectedNodeId],
   );
 
-  // Si el usuario selecciona el nodo "catastro" del distrito Cognición,
-  // en lugar de mostrar el ContextCard normal, abrimos el CatastroCluster.
-  useEffect(() => {
-    if (selectedNodeId === "catastro") {
-      setCatastroOpen(true);
-      // soltamos la selección para que el ContextCard normal no se muestre
-      setSelectedNodeId(null);
-    }
-  }, [selectedNodeId]);
+  // El ContextCard solo debe renderizar cuando la capability es context-card.
+  // Para los otros casos (modal/studio), el SceneOrchestrator se encarga.
+  const selectedNode = useMemo(() => {
+    if (capability.open !== "context-card") return null;
+    return boardData.nodes.find((n) => n.id === selectedNodeId) ?? null;
+  }, [selectedNodeId, boardData, capability]);
 
   const handleCloseTutorial = () => {
     localStorage.setItem(TUTORIAL_KEY, "true");
@@ -130,6 +147,19 @@ export default function Home() {
     zoomBounds: { min: 14, max: 60 },
   });
 
+  // T9 — cuando un modal/studio quiere abrir un nodo (ej. el ContextCard
+  // dispara "Abrir Studio operable"), reusamos el setter del nodeId y el
+  // registry resuelve la capability automáticamente.
+  const handleSelectNode = (id: string | null) => setSelectedNodeId(id);
+
+  // T8 — Causal Timeline: cuando el usuario viaja en el tiempo, comparamos
+  // el snapshot histórico vs el vigente para colorear los nodos según su
+  // cambio causal (added/removed/status-changed/metric-changed).
+  const causal = useCausalDiff(
+    travelSnapshotId,
+    liveBoard.data?.id ?? null,
+  );
+
   return (
     <div className="fixed inset-0 overflow-hidden bg-background">
       {/* Canvas 3D */}
@@ -141,9 +171,10 @@ export default function Home() {
           data={boardData}
           selectedNodeId={selectedNodeId}
           hoveredNodeId={hoveredNodeId}
-          onSelectNode={setSelectedNodeId}
+          onSelectNode={handleSelectNode}
           onHoverNode={setHoveredNodeId}
           zoomLevel={zoomLevel}
+          causalStateByNode={causal.causalStateByNode}
         />
       </div>
 
@@ -168,8 +199,7 @@ export default function Home() {
           node={selectedNode}
           data={boardData}
           onClose={() => setSelectedNodeId(null)}
-          onSelectNode={setSelectedNodeId}
-          onOpenStudio={() => setStudioOpen(true)}
+          onSelectNode={handleSelectNode}
         />
         <TopToolbar
           zoomLevel={zoomLevel}
@@ -177,7 +207,7 @@ export default function Home() {
           onResetView={handleResetView}
           onOpenHelp={() => setShowTutorial(true)}
         />
-        <Omnibox data={boardData} onSelectNode={setSelectedNodeId} />
+        <Omnibox data={boardData} onSelectNode={handleSelectNode} />
         <LayerSwitcher data={boardData} />
         <TimelineSlider
           activeSnapshotId={travelSnapshotId}
@@ -191,18 +221,59 @@ export default function Home() {
         {showTutorial && <TutorialOverlay onClose={handleCloseTutorial} />}
       </AnimatePresence>
 
-      {/* Nano Banana Studio (operable) */}
-      <NanoBananaStudio open={studioOpen} onClose={() => setStudioOpen(false)} />
-
-      {/* Catastro Cluster — vista isométrica de las 82 candidatas reales */}
-      <CatastroCluster
-        open={catastroOpen}
-        onClose={() => setCatastroOpen(false)}
-        onOpenStudio={() => {
-          setCatastroOpen(false);
-          setStudioOpen(true);
-        }}
+      {/* T9 — Scene Contract: monta modal/studio según el registry */}
+      <SceneOrchestrator
+        capability={capability}
+        onCloseCapability={() => setSelectedNodeId(null)}
       />
+
+      {/* Hito B-lite — botón flotante para abrir el panel de sprints */}
+      <button
+        onClick={() => setShowSprintsPanel(true)}
+        className="absolute top-4 right-32 z-30 px-3 py-1.5 bg-[#1a0e05] hover:bg-[#2a1808] border border-orange-900/50 hover:border-orange-700 rounded text-orange-300 hover:text-orange-200 text-xs uppercase tracking-[0.15em] font-bold transition pointer-events-auto shadow-lg flex items-center gap-2"
+        aria-label="Abrir panel de sprints"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+        Sprints
+      </button>
+
+      <SprintsPanel
+        open={showSprintsPanel}
+        onClose={() => setShowSprintsPanel(false)}
+      />
+
+      {/* Hito C — botón Mapa Estelar del ecosistema */}
+      <button
+        onClick={() => setShowStarMap(true)}
+        className="absolute top-4 right-56 z-30 px-3 py-1.5 bg-[#0a0a18] hover:bg-[#14142a] border border-purple-900/50 hover:border-purple-700 rounded text-purple-300 hover:text-purple-200 text-xs uppercase tracking-[0.15em] font-bold transition pointer-events-auto shadow-lg flex items-center gap-2"
+        aria-label="Abrir mapa estelar del ecosistema"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+        Estrellas
+      </button>
+
+      <StarMapPanel
+        open={showStarMap}
+        onClose={() => setShowStarMap(false)}
+      />
+
+      {/* Hito 8 — botón Forja shadow adapter */}
+      <button
+        onClick={() => setShowForjaShadow(true)}
+        className="absolute top-4 right-80 z-30 px-3 py-1.5 bg-[#1a0a05] hover:bg-[#2a1009] border border-amber-900/50 hover:border-amber-700 rounded text-amber-300 hover:text-amber-200 text-xs uppercase tracking-[0.15em] font-bold transition pointer-events-auto shadow-lg flex items-center gap-2"
+        aria-label="Abrir panel Forja shadow"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+        Forja
+      </button>
+
+      <ForjaShadowPanel
+        isOpen={showForjaShadow}
+        onClose={() => setShowForjaShadow(false)}
+      />
+
+      {/* Hito A — stream firmado del observatorio (bus ed25519) */}
+      <EventStream />
     </div>
   );
 }

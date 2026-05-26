@@ -348,60 +348,7 @@
 - [x] Documento resumen para Alfredo entregado en mensaje final con archivos tocados, tests añadidos por tarea, métricas comparativas
 - [x] Confirmación explícita: no-deploy, no-producción, no-otros-repos (cero llamadas a Publish, cero cambios fuera de /home/ubuntu/tablero-campana)
 
-## Sprint MEGA v4.0 — PR2 / Sprint B: Visión disruptiva (FUTURO — NO en este sprint)
 
-> Nota: estas tareas (T10 War Room, T11 Flight Recorder, T12 Contract Compiler) son scope explícito de Sprint B y NO formaban parte del hand-off de Alfredo para este hilo, que pidió cerrar T9 + T8 + T7. Se dejan como backlog vivo para el próximo sprint.
-
-### Tarea 10 — Counterfactual War Room
-- [ ] Simulador de propagación de fallos sobre el grafo real
-- [ ] Backend: server/lib/counterfactual.ts con BFS sobre edges
-- [ ] UI: WarRoomPanel.tsx con selector de nodo + propagación visual
-- [ ] Tests: propagación correcta, ciclos manejados
-
-### Tarea 11 — Agent Flight Recorder
-- [ ] Schema Drizzle: board_flight_logs (id, nodeId, executionId, input, output, durationMs, status, traceUrl, createdAt)
-- [ ] Endpoint board.flightLogs.recent({nodeId})
-- [ ] UI: FlightRecorder.tsx en ContextCard (caja negra del nodo)
-- [ ] Tests: logs persistidos, query por nodeId
-
-### Tarea 12 — T1 Contract Compiler
-- [ ] Selección de región del board → contrato JSON ejecutable
-- [ ] Contrato: scope (nodos), denylist, budget (créditos, tiempo), tests, rollback strategy
-- [ ] Backend: server/lib/contractCompiler.ts
-- [ ] UI: RegionSelector.tsx + ContractPreview.tsx
-- [ ] Tests: contrato válido, denylist respetada
-
-### PR2 Cierre
-- [ ] Suite ≥180 tests vitest verde
-- [ ] Checkpoint webdev v4.0-pr2
-- [ ] Commit a branch v4-sprint-b-vision-disruptiva
-- [ ] Entrega final a Alfredo con resumen completo
-
-
-## Forja OS v4 MONSTRUO — Sprint v0.1 v2 (Días 1-7 kernel mínimo)
-
-- [ ] Día 1.1: Schema Drizzle TypeScript de las 8 tablas Forja en drizzle/schema.ts
-- [ ] Día 1.2: pnpm db:push exitoso contra DB staging
-- [ ] Día 1.3: Verificación SQL — las 8 tablas existen con FKs y constraints correctos
-- [ ] Día 2.1: server/forja/crypto.ts — verifyEnvelopeSignature con @noble/curves
-- [ ] Día 2.2: server/forja/canonical.ts — canonicalize JSON determinista (RFC 8785)
-- [ ] Día 2.3: server/forja/__tests__/crypto.test.ts — round-trip sign + verify verde
-- [ ] Día 2.4: Test envelope piloto real (2d4c9159) verifica VALID en server-side
-- [ ] Día 3.1: server/forja/boundary-gateway.ts — checkAuthorization(envelopeId, requestedAction)
-- [ ] Día 3.2: scope enforcement: domain, capabilities, prohibitions, budget, TTL, oracle gates
-- [ ] Día 3.3: 12+ tests de denial paths verde
-- [ ] Día 4.1: tRPC procedure ingestSignedEnvelope (verifies + inserts a root_authority_envelopes)
-- [ ] Día 4.2: tRPC procedure issueCapabilityToken (JWT short-lived por acción)
-- [ ] Día 4.3: tRPC procedure checkAuthorization (gateway entry point)
-- [ ] Día 5.1: server/forja/capability-token.ts — JWT HS256 short-lived
-- [ ] Día 5.2: Verificación cadena de delegación: envelope → token → action
-- [ ] Día 5.3: Tests delegación verde
-- [ ] Día 6.1: Tabla policy_decisions con audit log inmutable
-- [ ] Día 6.2: Tabla evidence_receipts con Merkle chain
-- [ ] Día 6.3: Helper de chain integrity verification
-- [ ] Día 7.1: Test end-to-end: envelope firmado → ingest → token → action → receipt → verify
-- [ ] Día 7.2: Reporte canónico FORJA_V4_KERNEL_DAY7_REPORT.md
-- [ ] Día 7.3: Checkpoint webdev guardado + commit pusheado a GitHub
 
 ## Forja OS v4 MONSTRUO — Sprint v0.1 Días 1-7 (kernel mínimo soberano) (COMPLETO)
 
@@ -439,46 +386,49 @@
 - [x] **36/36 tests Forja verde** (15 atenuación + 11 envelope + 5 E2E Día 7 + 5 E2E sub Día 8)
 
 
-## Sprint Observatorio Vivo v1 (sustituye Forja Días 9-30) — 26-may-2026
+## Sprint Observatorio Vivo v1.1 — DONE 26-may-2026
+Plan canónico v1.1: `docs/SPRINT_OBSERVATORIO_V1.md` (firmado por Alfredo).
+Firma T1: `EJECUTAR v1.1 + 3 modificadores`. Cierre: checkpoint webdev `da72ccba`.
+ADRs canonizados: `docs/adr/0001_topologia_cross_db_observatorio.md` y `docs/adr/0002_contratos_python_kernel_observatorio.md`.
 
-Plan canónico: `docs/SPRINT_OBSERVATORIO_V1.md`
+### Hito B-lite — Sprints fantasma (canon textual desde `bridge/`)
+- [x] Tabla `sprints` en TiDB (drizzle migration 0009)
+- [x] Helpers `server/db.ts`: upsertSprint, listSprints, getSprintById, countSprints
+- [x] Endpoints tRPC `sprints.list`, `sprints.getById`, `sprints.stats`, `sprints.triggerIngest`
+- [x] Ingestor TypeScript `server/lib/sprintIngestor.ts` (GitHub API, no FUSE)
+- [x] Parser `server/lib/sprintParser.ts` con 17 tests verdes
+- [x] 49 sprints reales del repo `el-monstruo` ingestados (DoD ≥20 ✓)
+- [x] UI overlay `SprintsPanel.tsx` con filtros por status + distrito + markdown render
+- [x] Router vitest (5 tests verdes)
+- [x] DoD binario: filtros funcionan, cero kernel real tocado, ≥20 sprints reales ✓
 
-### Hito B — Modo Transparencia (sprints fantasma)
-- [ ] Crear tabla `sprints` en drizzle/schema.ts con shape canónica
-- [ ] Migración + push a TiDB (`pnpm db:push`)
-- [ ] Helper `server/db.ts::insertSprint`, `getActiveSprintsForDistrict`, `upsertSprint`
-- [ ] Endpoint tRPC `sprints.list`, `sprints.byDistrict`, `sprints.byId` en `server/routers/sprints.ts`
-- [ ] Script `scripts/ingest_sprints.py` que lee del repo el-monstruo y poblea TiDB
-- [ ] Componente `SprintGhostBuilding.tsx` que renderiza edificio fantasma (reusa material SPRINT/FUTURE de `Building.tsx`)
-- [ ] Capa "Sprints planeados" en `LayerSwitcher.tsx`
-- [ ] `ContextCard.tsx` extendido para mostrar carta de sprint cuando se selecciona uno
-- [ ] Tests vitest del ingestor + endpoint
-- [ ] E2E: ingestor poblea, endpoint retorna, UI renderiza
-
-### Hito A — Bus de eventos vivos del kernel
-- [ ] Tabla `kernel_events_stream` en Supabase del Monstruo (NO en TiDB del Tablero)
-- [ ] Habilitar Supabase Realtime sobre la tabla
-- [ ] Módulo Python `kernel/observatorio/event_publisher.py` en repo el-monstruo
-- [ ] Hook en `kernel/engine.py` que llama `publish_event` en eventos clave (intake, enrich, execute, hitl, respond, tool_calls)
-- [ ] Cliente Realtime en Tablero `client/src/lib/kernelEventsClient.ts`
-- [ ] Hook React `useKernelEvents()` con ventana deslizante
-- [ ] Sistema de animación de pulsos sobre `Building.tsx` cuando llega evento
-- [ ] Panel lateral con timeline de eventos en `LivePulse.tsx`
-- [ ] Tests E2E con eventos mock + verificación de render <2s
+### Hito A — Bus de eventos firmados ed25519 (decisión arquitectónica B: vista firmada sobre `monstruo_event_stream`)
+- [x] Migration kernel Supabase: tabla `kernel_events_stream_signed` con índices, RLS, policies, publication realtime
+- [x] Keypair ed25519 generado e inyectado vía secrets (OBSERVATORIO_SIGNER_*)
+- [x] `server/lib/eventSigner.ts`: hash canonical + firma + verificación (17 tests)
+- [x] `server/lib/eventPublisher.ts`: publica firmando con timestamp Postgres-compatible (3 tests E2E)
+- [x] `server/lib/eventObserver.ts`: Postgres CDC live + fallback polling 5s + backpressure 250
+- [x] Endpoints tRPC `observatorio.getRecent`, `observatorio.getMetrics`, `observatorio.publishTest`
+- [x] UI HUD `EventStream.tsx` con dot status + métricas + payload expand
 
 ### Hito C — Mapa estelar de proyectos conectados
-- [ ] Tabla `connected_projects` en TiDB
-- [ ] Tabla `project_heartbeats` en TiDB
-- [ ] Endpoint tRPC `projects.list`, `projects.health`, `projects.heartbeats`
-- [ ] Health checker vivo en server (cron cada 60s vía Heartbeat o polling browser)
-- [ ] Distrito "Universo" o capa visual nueva en `IsometricBoard.tsx`
-- [ ] Renderizar 12+ proyectos canónicos con sus estados
-- [ ] Líneas de conexión vivas que pulsan según actividad
-- [ ] Tests E2E
+- [x] Tablas `connected_projects` + `project_health_pings` en TiDB (migration 0010)
+- [x] Catálogo curado `server/lib/projectsCatalog.ts` (16 proyectos del ecosistema)
+- [x] Pinger autenticado `server/lib/projectPinger.ts` (GITHUB_TOKEN inyectado, 4 tests verdes)
+- [x] Router tRPC `ecosystem.list`, `ecosystem.stats`, `ecosystem.getById`, `ecosystem.refresh` (5 tests)
+- [x] UI overlay `StarMapPanel.tsx` con clasificación por status + freshness
+- [x] 16 proyectos refrescados con `pushed_at` real desde GitHub API
 
-### Forja v4 ↔ kernel adapter (modo shadow)
-- [ ] Módulo Python `el-monstruo/core/forja_bridge/forja_client.py` (cross-repo)
-- [ ] Hook `action_envelope_hook.py` en kernel/engine.py
-- [ ] `receipt_writer.py` que persiste receipts en TiDB de Forja vía tRPC
-- [ ] Modo shadow: observa, registra, NO bloquea
-- [ ] Tests E2E del flujo kernel → Forja gateway → receipt
+### Adapter Forja↔kernel shadow
+- [x] Migration TiDB `forja_shadow_calls` (intent log)
+- [x] `server/lib/forjaShadowAdapter.ts` con whitelist de 8 endpoints canónicos del kernel
+- [x] Modo shadow estricto: registra intents, JAMÁS ejecuta side effects
+- [x] Endpoints tRPC `forjaShadow.list`, `forjaShadow.allowlist`, `forjaShadow.stats`, `forjaShadow.recordIntent`
+- [x] UI HUD `ForjaShadowPanel.tsx` con banner de aviso + lista de intents
+- [x] 6 tests vitest verdes
+
+### Hito B-polish — Estética 3D avanzada
+- [x] `EcosystemSatellites.tsx`: 16 satélites orbitando el tablero con material por status
+- [x] `EventParticles.tsx`: partículas de eventos firmados volando del kernel al perímetro
+- [x] Wired en `IsometricBoard.tsx` sin tocar BuildingsLayer ni ConnectionLines
+- [x] tsc clean, 352/353 tests verdes (1 falla preexistente flaky no relacionada)

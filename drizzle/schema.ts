@@ -979,3 +979,144 @@ export const evidenceReceipts = mysqlTable(
 );
 export type EvidenceReceiptRow = typeof evidenceReceipts.$inferSelect;
 export type InsertEvidenceReceipt = typeof evidenceReceipts.$inferInsert;
+
+
+/**
+ * sprints — Hito B-lite del Sprint Observatorio Vivo v1.1.
+ *
+ * Cada fila representa un sprint canonizado del repo `el-monstruo` (carpeta
+ * `bridge/sprints_propuestos/`, `bridge/sprints_completados/`, etc).
+ * El ingestor (`scripts/ingest_sprints.ts`) lee desde GitHub API y hace UPSERT.
+ *
+ * Status válidos (validados por aplicación con zod, NO por mysqlEnum para
+ * portabilidad): draft | signed | executing | completed | rejected | obsolete.
+ *
+ * La Forma renderiza "edificios fantasma" sobre los distritos afectados,
+ * usando el material `SPRINT/FUTURE` ya existente en `Building.tsx`.
+ *
+ * Doctrina v1.1 §3.1: motor TiDB / MySQL dialect. Sin ENUM nativo.
+ */
+export const sprints = mysqlTable(
+  "sprints",
+  {
+    sprintId: varchar("sprint_id", { length: 64 }).primaryKey(),
+    sourceRepo: varchar("source_repo", { length: 128 }).notNull(),
+    sourcePath: varchar("source_path", { length: 512 }).notNull(),
+    title: varchar("title", { length: 256 }).notNull(),
+    descriptionMd: text("description_md"),
+    status: varchar("status", { length: 32 }).notNull(),
+    signedBy: varchar("signed_by", { length: 64 }),
+    signedAt: timestamp("signed_at"),
+    startedAt: timestamp("started_at"),
+    completedAt: timestamp("completed_at"),
+    /** Lista de distritos afectados, ej. ["cognicion","interfaces"]. */
+    affectedDistricts: json("affected_districts").notNull(),
+    /** IDs de nodos del genoma que toca el sprint, opcional. */
+    affectedNodes: json("affected_nodes"),
+    /** IDs de proyectos del universo afectados, opcional. */
+    affectedProjects: json("affected_projects"),
+    /** Otros sprint_ids bloqueantes. */
+    dependencies: json("dependencies"),
+    estimatedDays: int("estimated_days"),
+    actualDays: int("actual_days"),
+    /** Números de PR de GitHub asociados, ej. [188,189]. */
+    prNumbers: json("pr_numbers"),
+    /** Metadata libre para extensiones futuras. */
+    metadata: json("metadata"),
+    ingestedAt: timestamp("ingested_at").defaultNow().notNull(),
+    /** Fuente de la última ingestión: "ingestor_v1" | "manual". */
+    ingestedFrom: varchar("ingested_from", { length: 64 }).notNull(),
+    /** sha256 hex del MD canónico para detectar cambios. */
+    hashCanonical: varchar("hash_canonical", { length: 64 }).notNull(),
+  },
+  (table) => ({
+    statusIdx: index("sprints_status_idx").on(table.status),
+    sourceIdx: index("sprints_source_idx").on(table.sourceRepo, table.sourcePath),
+    ingestedAtIdx: index("sprints_ingested_at_idx").on(table.ingestedAt),
+  }),
+);
+
+export type SprintRow = typeof sprints.$inferSelect;
+export type InsertSprint = typeof sprints.$inferInsert;
+
+
+// ============================================================================
+// Sprint Observatorio Vivo v1.1 — Hito C: Mapa estelar de proyectos conectados
+// ============================================================================
+
+export const connectedProjects = mysqlTable(
+  "connected_projects",
+  {
+    projectId: varchar("project_id", { length: 100 }).primaryKey(),
+    displayName: varchar("display_name", { length: 200 }).notNull(),
+    description: text("description"),
+    category: varchar("category", { length: 32 }).notNull(),
+    district: varchar("district", { length: 50 }),
+    githubOwner: varchar("github_owner", { length: 100 }),
+    githubRepo: varchar("github_repo", { length: 200 }),
+    githubVisibility: varchar("github_visibility", { length: 16 }),
+    deployTarget: varchar("deploy_target", { length: 32 }),
+    deployUrl: varchar("deploy_url", { length: 500 }),
+    stackTags: text("stack_tags"),
+    status: varchar("status", { length: 32 }).notNull().default("unknown"),
+    lastEventBusId: bigint("last_event_bus_id", { mode: "number" }),
+    starX: int("star_x"),
+    starY: int("star_y"),
+    lastSeenAt: timestamp("last_seen_at"),
+    lastPushedAt: timestamp("last_pushed_at"),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+  },
+  (table) => ({
+    categoryIdx: index("connected_projects_category_idx").on(table.category),
+    statusIdx: index("connected_projects_status_idx").on(table.status),
+  }),
+);
+export type ConnectedProject = typeof connectedProjects.$inferSelect;
+export type InsertConnectedProject = typeof connectedProjects.$inferInsert;
+
+export const projectHealthPings = mysqlTable(
+  "project_health_pings",
+  {
+    id: bigint("id", { mode: "number" }).autoincrement().primaryKey(),
+    projectId: varchar("project_id", { length: 100 }).notNull(),
+    status: varchar("status", { length: 16 }).notNull(),
+    latencyMs: int("latency_ms"),
+    httpStatus: int("http_status"),
+    source: varchar("source", { length: 32 }).notNull(),
+    notes: text("notes"),
+    busEventId: bigint("bus_event_id", { mode: "number" }),
+    pingedAt: timestamp("pinged_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    projectIdx: index("project_health_pings_project_idx").on(table.projectId),
+    pingedAtIdx: index("project_health_pings_pinged_at_idx").on(table.pingedAt),
+  }),
+);
+export type ProjectHealthPing = typeof projectHealthPings.$inferSelect;
+export type InsertProjectHealthPing = typeof projectHealthPings.$inferInsert;
+
+/**
+ * forja_shadow_calls — Hito 8 v1.1.
+ * Registro de intenciones (shadow) que el Tablero querría invocar sobre el
+ * kernel vía la puerta canónica `invokeKernelMonstruo` (apps/la-forja/api/src/puertas/kernel_monstruo.ts).
+ * En modo shadow estricto ninguna llamada se ejecuta — solo se registra para auditoría.
+ * El paso a modo enforce requiere DSC firmado.
+ */
+export const forjaShadowCalls = mysqlTable("forja_shadow_calls", {
+  id: int("id").autoincrement().primaryKey(),
+  callId: varchar("callId", { length: 64 }).notNull().unique(),
+  endpoint: varchar("endpoint", { length: 255 }).notNull(),
+  bodyHash: varchar("bodyHash", { length: 64 }).notNull(),
+  bodyPreview: text("bodyPreview"),
+  actorOpenId: varchar("actorOpenId", { length: 64 }),
+  actorRole: varchar("actorRole", { length: 32 }),
+  intent: varchar("intent", { length: 32 }).notNull().default("shadow"),
+  // shadow|enforce_blocked|enforce_allowed (futuro)
+  status: varchar("status", { length: 32 }).notNull().default("recorded"),
+  reasonNote: text("reasonNote"),
+  wouldCallAt: timestamp("wouldCallAt").defaultNow().notNull(),
+});
+
+export type ForjaShadowCall = typeof forjaShadowCalls.$inferSelect;
+export type InsertForjaShadowCall = typeof forjaShadowCalls.$inferInsert;
