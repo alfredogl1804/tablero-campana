@@ -437,3 +437,48 @@
 - [x] Nuevas violations en `types.ts`: `attenuation_violated`, `parent_envelope_not_found`, `parent_envelope_inactive`
 - [x] `server/forja/forja.subenvelope.e2e.test.ts` con 5 hitos (sub válido autorizado, scope expansion rechazado, capability addition rechazado, budget excess rechazado, parent revocado deniega gateway)
 - [x] **36/36 tests Forja verde** (15 atenuación + 11 envelope + 5 E2E Día 7 + 5 E2E sub Día 8)
+
+
+## Sprint Observatorio Vivo v1 (sustituye Forja Días 9-30) — 26-may-2026
+
+Plan canónico: `docs/SPRINT_OBSERVATORIO_V1.md`
+
+### Hito B — Modo Transparencia (sprints fantasma)
+- [ ] Crear tabla `sprints` en drizzle/schema.ts con shape canónica
+- [ ] Migración + push a TiDB (`pnpm db:push`)
+- [ ] Helper `server/db.ts::insertSprint`, `getActiveSprintsForDistrict`, `upsertSprint`
+- [ ] Endpoint tRPC `sprints.list`, `sprints.byDistrict`, `sprints.byId` en `server/routers/sprints.ts`
+- [ ] Script `scripts/ingest_sprints.py` que lee del repo el-monstruo y poblea TiDB
+- [ ] Componente `SprintGhostBuilding.tsx` que renderiza edificio fantasma (reusa material SPRINT/FUTURE de `Building.tsx`)
+- [ ] Capa "Sprints planeados" en `LayerSwitcher.tsx`
+- [ ] `ContextCard.tsx` extendido para mostrar carta de sprint cuando se selecciona uno
+- [ ] Tests vitest del ingestor + endpoint
+- [ ] E2E: ingestor poblea, endpoint retorna, UI renderiza
+
+### Hito A — Bus de eventos vivos del kernel
+- [ ] Tabla `kernel_events_stream` en Supabase del Monstruo (NO en TiDB del Tablero)
+- [ ] Habilitar Supabase Realtime sobre la tabla
+- [ ] Módulo Python `kernel/observatorio/event_publisher.py` en repo el-monstruo
+- [ ] Hook en `kernel/engine.py` que llama `publish_event` en eventos clave (intake, enrich, execute, hitl, respond, tool_calls)
+- [ ] Cliente Realtime en Tablero `client/src/lib/kernelEventsClient.ts`
+- [ ] Hook React `useKernelEvents()` con ventana deslizante
+- [ ] Sistema de animación de pulsos sobre `Building.tsx` cuando llega evento
+- [ ] Panel lateral con timeline de eventos en `LivePulse.tsx`
+- [ ] Tests E2E con eventos mock + verificación de render <2s
+
+### Hito C — Mapa estelar de proyectos conectados
+- [ ] Tabla `connected_projects` en TiDB
+- [ ] Tabla `project_heartbeats` en TiDB
+- [ ] Endpoint tRPC `projects.list`, `projects.health`, `projects.heartbeats`
+- [ ] Health checker vivo en server (cron cada 60s vía Heartbeat o polling browser)
+- [ ] Distrito "Universo" o capa visual nueva en `IsometricBoard.tsx`
+- [ ] Renderizar 12+ proyectos canónicos con sus estados
+- [ ] Líneas de conexión vivas que pulsan según actividad
+- [ ] Tests E2E
+
+### Forja v4 ↔ kernel adapter (modo shadow)
+- [ ] Módulo Python `el-monstruo/core/forja_bridge/forja_client.py` (cross-repo)
+- [ ] Hook `action_envelope_hook.py` en kernel/engine.py
+- [ ] `receipt_writer.py` que persiste receipts en TiDB de Forja vía tRPC
+- [ ] Modo shadow: observa, registra, NO bloquea
+- [ ] Tests E2E del flujo kernel → Forja gateway → receipt
